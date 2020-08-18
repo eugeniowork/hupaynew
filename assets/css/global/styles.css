@@ -1,0 +1,138 @@
+.login {
+  height: 100vh;
+  width: 100%;
+  background: #dadada;
+  position: relative;
+}
+
+.login .loginbg {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+}
+
+.login .loginForm {
+  z-index: 1;
+  padding: 20px 50px;
+  background: white;
+  min-height: 400px;
+  height: auto;
+  width: 400px;
+  border-radius: 5px;
+}
+
+.login .loginForm img {
+  height: 80px;
+  width: 80px;
+}
+
+.login .loginForm .loginTitle {
+  text-align: center;
+  font-size: 24px;
+}
+
+.login .loginForm .loginTitle span {
+  font-style: italic;
+}
+
+.login .loginForm input, .login .loginForm select {
+  padding-left: 45px;
+  background: #ececec;
+  margin-bottom: 10px;
+}
+
+.login .loginForm input:focus, .login .loginForm select:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.login .loginForm .forgotPasswordBtn {
+  font-style: italic;
+  color: #333;
+  text-align: center;
+}
+
+.login .loginForm i {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  padding: 10px 10px;
+  text-align: center;
+  color: #333;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.login .copyright {
+  padding: 10px 10px;
+  position: relative;
+}
+
+.login .copyright img {
+  width: 20px;
+  height: 20px;
+}
+
+.login .copyright small {
+  font-weight: bold;
+}
+
+#forgotPasswordModal input {
+  background: #ececec;
+  margin-bottom: 10px;
+}
+
+#forgotPasswordModal input:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.top-navbar {
+  background: #212529;
+  width: 100%;
+  min-height: 50px;
+  color: white;
+  padding: 15px 20px;
+}
+
+.top-navbar a {
+  font-weight: bold;
+  font-family: sans-serif;
+  color: white;
+  letter-spacing: 4px;
+}
+
+.top-navbar a:hover {
+  text-decoration: none;
+}
+
+.top-navbar a img {
+  width: 30px;
+  height: 30px;
+}
+
+.top-navbar .buttons {
+  line-height: 30px;
+}
+
+.top-navbar .buttons button {
+  color: white;
+  background: none;
+  border: none;
+}
+
+.top-navbar .buttons button:focus {
+  outline: 0 !important;
+}
+
+.top-navbar .buttons #accountDropdown {
+  line-height: 35px !important;
+}
+
+.top-navbar .buttons .accountDropdown {
+  top: 23px !important;
+  left: -142px;
+}
+/*# sourceMappingURL=styles.css.map */

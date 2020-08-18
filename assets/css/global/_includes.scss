@@ -1,0 +1,8 @@
+@mixin removeShadows() {
+    background:rgb(236, 236, 236);
+    
+    margin-bottom: 10px;
+    &:focus{
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,69 @@
+
+.login{
+    height: 100vh;
+    width: 100%;
+    background: rgb(218, 218, 218);
+    position: relative;
+    .loginbg{
+        height: 100vh;
+        width: 100%;
+        position: absolute;
+    }
+    .loginForm{
+        z-index: 1;
+        padding:20px 50px;
+        background: white;
+        min-height: 400px;
+        height: auto;
+        width: 400px;
+        border-radius: 5px;
+        img{
+            height: 80px;
+            width: 80px;
+        }
+        .loginTitle{
+            text-align: center;
+            font-size: 24px;
+            span{
+                font-style: italic;
+            }
+        }
+        input, select{
+            padding-left: 45px;
+            @include removeShadows();
+        }
+        .forgotPasswordBtn{
+            font-style: italic;
+            color:#333;
+            text-align: center;
+        }
+        i{
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            padding: 10px 10px;
+            text-align: center;
+            color: #333;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+    }
+    .copyright{
+        padding:10px 10px;
+        position: relative;
+        img{
+            width: 20px;
+            height: 20px;
+        }
+        small{
+            font-weight: bold;
+        }
+    }
+}
+#forgotPasswordModal{
+    input{
+        @include removeShadows();
+    }
+}
