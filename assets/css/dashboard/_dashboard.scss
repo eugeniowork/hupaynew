@@ -1,0 +1,54 @@
+.div-main-body{
+    padding-bottom: 0px !important;
+}
+.events{
+    
+    .events-content{
+        width: 100%;
+        background: blue;
+        .events-content-profile{
+            
+            width: 100%;
+            img{
+                height: 50px;
+                width: 50px;
+            }
+            .events-content-names{
+                margin-left: 10px;
+                .name{
+                    font-size: 15px;
+                    font-weight: bold;
+                }
+                .role{
+                    font-size: 13px;
+                }
+            }
+        }
+        .events-content-title{
+            font-weight: bold;
+            font-style: italic;
+        }
+        .events-content-post{
+            width: 100% !important;
+            .events-post-image{
+                img{
+                    width: 230px;
+                    height: 130px;
+                }
+            }
+            .event-value{
+                font-size:15px;
+            }
+            
+        }
+        .events-content-names{
+            width: 100%;
+        }
+    }
+}
+.loans-balance{
+    .div-main-body-head{
+        background: #1d8348 !important;
+    }
+    
+}

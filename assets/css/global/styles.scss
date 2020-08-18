@@ -1,3 +1,32 @@
 @import "includes";
 @import "../auth/login";
 @import "header_button";
+@import "../dashboard/dashboard";
+body{
+    background:rgb(236, 236, 236);
+}
+.div-main-body{
+    width: 100%;
+    padding-left: 270px;
+    padding-right: 20px;
+    padding-top: 100px;
+    color:rgb(104, 101, 101);
+    padding-bottom: 50px;
+    .div-main-body-head{
+        background: #4e73df;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1);
+        color:white;
+        height: 45px;
+        padding: 10px 20px;
+    }
+    .div-main-body-content{
+        background: white;
+        // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        padding: 10px 10px;
+        min-height: 300px;
+    }
+}

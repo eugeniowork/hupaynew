@@ -4,7 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Company_controller extends CI_Controller{
     function __construct(){
 		parent::__construct();
-
+        // if(!$this->session->userdata('user')){
+        //     redirect('login');
+        // }
 		$this->load->model("company_model", 'company_model');
 	}
     public function getAllCompanyForDropdown(){

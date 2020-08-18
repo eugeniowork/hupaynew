@@ -17,4 +17,13 @@ class Dashboard_controller extends CI_Controller{
         $this->load->view('dashboard/dashboard');
         $this->load->view('global/footer');
     }
+
+    public function logout(){
+        if($this->session->userdata('user')){
+            session_destroy();
+            $this->session->unset_userdata('user');
+        }
+        
+        redirect('');
+    }
 }

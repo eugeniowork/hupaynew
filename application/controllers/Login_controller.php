@@ -112,7 +112,7 @@ class Login_controller extends CI_Controller{
                             $this->data['msg'] = 'You are not '.$company['company'].' employee.';
                         }
                         else{
-                            $this->session->set_userdata('user',$check);
+                            $this->session->set_userdata('user',$check['emp_id']);
                             $this->data['status'] = "success";
                         }
                     }

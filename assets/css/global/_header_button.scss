@@ -4,6 +4,8 @@
     min-height: 50px;
     color:white;
     padding:15px 20px;
+    position: fixed;
+    z-index: 3;
     a{
         font-weight: bold;
         font-family: sans-serif;
@@ -27,14 +29,141 @@
             &:focus{
                 outline: 0 !important;
             }
-            
+            span{
+                background: red;
+                padding: .2em .3em .3em;
+                font-size: 10px;
+                border-radius: 2px;
+                margin-top: -22px;
+                margin-left: 5px;
+                position: absolute;
+                
+            }
+            &:hover{
+                text-decoration: none;
+            }
         }
-        #accountDropdown{
-            line-height: 35px !important;
-        }
-        .accountDropdown{
+        // #accountDropdown{
+        //     line-height: 35px !important;
+        // }
+        // .accountDropdown{
+        //     top: 23px !important;
+        //     left: -142px;
+        // }
+        .dropdown-menu{
             top: 23px !important;
             left: -142px;
+            width: 350px;
+        }
+        .dropdown-toggle{
+            &::after{
+                display: none;
+            }
+            
+        }
+        .name{
+            font-size: 14px;
+        }
+    }
+}
+.side-navbar{
+    height: 100vh;
+    width: 230px;
+    background:#212529;
+    position: fixed;
+    box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
+    overflow:auto;
+    margin-top: 62px;
+    &::-webkit-scrollbar-thumb {
+        background-color: #bdbdbd;    /* color of the scroll thumb */
+        border-radius: 0px;       /* roundness of the scroll thumb */
+        border: 3px solid #bdbdbd;  /* creates padding around scroll thumb */
+    }
+    &::-webkit-scrollbar-track {
+        background: white;        /* color of the tracking area */
+    }
+    &::-webkit-scrollbar {
+        width: 9px;               /* width of the entire scrollbar */
+    }
+    .side-navbar-profile{
+        
+        width: 100%;
+        height: auto;
+        background: white;
+        
+        .side-navbar-profile-content{
+            padding:10px 10px;
+            height: 100%;
+            img{
+                
+                height: 150px;
+                width: 150px;
+                padding:0px 0px;
+                border-radius: 100%;
+                border:1px solid gray;
+                margin-bottom: 5px;
+            }
+            button{
+                &:focus{
+                    outline: 0 !important;
+                    box-shadow: none;
+                }
+            }
+            .change-profile-btn{
+                display: none;
+            }
+            .fullname{
+                font-weight: bold;
+                font-size: 13px;
+                text-align: center;
+                color:#555555;
+            }
+            .position{
+                color:#1b4f72;
+                text-align: center;
+                font-weight: bold;
+            }
+            // .change-profile-btn{
+            //     border:none;
+            //     background: none;
+            // }
+        }
+    }
+    
+    .side-navbar-buttons{
+        padding:10px 0px;
+        padding-bottom: 90px;
+        button, a{
+            
+            &:focus{
+                outline: 0 !important;
+                box-shadow: none;
+            }
+            &:hover{
+                background:rgba(0, 0, 0, 0.5);
+                color:white;
+            }
+            i{
+                line-height: 25px;
+            }
+            color:#bdbdbd;
+            width: 100%;
+            text-align: justify;
+        }
+        .side-navbar-sub-buttons{
+            padding:0px 20px;
+        }
+        .messagingDropdown, .attendanceDropdown, .leavesDropdown, .loansDropdown{
+            display: none;
+        }
+        .loansDropdown{
+            img{
+                width: 25px;
+                height: 20px;
+            }
+        }
+        .fa-caret-down{
+            display: none;
         }
     }
 }
