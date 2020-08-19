@@ -50,5 +50,36 @@
     .div-main-body-head{
         background: #1d8348 !important;
     }
-    
+    .div-main-body-content{
+        .show-sss-info-balance-btn{
+            background: none;
+            border:none;
+            color:#1d8348;
+            &:focus{
+                outline: 0 !important;
+                box-shadow: none;
+            }
+        }
+        .div-sss-info-balance{
+            background: white;
+            display: none;
+            position: absolute;
+            top: 60px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 10px;
+            z-index: 2;
+            // padding:10px 10px;
+            .div-sss-info-balance-head{
+                padding:10px 10px;
+                font-size: 13px;
+                background: #ffff99;
+                font-weight: bold;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+            .div-sss-info-balance-content{
+                padding:10px 10px;
+            }
+        }
+    }
 }

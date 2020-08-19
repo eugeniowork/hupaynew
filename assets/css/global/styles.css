@@ -330,6 +330,42 @@
   background: #1d8348 !important;
 }
 
+.loans-balance .div-main-body-content .show-sss-info-balance-btn {
+  background: none;
+  border: none;
+  color: #1d8348;
+}
+
+.loans-balance .div-main-body-content .show-sss-info-balance-btn:focus {
+  outline: 0 !important;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.loans-balance .div-main-body-content .div-sss-info-balance {
+  background: white;
+  display: none;
+  position: absolute;
+  top: 60px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-head {
+  padding: 10px 10px;
+  font-size: 13px;
+  background: #ffff99;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-content {
+  padding: 10px 10px;
+}
+
 body {
   background: #ececec;
 }
@@ -358,7 +394,7 @@ body {
   background: white;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  padding: 10px 10px;
+  padding: 10px 30px;
   min-height: 300px;
 }
 /*# sourceMappingURL=styles.css.map */

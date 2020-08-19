@@ -85,4 +85,9 @@ $(document).ready(function(){
         var time = date + ' ' + month + ' ' + year + ' ';
         return time;
     }
+
+    $('.show-sss-info-balance-btn').on('click',function(){
+        $('.div-sss-info-balance').slideToggle('fast');
+        
+    })
 })
