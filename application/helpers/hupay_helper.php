@@ -201,5 +201,8 @@
 
         return $final_value;
     }
+    function asd(){
+        return 'asd';
+    }
     
 ?>

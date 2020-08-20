@@ -101,7 +101,7 @@
             <i class="caret-down-attendance fas fa-caret-down pull-right"></i>
         </button>
         <div class="side-navbar-sub-buttons attendanceDropdown">
-            <a class="btn" >View Attendance</a>     
+            <a class="btn" href="<?php base_url();?>attendance">View Attendance</a>     
             <a class="btn" >Sub Attendance List</a>
             <a class="btn" >File Overtime</a>
             <a class="btn" >OT List Approved</a>

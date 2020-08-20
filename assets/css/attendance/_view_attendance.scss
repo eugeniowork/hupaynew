@@ -1,0 +1,66 @@
+.view-attendance{
+    .div-main-body-content{
+        height: auto !important;
+        .search-by{
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .attendance{
+            margin-top: 10px;
+            
+            .attendance-loading{
+                height: 100px;
+                display: none ;
+                .spinner-border{
+                    height: 50px;
+                    width: 50px;
+                }
+            }
+            .attendance-body{
+                display:none;
+                border:1px solid lightgray;
+            }
+            .attendance-head{
+                padding: 5px 5px;
+                background:#1abc9c;
+                span{
+                    font-weight: bold;
+                    color:white;
+                    
+                }
+            }
+            .attendance-content{
+                padding:10px 10px;
+            }
+            #editAttendanceModal{
+                .modal-header{
+                    background:#158cba;
+                    color:white;
+                    padding:5px 10px;
+                    .modal-title{
+                        font-size: 15px;
+                    }
+                }
+                .modal-footer{
+                    padding:0px 5px;
+                }
+            }
+        }
+        .table{
+            border: 1px solid lightgray;
+            tr{
+                text-align: center;
+            }
+            .editAttendanceBtn{
+                border: none;
+                background:none;
+                &:focus{
+                    outline: 0 !important;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+    padding-bottom: 50px !important;
+    
+}

@@ -366,6 +366,85 @@
   padding: 10px 10px;
 }
 
+.view-attendance {
+  padding-bottom: 50px !important;
+}
+
+.view-attendance .div-main-body-content {
+  height: auto !important;
+}
+
+.view-attendance .div-main-body-content .search-by {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.view-attendance .div-main-body-content .attendance {
+  margin-top: 10px;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-loading {
+  height: 100px;
+  display: none;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-loading .spinner-border {
+  height: 50px;
+  width: 50px;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-body {
+  display: none;
+  border: 1px solid lightgray;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-head {
+  padding: 5px 5px;
+  background: #1abc9c;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-head span {
+  font-weight: bold;
+  color: white;
+}
+
+.view-attendance .div-main-body-content .attendance .attendance-content {
+  padding: 10px 10px;
+}
+
+.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.view-attendance .div-main-body-content .table {
+  border: 1px solid lightgray;
+}
+
+.view-attendance .div-main-body-content .table tr {
+  text-align: center;
+}
+
+.view-attendance .div-main-body-content .table .editAttendanceBtn {
+  border: none;
+  background: none;
+}
+
+.view-attendance .div-main-body-content .table .editAttendanceBtn:focus {
+  outline: 0 !important;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 body {
   background: #ececec;
 }

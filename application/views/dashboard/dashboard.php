@@ -101,6 +101,7 @@
                     // $workingDaysCount = $cut_off_attendance_count;
                     // $holidayCutOffCount = $holiday_cut_off_count;
                     // $allowance = $allowanceValue;
+                    echo $present;
                 ?>
                 <strong>Running Balance: </strong>
                 
