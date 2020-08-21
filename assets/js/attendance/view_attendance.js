@@ -184,7 +184,7 @@ $(document).ready(function(){
                         toast_options(4000);
                         toastr.success("Your request has been sent. Page will be reloaded shortly.");
                         setTimeout(function(){
-                            window.reload();
+                            window.location.reload();
                         },1000)
                     }
                     else{
@@ -202,11 +202,7 @@ $(document).ready(function(){
                 }
             })
         }
-        function change_button_to_default(btnName, btnText){
-            $(btnName).prop('disabled', false);
-            $(btnName).css('cursor','pointer');
-            $(btnName).text(btnText);
-        }
+        
     })
     $("#editAttendanceModal").on('hide.bs.modal', function(){
         $('.update-attendance-warning').empty();
@@ -245,20 +241,67 @@ $(document).ready(function(){
         })
 
     })
+
+    var loadingAddOt = false;
     $('.submit-ot-btn').on('click',function(){
+        var btnName = this;
+        if(!loadingAddOt){
+            loadingAddOt = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Submitting . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $.ajax({
+                url:base_url+'attendance_controller/addOt',
+                type:'post',
+                dataType:'json',
+                data:{
+                    attendanceDateOt:$('.attendance-date-ot').val(),
+                    hourTimeOutOt:$('.hour-time-out-ot').val(),
+                    minTimeOutOt:$('.min-time-out-ot').val(),
+                    periodTimeOutOt:$('.period-time-out-ot').val(),
+                    hourTimeInOt:$('.hour-time-in-ot').val(),
+                    minTimeInOt:$('.min-time-in-ot').val(),
+                    periodTimeInOt:$('.period-time-in-ot').val(),
+                    remarksOt:$('.remarks-ot').val(),
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success("Overtime file has been submitted. Page will be reloaded shortly.");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.add-ot-warning',response.msg, "danger")
+                        loadingAddOt = false;
+                        change_button_to_default(btnName, 'Submit');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAddOt = false;
+                    change_button_to_default(btnName, 'Submit');
+                }
+            })
+        }
+    })
+    $('.submit-attendance-btn').on('click',function(){
         $.ajax({
-            url:base_url+'attendance_controller/addOt',
-            type:'post',
+            url:base_url+'attendance_controller/addAttendance',
+            data:'post',
             dataType:'json',
             data:{
-                attendanceDateOt:$('.attendance-date-ot').val(),
-                hourTimeOutOt:$('.hour-time-out-ot').val(),
-                minTimeOutOt:$('.min-time-out-ot').val(),
-                periodTimeOutOt:$('.period-time-out-ot').val(),
-                hourTimeInOt:$('.hour-time-in-ot').val(),
-                minTimeInOt:$('.min-time-in-ot').val(),
-                periodTimeInOt:$('.period-time-in-ot').val(),
-                remarksOt:$('.remarks-ot').val(),
+                addAttendanceDate:$('.add-attendance-date').val(),
+                hourTimeOutAttendance:$('.hour-time-out-attendance').val(),
+                minTimeOutOtAttendance:$('.min-time-out-attendance').val(),
+                periodTimeOutAttendance:$('.period-time-out-attendance').val(),
+                hourTimeInAttendance:$('.hour-time-in-attendance').val(),
+                minTimeInAttendance:$('.min-time-in-attendance').val(),
+                periodTimeInAttendance:$('.period-time-in-attendance').val(),
+                remarksAttendance:$('.remarks-attendance').val(),
             },
             success:function(response){
 
@@ -268,4 +311,9 @@ $(document).ready(function(){
             }
         })
     })
+    function change_button_to_default(btnName, btnText){
+        $(btnName).prop('disabled', false);
+        $(btnName).css('cursor','pointer');
+        $(btnName).text(btnText);
+    }
 })

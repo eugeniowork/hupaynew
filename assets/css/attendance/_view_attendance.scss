@@ -84,6 +84,9 @@
         #addOverTimeModal{
             @include modal();
         }
+        #addAttendanceModal{
+            @include modal();
+        }
     }
     padding-bottom: 50px !important;
     // .attendance-menu-head{

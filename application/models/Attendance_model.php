@@ -105,6 +105,10 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_attendance_if_exist($emp_id,$date){
+        $query = $this->db->get_where('tb_attendance_notif', array('emp_id'=>$emp_id, 'date'=>$date));
+        return $query->row_array();
+    }
     // public function get_info_working_hours($id){
     //     $query = $this->db->get_where('tb_working_hours',array('working_hours_id'=>$id));
     //     return $query->row_array();

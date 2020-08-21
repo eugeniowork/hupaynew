@@ -640,7 +640,7 @@ class Attendance_controller extends CI_Controller{
 	        $attendance_date_ot_day = substr(substr($attendanceDateOt, -7), 0,2);
             $attendance_date_ot_year = substr($attendanceDateOt, -4);
             
-            echo $time_from." ".$time_out;
+            //echo $time_from." ".$time_out;
 
             if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$attendanceDateOt)) {
                 $this->data['status'] = "error";
@@ -763,5 +763,158 @@ class Attendance_controller extends CI_Controller{
         }
         
         echo json_encode($this->data);
+    }
+    public function addAttendance(){
+        $addAttendanceDate = $this->input->post('addAttendanceDate');
+        $hourTimeOutAttendance = $this->input->post('hourTimeOutAttendance');
+        $minTimeOutOtAttendance = $this->input->post('minTimeOutOtAttendance');
+        $periodTimeOutAttendance = $this->input->post('periodTimeOutAttendance');
+        
+        $hourTimeInAttendance = $this->input->post('hourTimeInAttendance');
+        $minTimeInAttendance = $this->input->post('minTimeInAttendance');
+        $periodTimeInAttendance = $this->input->post('periodTimeInAttendance');
+
+        $remarksAttendance = $this->input->post('remarksAttendance');
+
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $head_emp_id = $employeeInfo['head_emp_id'];
+        $biod_id = $employeeInfo['bio_id'];
+        
+        $hour_time_in = $hourTimeInAttendance;
+        if ($hour_time_in < 10){
+            $hour_time_in = "0" . $hour_time_in;
+        }
+    
+        $min_time_in = $minTimeInAttendance;
+    
+        if ($min_time_in < 10){
+            $min_time_in = "0" . $min_time_in;
+        }
+
+        $period_time_in = $periodTimeInAttendance;
+        if ($period_time_in == "PM" && $hour_time_in != 12){
+            $hour_time_in = $hour_time_in + 12;
+        }
+
+        $time_in = $hour_time_in . ":" . $min_time_in . ":" . "00";
+
+        // time out
+        $hour_time_out = $hourTimeOutAttendance;
+
+        if ($hour_time_out < 10){
+            $hour_time_out = "0" . $hour_time_out;
+        }
+
+        $min_time_out = $minTimeOutOtAttendance;
+
+        if ($min_time_out < 10){
+            $min_time_out = "0" . $min_time_out;
+        }
+        //$sec_time_out = $_POST["sec_time_out"];
+        $period_time_out = $periodTimeOutAttendance;
+        if ($period_time_out == "PM" && $hour_time_out != 12){
+            $hour_time_out = $hour_time_out + 12;
+        }
+        $time_out = $hour_time_out . ":" . $min_time_out . ":" . "00";
+
+        $remarks = $remarksAttendance;
+
+        $current_date = getDateDate();
+
+        $attendance_date_month = substr($addAttendanceDate,0,2);
+        $attendance_date_day = substr(substr($addAttendanceDate, -7), 0,2);
+        $attendance_date_year = substr($addAttendanceDate, -4);
+
+        if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$addAttendanceDate)) {
+            $this->data['status'] = "error";
+            $this->data['msg'] = "<strong>Attendance Date</strong> not match to the current format mm/dd/yyyy.";
+        }
+        else if ($attendance_date_year % 4 == 0 && $attendance_date_month == 2 && $attendance_date_day >= 30){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid attendance date.";
+        }
+        else if ($attendance_date_year % 4 != 0 && $attendance_date_month == 2 && $attendance_date_day >= 29){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid attendance date.";
+        }
+        else if (($attendance_date_month == 4 || $attendance_date_month == 6 || $attendance_date_month == 9 || $attendance_date_month == 11)
+			&& $attendance_date_day  >= 31){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid attendance date.";
+        }
+        else if ($attendance_class->getRowsTimeInOut(dateDefaultDb($addAttendanceDate),$biod_id) != 0){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "The date <strong>".$addAttendanceDate."</strong> is already exist in your attendance list";
+        }
+        else if (($period_time_in != "AM" && $period_time_in != "PM") || ($period_time_out != "AM" && $period_time_out != "PM")){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please select AM and PM only.";
+        }
+        else if ($time_out <= $time_in && $time_out != "000:000:00"){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "<strong>Time out</strong> cannot be greater than or equal to <strong>Time in</strong>.";
+        }
+        else{
+            $attendance_date = dateDefaultDb($addAttendanceDate);
+            $get_attendance_if_exist = $this->attendance_model->get_attendance_if_exist($emp_id,$attendance_date);
+            if(!empty($get_attendance_if_exist)){
+                $attendance_notif_id = $get_attendance_if_exist['attendance_notif_id'];
+                $notif_status = 0;
+                // ibig sabihin staff xa
+                if ($head_emp_id != 0){
+                    $notif_status = 4;
+                }
+
+                // ibig sabihin head xa
+                else if ($head_emp_id == 0){
+                    $notif_status = 0;
+                }
+                $attendanceNotifData = array(
+                    'time_in'=>$time_in,
+                    'time_out'=>$time_out,
+                    'remarks'=>$remarks,
+                    'notif_status'=>$notif_status,
+                    'DateCreated'=>$current_date,
+
+                );
+                $attendanceNotifUpdate = $this->attendance_model->attendance_notif_update($attendanceNotifData, $attendanceId);
+
+                $emp_id_values = explode("#",getEmpIdByNotification($emp_id));
+
+                $count = getEmpIdByNotificationCount($emp_id) - 1;
+
+                $final_attendance_date = dateFormat($attendance_date);
+
+                $date_create = date_create($time_in);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+                $counter = 0;
+                do{
+                    $emp_id = $emp_id_values[$counter];
+                    $approver_id = $emp_id;
+                    $notifType = "Add Attendance on $final_attendance_date with time in $final_time_in and time out $final_time_out";
+                    $status = "Pending";
+                    $dateTime = getDateTime();
+                    $insertNotificationsData = array(
+                        'attendance_notification_id'=>'',
+                        'emp_id'=>$emp_id,
+                        'notif_emp_id'=>$approver_id,
+                        'attendance_notif_id'=>$attendance_notif_id,
+                        'attendance_ot_id'=>'0',
+                        'leave_id'=>'0',
+                        'NotifType'=>$notifType,
+                        'type'=>'Update Attendance',
+                        'Status'=>$status,
+                        'DateTime'=>$dateTime,
+                        'ReadStatus'=>0,
+                    );
+                    $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+                    $counter++;
+                }
+            }
+        }
     }
 }

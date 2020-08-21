@@ -4,7 +4,7 @@
     </div>
     <div class="div-main-body-content attendance-menu-content">
         <button data-toggle="modal" data-target="#addOverTimeModal">File Overtime</button>
-        <button>Add Attendance</button>
+        <button data-toggle="modal" data-target="#addAttendanceModal">Add Attendance</button>
         <button>File Leave</button>
         <button>View Leave Status and History</button>
         <div class="modal fade" id="addOverTimeModal" tabindex="-1" role="dialog" aria-labelledby="addOverTimeModalTitle" aria-hidden="true">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-sm-5" style="">
                             <select class="form-control period-time-in-ot" required="required">
-                                <option selected disabled>Select Period Time</option>
+                                <option selected disabled>Select </option>
                                 <option value="AM">AM</option>
                                 <option value="PM">PM</option>
                             </select>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-sm-5" style="">
                             <select class="form-control period-time-out-ot" >
-                                <option selected disabled>Select Period Time</option>
+                                <option selected disabled>Select</option>
                                 <option value="AM" >AM</option>
                                 <option value="PM">PM</option>
                             </select>
@@ -67,13 +67,95 @@
 
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
-                        <textarea class="form-control remarks-ot" placeholder="Input Remarks"></textarea>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                            <textarea class="form-control remarks-ot" placeholder="Input Remarks"></textarea>
+                        </div>
                     </div><br/>
+                    <div class="add-ot-warning">
+
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-primary submit-ot-btn">Submit</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addAttendanceModal" tabindex="-1" role="dialog" aria-labelledby="addAttendanceModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAttendanceModalLongTitle">Add Attendance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <span><i class="far fa-calendar-alt"></i>&nbsp;Date: <span class="text-danger">*</span></label></span>
+                        <input type="text" class="form-control datepicker add-attendance-date" >
+                    </div>
+                    <div class="row time-in-attendance">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time In:&nbsp;<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                            <input type="text" class="form-control hour-time-in-attendance number-only" placeholder="H">
+                        </div>
+                        <div class="col-sm-1" style="margin-top:10px;">
+                            :
+                        </div>
+                        <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                            <input type="text" class="form-control min-time-in-attendance number-only" placeholder="M">
+                        </div>
+                        <div class="col-sm-5" style="">
+                            <select class="form-control period-time-in-attendance" required="required">
+                                <option selected disabled>Select</option>
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                            <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
+
+                        </div>
+                    </div>
+                    <div class="row time-out-attendance">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time Out:&nbsp;<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                            <input type="text" class="form-control hour-time-out-attendance number-only" placeholder="H" >
+                        </div>
+                        <div class="col-sm-1" style="margin-top:10px;">
+                            :
+                        </div>
+                        <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                            <input type="text" class="form-control min-time-out-attendance number-only" placeholder="M" >
+                        </div>
+                        <div class="col-sm-5" style="">
+                            <select class="form-control period-time-out-attendance" >
+                                <option selected disabled>Select</option>
+                                <option value="AM" >AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                            <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                            <textarea class="form-control remarks-attendance" placeholder="Input Remarks"></textarea>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="add-attendance-warning">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary submit-attendance-btn">Submit</button>
                 </div>
                 </div>
             </div>
@@ -195,9 +277,11 @@
 
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
-                            <textarea class="form-control remarks" placeholder="Input Remarks"></textarea>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                                <textarea class="form-control remarks" placeholder="Input Remarks"></textarea>
+                            </div>
                         </div><br/>
                         <div class="update-attendance-warning">
 

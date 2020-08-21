@@ -24,6 +24,8 @@ BUGS
     - CUT OF ATTENDANCE THE FIRST ELEMENTS GETS DOUBLED
     - UPDATE ATTENDANCE TIME ONLY 0-60 ONLY
     - add on paste
+    - valid dates
+    - dont allow user to modify date format
 - DASHBOARD 
     - RUNNING BALANCE
     - EVENTS WITH TWO IMAGES
