@@ -87,6 +87,12 @@
         #addAttendanceModal{
             @include modal();
         }
+        #fileLeaveOptionModal{
+            @include modal();
+        }
+        #fileLeaveModal{
+            @include modal();
+        }
     }
     padding-bottom: 50px !important;
     // .attendance-menu-head{

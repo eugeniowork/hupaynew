@@ -5,7 +5,7 @@
     <div class="div-main-body-content attendance-menu-content">
         <button data-toggle="modal" data-target="#addOverTimeModal">File Overtime</button>
         <button data-toggle="modal" data-target="#addAttendanceModal">Add Attendance</button>
-        <button>File Leave</button>
+        <button data-toggle="modal" data-target="#fileLeaveOptionModal">File Leave</button>
         <button>View Leave Status and History</button>
         <div class="modal fade" id="addOverTimeModal" tabindex="-1" role="dialog" aria-labelledby="addOverTimeModalTitle" aria-hidden="true">
             <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
@@ -156,6 +156,62 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-primary submit-attendance-btn">Submit</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="fileLeaveOptionModal" tabindex="-1" role="dialog" aria-labelledby="fileLeaveOptionModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileLeaveOptionModalLongTitle">File Leave Option</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button class="open-file-leave-btn" data-toggle="modal" data-target="#fileLeaveModal">File Leave</button>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary submit-attendance-btn">Submit</button>
+                </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="fileLeaveModal" tabindex="-1" role="dialog" aria-labelledby="fileLeaveModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileLeaveModalLongTitle">File Leave</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <span><i class="far fa-calendar-alt"></i>&nbsp;Type of Leave: <span class="text-danger">*</span></label></span>
+                        <select class="form-control leave-type">
+
+                        </select>
+                    </div>
+                    <br/>
+                    <div>
+                        <span><i class="far fa-calendar-alt"></i>&nbsp;Date From: <span class="text-danger">*</span></label></span>
+                        <input type="text" class="form-control datepicker date-from-leave" placeholder="Input Date">
+                    </div>
+                    <br/>
+                    <div>
+                        <span><i class="far fa-calendar-alt"></i>&nbsp;Date To: <span class="text-danger">*</span></label></span>
+                        <input type="text" class="form-control datepicker date-to-leave" placeholder="Input Date">
+                    </div><br/>
+                    <div >
+                        <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                        <textarea class="form-control remarks-leave" placeholder="Input Remarks"></textarea>
+                    </div>
+                    <br/>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary submit-leave-btn">Submit</button>
                 </div>
                 </div>
             </div>

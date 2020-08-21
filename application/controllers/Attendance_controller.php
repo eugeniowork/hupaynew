@@ -18,6 +18,7 @@ class Attendance_controller extends CI_Controller{
         $this->load->helper('hupay_helper');
         $this->load->helper('attendance_helper');
         $this->load->helper('date_helper');
+        $this->load->helper('leave_helper');
         //$this->load->library('../controllers/holiday_controller');
 
     }
@@ -1002,4 +1003,208 @@ class Attendance_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+
+    public function addLeave(){
+        $leaveType = $this->input->post('leaveType');
+        $dateFromLeave = $this->input->post('dateFromLeave');
+        $dateToLeave = $this->input->post('dateToLeave');
+        $remarksLeave = $this->input->post('remarksLeave');
+        $fileLeaveType = $this->input->post('fileLeaveType');
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $head_emp_id = $employeeInfo['head_emp_id'];
+        $bio_id = $employeeInfo['bio_id'];
+        $dateFrom_month = substr($dateFromLeave,0,2);
+	    $dateFrom_day = substr(substr($dateFromLeave, -7), 0,2);
+        $dateFrom_year = substr($dateFromLeave, -4);
+        
+        $dateTo_month = substr($dateToLeave,0,2);
+	    $dateTo_day = substr(substr($dateToLeave, -7), 0,2);
+        $dateTo_year = substr($dateToLeave, -4);
+        
+        $date1=date_create(date_format(date_create($dateFromLeave),"Y-m-d"));
+        $date2=date_create(date_format(date_create(date("Y-m-d")),"Y-m-d"));
+        $diff =date_diff($date1,$date2);
+        $diffConverted =  $diff->format("%R%a");
+        $days = str_replace("+","",$diffConverted);
+
+        $exist_leave_type = 0;
+        $no_days_to_file = 0;
+        $lv_id = 0;
+        $name = "";
+
+        $leave = $this->leave_model->get_type_of_leave_by_id($leaveType);
+        if(!empty($leave)){
+
+            $lv_id = $leave->lv_id;
+            $no_days_to_file = $leave->no_days_to_file;
+            $name = $leave->name;
+            //$db_leave_count = $row_leave_type->count;
+
+            $exist_leave_type = 1;
+        }
+        $row_wd = $this->working_day_model->get_working_days_info($employeeInfo['working_days_id']);
+
+        $day_from = $row_wd['day_from'];
+        $day_to = $row_wd['day_to'];
+        
+        $leaveValidated = leaveValidation($lv_id, $dateFromLeave, $dateToLeave, $no_days_to_file,$emp_id);
+
+        if ($exist_leave_type == 0){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Leave type does not exists.";
+        }
+        else if($leaveValidated !=""){
+            $this->data['status'] = "error";
+            $this->data['msg'] = $leaveValidated;
+        }
+        else if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateFromLeave)) {
+            $this->data['status'] = "error";
+            $this->data['msg'] = "<strong>Date From</strong> not match to the current format mm/dd/yyyy.";
+        }
+        else if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateToLeave)) {
+            $this->data['status'] = "error";
+            $this->data['msg'] = "<strong>Date To</strong> not match to the current format mm/dd/yyyy.";
+        }
+        else if ($dateFrom_year % 4 == 0 && $dateFrom_month == 2 && $dateFrom_day >= 30){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if ($dateFrom_year % 4 != 0 && $dateFrom_month == 2 && $dateFrom_day >= 29){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if (($dateFrom_month == 4 || $dateFrom_month == 6 || $dateFrom_month == 9 || $dateFrom_month == 11)
+			&& $dateFrom_day  >= 31){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if ($dateTo_year % 4 == 0 && $dateTo_month == 2 && $dateTo_day >= 30){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if ($dateTo_year % 4 != 0 && $dateTo_month == 2 && $dateTo_day >= 29){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if (($dateTo_month == 4 || $dateTo_month == 6 || $dateTo_month == 9 || $dateTo_month == 11)
+			&& $dateTo_day  >= 31){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Invalid leave date.";
+        }
+        else if ($dateFromLeave > $dateToLeave){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "<strong>Date From</strong> cannot be greater than or equal to <strong>Date To</strong>.";
+        }
+        else{
+            $lt_id = $leaveType;
+            $remaining_leave_count = getEmpLeaveCountByEmpIdLtId($emp_id,$lv_id);
+
+            $dateFrom = dateDefaultDb($dateFromLeave);
+		    $dateTo = dateDefaultDb($dateToLeave);
+
+            $dates = array();
+            $from = strtotime($dateFrom);
+            $last = strtotime($dateTo);
+            $output_format = 'Y-m-d';
+            $step = '+1 day';
+
+            $count = 0;
+            while( $from <= $last ) {
+
+                $count++;
+                $dates[] = date($output_format, $from);
+                $from = strtotime($step, $from);
+            
+            }
+
+            $count = $count- 1;
+            $weekdays = array();
+            $counter = 0;
+            $weekdays_count = 0;
+            $days_count = 0;
+            do{
+                $date_create = date_create($dates[$counter]);
+                $day = date_format($date_create, 'w');
+                if ($day >= $day_from && $day <= $day_to){
+                    $weekdays[] = $dates[$counter];
+				    $date =  $dates[$counter]; 
+                    $weekdays_count++;
+                    $holiday = date_format(date_create($date), 'F j');
+                    $holiday_num_rows =$this->holiday_model->get_holiday_date_rows($holiday);
+                    if($holiday_num_rows != 1){
+                        $days_count ++;
+                    }
+                }
+                $counter++;
+            }
+            while($count <= $count);
+
+            $dateCreated = getDate();
+            $can_file = false;
+            if ($name == "Formal Leave"){
+                $fileLeaveType = "Leave without pay";
+                $can_file = true;
+            }
+            $notifFileLeave = "File Leave";
+            if ($days_count <= $remaining_leave_count || $can_file == true){
+                $approveStat = 0;
+                // ibig sabihin staff xa
+                if ($head_emp_id != 0){
+                    $approveStat = 4;
+                }
+
+                // ibig sabihin head xa
+                else if ($head_emp_id == 0){
+                    $approveStat = 0;
+                }
+
+                $lt_id = $leaveType;
+
+                $leaveDateFromDateTo = $this->leave_model->leaveDateFromDateTo($emp_id,dateDefaultDb($dateFromLeave),
+                    dateDefaultDb($dateToLeave), $fileLeaveType
+                );
+                if(!empty($leaveDateFromDateTo)){
+                    $updateLeaveData = array(
+                        'head_emp_id'=>$head_emp_id,
+                        'LeaveType'=>$leaveType,
+                        'lt_id'=>$lt_id,
+                        'Remarks'=>$remarksLeave,
+                        'FileLeaveType'=>$fileLeaveType,
+                        'approveStat'=>$approveStat
+                    );
+                    $updateLeave = $this->leave_model->update_leave($emp_id, $dateFrom,$dateTo, $data);
+
+                }
+                else{
+                    $approveStat = 0;
+	    			// ibig sabihin staff xa
+                    if ($head_emp_id != 0){
+                        $approveStat = 4;
+                    }
+
+                    // ibig sabihin head xa
+                    else if ($head_emp_id == 0){
+                        $approveStat = 0;
+                    }
+                    $insertLeaveData = array(
+                        'emp_id'=>$emp_id,
+                    );
+                    $insertLeave = $this->leave_model->insert_leave();
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+        }
+        echo json_encode($this->data);
+    }   
 }

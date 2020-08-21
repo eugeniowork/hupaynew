@@ -336,6 +336,57 @@ $(document).ready(function(){
             })
         }
     })
+    $('.open-file-leave-btn').on('click',function(response){
+        $('.leave-type').empty();
+        $.ajax({
+            url:base_url+'leave_controller/getTypesOfLeave',
+            type:'post',
+            dataType:'json',
+            data:{
+                leaveId:0,
+                status:"Add",
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    var selectedDefault = '<option selected disabled>Please Select</option>';
+                    $('.leave-type').append(selectedDefault);
+                    response.leaveOptions.forEach(function(data,key){
+                        var option = '<option value='+data.lt_id+'>'+data.name+'</option>';
+                        $('.leave-type').append(option);
+                    });
+                }
+                else{
+
+
+                }
+            },
+            error:function(response){
+
+            }
+        })
+    })
+    $('.submit-leave-btn').on('click',function(response){
+        $.ajax({
+            url:base_url+'attendance_controller/addLeave',
+            type:'post',
+            dataType:'json',
+            data:{
+                leaveType:$('.leave-type').val(),
+                dateFromLeave:$('.date-from-leave').val(),
+                dateToLeave:$('.date-to-leave').val(),
+                remarksLeave:$('.remarks-leave').val(),
+                fileLeaveType:'Leave with pay',
+            },
+            success:function(response){
+
+            },
+            error:function(response){
+
+            }
+        })
+    })
+
+
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');

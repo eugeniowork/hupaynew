@@ -28,4 +28,45 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$emp_id, 'approveStat' => 1,'dateFrom <=' => $date, 'dateTo >='=>$date));
         return $query->result();
     }
+    public function get_type_of_leave_status_one(){
+        $query = $this->db->get_where('tb_leave_type', array('status' =>1));
+        return $query->result();
+    }
+    public function get_type_of_leave_by_id($lt_id){
+        $query = $this->db->get_where('tb_leave_type', array('lt_id' =>$lt_id));
+        return $query->row_array();
+    }
+    public function get_pet_info($emp_id){
+        $query = $this->db->get_where('tb_pet_info', array('emp_id' =>$emp_id));
+        return $query->row_array();
+    }
+
+    public function get_employee_leave($emp_id){
+        $query = $this->db->get_where('tb_emp_leave', array('emp_id' =>$emp_id));
+        return $query->result();
+    }
+    public function leaveDateFromDateTo($emp_id, $dateFrom, $dateTo, $fileLeaveType){
+        $query = $this->db->get_where('tb_leave', 
+            array('FileLeaveType' =>$fileLeaveType, 'dateFrom'=>$dateFrom, 'dateTo'=>$dateTo, 'emp_id' => $emp_id)
+        );
+        return $query->row_array();
+    }
+    public function update_leave($emp_id, $dateFrom, $dateTo,$data){
+        $this->db->trans_start();
+        $this->db->where('emp_id',$emp_id);
+        $this->db->where('dateFrom',$dateFrom);
+        $this->db->where('dateTo',$dateTo);
+        $this->db->update('tb_leave',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function insert_leave($data){
+        $insert = $this->db->insert('tb_leave',$data);
+        return $insert;
+    }
 }
