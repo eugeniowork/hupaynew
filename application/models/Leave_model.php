@@ -45,7 +45,7 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_emp_leave', array('emp_id' =>$emp_id));
         return $query->result();
     }
-    public function leaveDateFromDateTo($emp_id, $dateFrom, $dateTo, $fileLeaveType){
+    public function leave_date_from_date_to($emp_id, $dateFrom, $dateTo, $fileLeaveType){
         $query = $this->db->get_where('tb_leave', 
             array('FileLeaveType' =>$fileLeaveType, 'dateFrom'=>$dateFrom, 'dateTo'=>$dateTo, 'emp_id' => $emp_id)
         );

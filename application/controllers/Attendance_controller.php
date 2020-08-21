@@ -1140,7 +1140,7 @@ class Attendance_controller extends CI_Controller{
             }
             while($counter <= $count);
 
-            $dateCreated = getDate();
+            $dateCreated = getDateDate();
             $can_file = false;
             if ($name == "Formal Leave"){
                 $fileLeaveType = "Leave without pay";
@@ -1161,7 +1161,7 @@ class Attendance_controller extends CI_Controller{
 
                 $lt_id = $leaveType;
 
-                $leaveDateFromDateTo = $this->leave_model->leaveDateFromDateTo($emp_id,dateDefaultDb($dateFromLeave),
+                $leaveDateFromDateTo = $this->leave_model->leave_date_from_date_to($emp_id,dateDefaultDb($dateFromLeave),
                     dateDefaultDb($dateToLeave), $fileLeaveType
                 );
                 if(!empty($leaveDateFromDateTo)){
@@ -1174,9 +1174,10 @@ class Attendance_controller extends CI_Controller{
                         'approveStat'=>$approveStat
                     );
                     $updateLeave = $this->leave_model->update_leave($emp_id, $dateFrom,$dateTo, $updateLeaveData);
-
+                    
                 }
                 else{
+                    
                     $approveStat = 0;
 	    			// ibig sabihin staff xa
                     if ($head_emp_id != 0){
@@ -1197,7 +1198,7 @@ class Attendance_controller extends CI_Controller{
                         'Remarks'=>$remarksLeave,
                         'FileLeaveType'=>$fileLeaveType,
                         'approveStat'=>$approveStat,
-                        'dateCreated'=>$date
+                        'dateCreated'=>$dateCreated,
                     );
                     $insertLeave = $this->leave_model->insert_leave($insertLeaveData);
                 }
@@ -1236,7 +1237,7 @@ class Attendance_controller extends CI_Controller{
                     $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
                     $counter++;
                 }
-                while($count <= $count);
+                while($counter <= $count);
                 $this->data['status'] = "success";
                 
             }
