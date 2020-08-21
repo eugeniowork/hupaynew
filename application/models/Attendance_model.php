@@ -38,7 +38,7 @@ class Attendance_model extends CI_Model{
     }
     public function attendance_notif_update($attendanceNotifData, $attendanceId){
         $this->db->trans_start();
-        $this->db->where('attendance_id',$attendanceId);
+        $this->db->where('attendance_notif_id',$attendanceId);
         $this->db->update('tb_attendance_notif',$attendanceNotifData);
         $this->db->trans_complete();
         if($this->db->trans_status() === TRUE){

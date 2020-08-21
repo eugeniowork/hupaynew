@@ -246,9 +246,10 @@ $(document).ready(function(){
     $('.submit-ot-btn').on('click',function(){
         var btnName = this;
         if(!loadingAddOt){
+            $('.add-ot-warning').empty();
             loadingAddOt = true;
             $(btnName).text('');
-            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Submitting . . .');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
             $(btnName).prop('disabled', true);
             $(btnName).css('cursor','not-allowed');
             $.ajax({
@@ -288,28 +289,52 @@ $(document).ready(function(){
             })
         }
     })
+    var loadingAddAttendance = false;
     $('.submit-attendance-btn').on('click',function(){
-        $.ajax({
-            url:base_url+'attendance_controller/addAttendance',
-            data:'post',
-            dataType:'json',
-            data:{
-                addAttendanceDate:$('.add-attendance-date').val(),
-                hourTimeOutAttendance:$('.hour-time-out-attendance').val(),
-                minTimeOutOtAttendance:$('.min-time-out-attendance').val(),
-                periodTimeOutAttendance:$('.period-time-out-attendance').val(),
-                hourTimeInAttendance:$('.hour-time-in-attendance').val(),
-                minTimeInAttendance:$('.min-time-in-attendance').val(),
-                periodTimeInAttendance:$('.period-time-in-attendance').val(),
-                remarksAttendance:$('.remarks-attendance').val(),
-            },
-            success:function(response){
-
-            },
-            error:function(response){
-
-            }
-        })
+        var btnName = this;
+        if(!loadingAddAttendance){
+            loadingAddAttendance = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.add-attendance-warning').empty();
+            $.ajax({
+                url:base_url+'attendance_controller/addAttendance',
+                type:'post',
+                dataType:'json',
+                data:{
+                    addAttendanceDate:$('.add-attendance-date').val(),
+                    hourTimeOutAttendance:$('.hour-time-out-attendance').val(),
+                    minTimeOutOtAttendance:$('.min-time-out-attendance').val(),
+                    periodTimeOutAttendance:$('.period-time-out-attendance').val(),
+                    hourTimeInAttendance:$('.hour-time-in-attendance').val(),
+                    minTimeInAttendance:$('.min-time-in-attendance').val(),
+                    periodTimeInAttendance:$('.period-time-in-attendance').val(),
+                    remarksAttendance:$('.remarks-attendance').val(),
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success("Attendance was successfully submitted. Page will be reloaded shortly.");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.add-attendance-warning',response.msg, "danger")
+                        loadingAddAttendance = false;
+                        change_button_to_default(btnName, 'Submit');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAddAttendance = false;
+                    change_button_to_default(btnName, 'Submit');
+                }
+            })
+        }
     })
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
