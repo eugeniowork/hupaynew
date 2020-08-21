@@ -69,4 +69,12 @@ class Leave_model extends CI_Model{
         $insert = $this->db->insert('tb_leave',$data);
         return $insert;
     }
+    public function leave_last_id(){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->order_by('leave_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
 }

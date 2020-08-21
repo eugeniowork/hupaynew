@@ -1036,14 +1036,14 @@ class Attendance_controller extends CI_Controller{
         $leave = $this->leave_model->get_type_of_leave_by_id($leaveType);
         if(!empty($leave)){
 
-            $lv_id = $leave->lv_id;
-            $no_days_to_file = $leave->no_days_to_file;
-            $name = $leave->name;
+            $lv_id = $leave['lv_id'];
+            $no_days_to_file = $leave['no_days_to_file'];
+            $name = $leave['name'];
             //$db_leave_count = $row_leave_type->count;
 
             $exist_leave_type = 1;
         }
-        $row_wd = $this->working_day_model->get_working_days_info($employeeInfo['working_days_id']);
+        $row_wd = $this->working_days_model->get_working_days_info($employeeInfo['working_days_id']);
 
         $day_from = $row_wd['day_from'];
         $day_to = $row_wd['day_to'];
@@ -1138,7 +1138,7 @@ class Attendance_controller extends CI_Controller{
                 }
                 $counter++;
             }
-            while($count <= $count);
+            while($counter <= $count);
 
             $dateCreated = getDate();
             $can_file = false;
@@ -1173,7 +1173,7 @@ class Attendance_controller extends CI_Controller{
                         'FileLeaveType'=>$fileLeaveType,
                         'approveStat'=>$approveStat
                     );
-                    $updateLeave = $this->leave_model->update_leave($emp_id, $dateFrom,$dateTo, $data);
+                    $updateLeave = $this->leave_model->update_leave($emp_id, $dateFrom,$dateTo, $updateLeaveData);
 
                 }
                 else{
@@ -1189,20 +1189,61 @@ class Attendance_controller extends CI_Controller{
                     }
                     $insertLeaveData = array(
                         'emp_id'=>$emp_id,
+                        'head_emp_id'=>$head_emp_id,
+                        'dateFrom'=>$dateFrom,
+                        'dateTo'=>$dateTo,
+                        'LeaveType'=>$leaveType,
+                        'lt_id'=>$lt_id,
+                        'Remarks'=>$remarksLeave,
+                        'FileLeaveType'=>$fileLeaveType,
+                        'approveStat'=>$approveStat,
+                        'dateCreated'=>$date
                     );
-                    $insertLeave = $this->leave_model->insert_leave();
+                    $insertLeave = $this->leave_model->insert_leave($insertLeaveData);
                 }
+                $emp_id_values = explode("#",getEmpIdByNotification($emp_id));
+                //echo $emp_id_values[0];
+
+                $count = getEmpIdByNotificationCount($emp_id) - 1;
+                //echo $count;
+                $final_date_from = dateFormat($dateFrom);
+                $final_date_to = dateFormat($dateTo);
+
+                $counter = 0;
+                do {
+
+                    $emp_id = $emp_id_values[$counter];
+                    //echo $emp_id . "<br/>";
+                    
+                    $approver_id = $emp_id;
+                    $notifType = "File ".$name." from $final_date_from to $final_date_to";
+                    $status = "Pending";
+                    $dateTime = getDateTime();
+                    $attendanceLeaveId = $this->leave_model->leave_last_id();
+                    $insertNotificationsData = array(
+                        'attendance_notification_id'=>'',
+                        'emp_id'=>$emp_id,
+                        'notif_emp_id'=>$approver_id,
+                        'attendance_notif_id'=>0,
+                        'attendance_ot_id'=>'0',
+                        'leave_id'=>$attendanceLeaveId['leave_id'],
+                        'NotifType'=>$notifType,
+                        'type'=>$notifFileLeave,
+                        'Status'=>$status,
+                        'DateTime'=>$dateTime,
+                        'ReadStatus'=>0,
+                    );
+                    $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+                    $counter++;
+                }
+                while($count <= $count);
+                $this->data['status'] = "success";
+                
             }
-
-
-
-
-
-
-
-
-
-
+            else{
+                $this->data['error'] = "error";
+                $this->data['msg'] = "You cannot file leave with pay because your remaining leave count is less than the date range you've enter.";
+            }
 
         }
         echo json_encode($this->data);

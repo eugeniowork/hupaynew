@@ -4,7 +4,7 @@
         $CI =& get_instance();
         $CI->load->model('leave_model');
         $date_today = date("Y-m-d");
-        $checkExistPetInfoByEmpId = $CI->leave_model($emp_id);
+        $checkExistPetInfoByEmpId = $CI->leave_model->get_pet_info($emp_id);
         $message = "";
 		if ($lv_id == 1){
 
@@ -48,7 +48,7 @@
         $CI->load->model('leave_model');
         $remaining_leave = 0;
 
-        $select_qry = $this->leave_model->get_employee_leave($emp_id);
+        $select_qry = $CI->leave_model->get_employee_leave($emp_id);
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 $leave_array_explode =explode("," ,$value->leave_array);
