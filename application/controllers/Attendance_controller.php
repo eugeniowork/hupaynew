@@ -452,11 +452,69 @@ class Attendance_controller extends CI_Controller{
     }
 
     public function getSpecificDateAttendance(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $bio_id = $employeeInfo['bio_id'];
         $dateFrom = $this->input->post('dateFrom');
         $dateTo = $this->input->post('dateTo');
         $dateFrom = dateDefaultDb($dateFrom);
         $dateTo = dateDefaultDb($dateTo);
         
+        date_default_timezone_set("Asia/Manila");
+		$dates = date("Y-m-d H:i:s");
+		$date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $select_cutoff_qry = $this->attendance_model->get_cut_off();
+
+        $attendanceFinal = array();
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $value){
+                $date_from = date_format(date_create($value->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($value->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+					$date_from = $prev_year . "-" .date_format(date_create($value->dateFrom),'m-d');
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($value->dateTo. ", " .$year),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($value->datePayroll . ", " .$year),'Y-m-d');
+                }
+            }
+        }
+        $select_qry = $this->attendance_model->get_attendance_between_date($dateFrom, $dateTo, $bio_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $date_create = date_create($value->date);
+                $date_format = date_format($date_create, 'F d, Y');
+
+                $timeFrom = date_format(date_create($value->time_in), 'g:i A');
+                $timeTo = date_format(date_create($value->time_out), 'g:i A');
+                if ($value->time_out == "00:00:00"){
+                    $timeTo = "-";
+                }
+                if ($value->time_in == "00:00:00"){
+                    $timeFrom = "-";
+                }
+                $cutOff_dateFrom =  date_format(date_create($final_date_from), 'F d, Y');
+
+                $cutOff_dateTo =  date_format(date_create($final_date_to), 'F d, Y');
+
+                $cutOffPeriod = $cutOff_dateFrom . " - " . $cutOff_dateTo;
+                $num_rows = $this->payroll_model->get_payroll_info($cutOffPeriod);
+
+                array_push($attendanceFinal, array(
+                    'attendance_id'=>$value->attendance_id,
+                    'date_format'=>$date_format,
+                    'timeFrom'=>$timeFrom,
+                    'timeTo'=>$timeTo,
+                ));
+            }
+        }
+        $this->data['attendanceFinal'] = $attendanceFinal;
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }

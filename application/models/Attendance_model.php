@@ -64,6 +64,18 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_attendance_between_date($dateFrom, $dateTo, $bio_id){
+        $this->db->select('*');
+        $this->db->from('tb_attendance');
+        
+        //$this->db->where('date BETWEEN "'. $dateFrom. '" and "'. $dateTo.'"');
+        $this->db->where('date >=',$dateFrom);
+        $this->db->where('date <=', $dateTo);
+        $this->db->where('bio_id',$bio_id);
+        $this->db->order_by('date', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
     // public function get_info_working_hours($id){
     //     $query = $this->db->get_where('tb_working_hours',array('working_hours_id'=>$id));
     //     return $query->row_array();

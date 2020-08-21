@@ -17,13 +17,13 @@
         <br/>
         <div class="d-flex flex-row ">
             <div class="p-2">
-                <input type="text" class="datepicker date-from" placeholder="Input Date">
+                <input type="text" class="datepicker date-from" placeholder="Input Date From">
             </div>
             <div class="p-2">
                 <i class="fas fa-long-arrow-alt-right"></i>
             </div>
             <div class="p-2">
-                <input type="text" class="datepicker date-to" placeholder="Input Date">
+                <input type="text" class="datepicker date-to" placeholder="Input Date To">
             </div>
             <div class="p-2">
                 <button class="btn btn-primary btn-sm searchBtn">Search</button>

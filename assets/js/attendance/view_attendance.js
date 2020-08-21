@@ -22,81 +22,88 @@ $(document).ready(function(){
             searchResult = "Current Cut off";
             url = "getCutOffAttendance";
         }
-        else{
+        else if(searchOption == "optionSearchSpecificDate"){
             searchResult = "Specific date";
             dateFrom = $('.date-from').val();
             dateTo = $('.date-to').val();
             url = "getSpecificDateAttendance";
         }
+
         if(url == ""){
             toast_options(4000);
             toastr.warning("Please choose from <strong>Search Option</strong>.");
         }
         else{
-            $('.attendance-loading').show();
-            $('#attendanceTable').dataTable().fnDestroy();
-            $('.attendance-body').hide();
-            $('#attendanceTable tbody').empty()
-            $.ajax({
-                url:base_url+'attendance_controller/'+url,
-                type:'post',
-                dataType:'json',
-                data:{
-                    searchOption:searchOption,
-                    dateFrom:dateFrom,
-                    dateTo:dateTo,
-                },
-                success:function(response){
-                    if(response.status == "success"){
-                        $('.searchByValue').text(searchResult);
-                        $('.attendance-body').show();
-                        $('#attendanceTable tbody').empty()
-                        response.attendanceFinal.forEach(function(data,key){
-                            if(data.holiday_type){
-                                var tr = '<tr id='+data.attendance_id+'>'+
-                                    '<td>'+data.date_format+'</td>'+
-                                    '<td style="background-color:#2980b9;color:#fff">'+data.holiday_type+'</td>'+
-                                    '<td style="background-color:#2980b9;color:#fff">'+data.holiday_value+'</td>'+
-                                    '<td>No Action</td>'+
-                                '</tr>';
-                                $('#attendanceTable tbody').append(tr)
-                            }
-                            else{
-                                var timeIn = "-";
-                                var timeOut = "-";
-                                if(data.timeFrom){
-                                    timeIn = data.timeFrom;
+            if(dateFrom != "" && dateTo != ""){
+                $('.attendance-loading').show();
+                $('#attendanceTable').dataTable().fnDestroy();
+                $('.attendance-body').hide();
+                $('#attendanceTable tbody').empty()
+                $.ajax({
+                    url:base_url+'attendance_controller/'+url,
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        searchOption:searchOption,
+                        dateFrom:dateFrom,
+                        dateTo:dateTo,
+                    },
+                    success:function(response){
+                        if(response.status == "success"){
+                            $('.searchByValue').text(searchResult);
+                            $('.attendance-body').show();
+                            $('#attendanceTable tbody').empty()
+                            response.attendanceFinal.forEach(function(data,key){
+                                if(data.holiday_type){
+                                    var tr = '<tr id='+data.attendance_id+'>'+
+                                        '<td>'+data.date_format+'</td>'+
+                                        '<td style="background-color:#2980b9;color:#fff">'+data.holiday_type+'</td>'+
+                                        '<td style="background-color:#2980b9;color:#fff">'+data.holiday_value+'</td>'+
+                                        '<td>No Action</td>'+
+                                    '</tr>';
+                                    $('#attendanceTable tbody').append(tr)
                                 }
-                                if(data.timeTo){
-                                    timeOut = data.timeTo;
+                                else{
+                                    var timeIn = "-";
+                                    var timeOut = "-";
+                                    if(data.timeFrom){
+                                        timeIn = data.timeFrom;
+                                    }
+                                    if(data.timeTo){
+                                        timeOut = data.timeTo;
+                                    }
+                                    var button = "-";
+                                    if(data.timeTo && data.timeFrom){
+                                        button = '<button data-toggle="modal" data-target="#editAttendanceModal" class="editAttendanceBtn" id='+data.attendance_id+'><i id='+data.attendance_id+' class="fas text-success fa-pencil-alt"></i></button>';
+                                    }
+                                    var tr = '<tr id='+data.attendance_id+'>'+
+                                        '<td>'+data.date_format+'</td>'+
+                                        '<td>'+timeIn+'</td>'+
+                                        '<td>'+timeOut+'</td>'+
+                                        '<td>'+button+'</td>'+
+                                    '</tr>';
+                                    $('#attendanceTable tbody').append(tr)
                                 }
-                                var button = "-";
-                                if(data.timeTo && data.timeFrom){
-                                    button = '<button data-toggle="modal" data-target="#editAttendanceModal" class="editAttendanceBtn" id='+data.attendance_id+'><i id='+data.attendance_id+' class="fas text-success fa-pencil-alt"></i></button>';
-                                }
-                                var tr = '<tr id='+data.attendance_id+'>'+
-                                    '<td>'+data.date_format+'</td>'+
-                                    '<td>'+timeIn+'</td>'+
-                                    '<td>'+timeOut+'</td>'+
-                                    '<td>'+button+'</td>'+
-                                '</tr>';
-                                $('#attendanceTable tbody').append(tr)
-                            }
+                                
+                            })
                             
-                        })
-                        
-                        $('.attendance-loading').hide();
-                        $('#attendanceTable').dataTable({
-                            "ordering": false,
-                            "info":     false
-                        });
-                        
-                    }
-                },
-                error:function(response){
+                            $('.attendance-loading').hide();
+                            $('#attendanceTable').dataTable({
+                                "ordering": false,
+                                "info":     false
+                            });
+                            
+                        }
+                    },
+                    error:function(response){
 
-                }
-            })
+                    }
+                })
+            }
+            else{
+                toast_options(4000);
+                toastr.warning("Please provide a <strong>Date From</strong> and <strong>Date To</strong>.");
+            }
         }
     })
     $(document).on('click', '.editAttendanceBtn',function(event){
