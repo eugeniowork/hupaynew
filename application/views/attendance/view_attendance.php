@@ -15,7 +15,24 @@
         <input type="radio" id="optionSearchSpecificDate" class="optionSearch" value="Specific Date">
         <label for="optionSearchSpecificDate">Specific Date</label>
         <br/>
-        <button class="btn btn-primary btn-sm searchBtn">Search</button>
+        <div class="d-flex flex-row ">
+            <div class="p-2">
+                <input type="text" class="datepicker date-from" placeholder="Input Date">
+            </div>
+            <div class="p-2">
+                <i class="fas fa-long-arrow-alt-right"></i>
+            </div>
+            <div class="p-2">
+                <input type="text" class="datepicker date-to" placeholder="Input Date">
+            </div>
+            <div class="p-2">
+                <button class="btn btn-primary btn-sm searchBtn">Search</button>
+            </div>
+            
+        </div>
+        
+        
+        
         <br/>
         
         <div class="attendance">
@@ -27,7 +44,7 @@
             </div>
             <div class="attendance-body">
                 <div class="attendance-head">
-                    <span>Search Result</span>
+                    <span>Search Result: <span class="searchByValue"></span></span>
                 </div>
                 <div class="attendance-content">
                     <table class="table table-striped" id="attendanceTable">
@@ -46,7 +63,7 @@
                 </div>
             </div>
             <div class="modal fade" id="editAttendanceModal" tabindex="-1" role="dialog" aria-labelledby="editAttendanceModalTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editAttendanceModalLongTitle">Update Attendance Info</h5>
@@ -55,11 +72,63 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <div>
+                            <span><i class="far fa-calendar-alt"></i>&nbsp;Date:</span>&nbsp;<span class="dateValue"></span>
+                        </div>
+                        <div class="row time-in">
+                            <div class="col-sm-12">
+                                <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time In:&nbsp;<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                                <input type="text" value="23" class="form-control hour_time_in number-only" placeholder="H">
+                            </div>
+                            <div class="col-sm-1" style="margin-top:10px;">
+                                :
+                            </div>
+                            <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                                <input type="text" value="23" class="form-control min_time_in number-only" placeholder="M">
+                            </div>
+                            <div class="col-sm-5" style="">
+                                <select class="form-control period_time_in" required="required">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                                <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
+
+                            </div>
+                        </div>
+                        <div class="row time-out">
+                            <div class="col-sm-12">
+                                <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time Out:&nbsp;<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                                <input type="text" value="23" class="form-control hour_time_out number-only" placeholder="H" >
+                            </div>
+                            <div class="col-sm-1" style="margin-top:10px;">
+                                :
+                            </div>
+                            <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                                <input type="text" value="23" class="form-control min_time_out number-only" placeholder="M" >
+                            </div>
+                            <div class="col-sm-5" style="">
+                                <select class="form-control period_time_out" >
+                                    <option value="AM" selected>AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                                <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
+
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                            <textarea class="form-control remarks" placeholder="Input Remarks"></textarea>
+                        </div><br/>
+                        <div class="update-attendance-warning">
+
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary">Save changes</button>
+                        <button class="btn btn-sm btn-primary save-change-btn">Request Update</button>
                     </div>
                     </div>
                 </div>

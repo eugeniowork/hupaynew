@@ -21,6 +21,7 @@ class Dashboard_controller extends CI_Controller{
         $this->load->model("working_hours_model", "working_hours_model");
         $this->load->model("attendance_model", "attendance_model");
         $this->load->model("leave_model", "leave_model");
+        $this->load->helper('hupay_helper');
         //$this->load->library('../controllers/holiday_controller');
 
     }

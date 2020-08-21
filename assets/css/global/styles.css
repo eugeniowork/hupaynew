@@ -422,6 +422,14 @@
   font-size: 15px;
 }
 
+.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body i {
+  color: #158cba;
+}
+
+.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body textarea {
+  resize: none;
+}
+
 .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-footer {
   padding: 0px 5px;
 }
@@ -441,6 +449,16 @@
 
 .view-attendance .div-main-body-content .table .editAttendanceBtn:focus {
   outline: 0 !important;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.view-attendance .div-main-body-content .fa-long-arrow-alt-right {
+  line-height: 30px;
+  font-size: 20px;
+}
+
+.view-attendance .div-main-body-content input {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -475,5 +493,11 @@ body {
   border-bottom-right-radius: 5px;
   padding: 10px 30px;
   min-height: 300px;
+}
+
+#toast-container > div {
+  opacity: 1;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  filter: alpha(opacity=100);
 }
 /*# sourceMappingURL=styles.css.map */

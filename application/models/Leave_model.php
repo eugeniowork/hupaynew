@@ -24,4 +24,8 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$id, 'approveStat' => 1, 'FileLeaveType'=>'Leave with pay'));
         return $query->result();
     }
+    public function get_leave_info($emp_id, $date){
+        $query = $this->db->get_where('tb_leave',array('emp_id'=>$emp_id, 'approveStat' => 1,'dateFrom <=' => $date, 'dateTo >='=>$date));
+        return $query->result();
+    }
 }

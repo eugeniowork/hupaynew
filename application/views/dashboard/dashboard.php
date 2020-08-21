@@ -1,3 +1,4 @@
+<?php $this->load->helper('hupay_helper')?>
 <div class="div-main-body loans-balance">
 
     <div class="div-main-body-head">

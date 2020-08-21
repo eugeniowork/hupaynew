@@ -41,6 +41,14 @@
                         font-size: 15px;
                     }
                 }
+                .modal-body{
+                    i{
+                        color:#158cba;
+                    }
+                    textarea{
+                        resize: none;
+                    }
+                }
                 .modal-footer{
                     padding:0px 5px;
                 }
@@ -59,6 +67,13 @@
                     box-shadow: none;
                 }
             }
+        }
+        .fa-long-arrow-alt-right{
+            line-height:30px;
+            font-size: 20px;
+        }
+        input{
+            box-shadow: none;
         }
     }
     padding-bottom: 50px !important;

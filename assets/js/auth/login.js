@@ -116,15 +116,7 @@ $(document).ready(function(){
         $('.modal-body p').text("");
         $('.modal-body input').val("");
     });
-    function render_response(div,msg, status){
-        $(div).empty();
-        $(div).append(
-            '<div class="alert alert-'+status+' alert-dismissible fade show">'+
-            msg+
-            '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-            '</div>'
-        );
-    }
+    
     function change_button_to_disabled(btnName){
         $(btnName).text("");
         $(btnName).attr('disabled', true);

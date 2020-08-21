@@ -1,4 +1,5 @@
 <?php
+    $this->load->helper('hupay_helper');
     $employeeInformation = employeeInformation();
 ?>
 <div class="top-navbar">
