@@ -13,6 +13,8 @@ class Attendance_controller extends CI_Controller{
         $this->load->model("attendance_model", "attendance_model");
         $this->load->model('holiday_model','holiday_model');
         $this->load->model('leave_model','leave_model');
+        $this->load->model('working_hours_model','working_hours_model');
+        $this->load->model('working_days_model','working_days_model');
         $this->load->helper('hupay_helper');
         $this->load->helper('attendance_helper');
         $this->load->helper('date_helper');
@@ -516,6 +518,250 @@ class Attendance_controller extends CI_Controller{
         }
         $this->data['attendanceFinal'] = $attendanceFinal;
         $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function addOt(){
+        
+        $attendanceDateOt = $this->input->post('attendanceDateOt');
+        $hourTimeOutOt = $this->input->post('hourTimeOutOt');
+        $minTimeOutOt = $this->input->post('minTimeOutOt');
+        $periodTimeOutOt = $this->input->post('periodTimeOutOt');
+        
+        $hourTimeInOt = $this->input->post('hourTimeInOt');
+        $minTimeInOt = $this->input->post('minTimeInOt');
+        $periodTimeInOt = $this->input->post('periodTimeInOt');
+
+        $remarksOt = $this->input->post('remarksOt');
+
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $row_wd = $this->working_days_model->get_working_days_info($employeeInfo['working_days_id']);
+
+        $day_from = $row_wd['day_from'];
+        $day_to = $row_wd['day_to'];
+        
+        $head_emp_id = $employeeInfo['head_emp_id'];
+        $this->form_validation->set_rules('attendanceDateOt', 'attendanceDateOt', 'required');
+        $this->form_validation->set_rules('hourTimeOutOt', 'hourTimeOutOt', 'required');
+        $this->form_validation->set_rules('minTimeOutOt', 'minTimeOutOt', 'required');
+        $this->form_validation->set_rules('periodTimeOutOt', 'periodTimeOutOt', 'required');
+        $this->form_validation->set_rules('remarksOt', 'remarksOt', 'required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required.";
+        }
+        else{
+            $row_working_hours = $this->working_hours_model->get_info_working_hours($employeeInfo['working_hours_id']);
+            $working_hours_time_out = $row_working_hours['timeTo'];
+
+            $date_ot_attendance = date_create($attendanceDateOt);
+            $day = date_format($date_ot_attendance, 'l');
+            $day_of_the_week = date_format($date_ot_attendance, 'w'); // 
+
+            $day_month = date_format($date_ot_attendance, 'j');
+            $month = date_format($date_ot_attendance, 'F');
+            $holiday_date = $month." ".$day_month;
+            $holiday = $this->holiday_model->get_holiday_date($holiday_date);
+            $otType = "";
+            if(!empty($holiday)){
+                $holidayType = $holiday['holiday_type'];
+                if ($holidayType != "Regular Holiday") {
+                    $holidayType = "Special Holiday";
+                }
+                if ($day_of_the_week >= $day_from && $day_of_the_week <= $day_to){
+                    $otType = $holidayType;
+                }
+                else {
+                    $otType = 'Restday / '.$holidayType;
+                }
+            }
+            else{
+                if ($day_of_the_week >= $day_from && $day_of_the_week <= $day_to){
+                    $otType = "Regular";
+                }
+        
+                else {
+                    $otType = "Restday";
+                }
+            }
+            $this->form_validation->set_rules('hourTimeInOt', 'hourTimeOutOt', 'required');
+            $this->form_validation->set_rules('minTimeInOt', 'minTimeOutOt', 'required');
+            $this->form_validation->set_rules('periodTimeInOt', 'periodTimeInOt', 'required');
+            $proceed = true;
+            if($this->form_validation->run() == FALSE){
+                $proceed = false;
+            }
+
+            if ($otType != "Regular" && $proceed) {
+                // time in
+                $hour_time_in = $hourTimeInOt;
+                if ($hour_time_in < 10 && strlen($hour_time_in) == 1){
+                    $hour_time_in = "0" . $hour_time_in;
+                }
+                $min_time_in = $minTimeInOt;
+                //echo $min_time_in . "<br/>";
+                if ($min_time_in < 10 && strlen($min_time_in) == 1){
+                    $min_time_in = "0" . $min_time_in;
+                }
+                //$sec_time_in = $_POST["sec_time_in"];
+                $period_time_in = $periodTimeInOt;
+                if ($period_time_in == "PM" && $hour_time_in != 12){
+                    $hour_time_in = $hour_time_in + 12;
+                }
+        
+                $time_from = $hour_time_in . ":" . $min_time_in . ":" . "00";
+            }
+            else{
+                $period_time_in = "PM"; 
+		        $time_from = $working_hours_time_out;
+            }
+            $hour_time_out = $hourTimeOutOt;
+            if ($hour_time_out < 10 && strlen($hour_time_out) == 1){
+                $hour_time_out = "0" . $hour_time_out;
+            }
+            $min_time_out = $minTimeOutOt;
+            if ($min_time_out < 10 && strlen($min_time_out) == 1){
+                $min_time_out = "0" . $min_time_out;
+            }
+            
+            $period_time_out = $periodTimeOutOt;
+            if ($period_time_out == "PM" && $hour_time_out != 12){
+                $hour_time_out = $hour_time_out + 12;
+            }
+            $time_out = $hour_time_out . ":" . $min_time_out . ":" . "00";
+
+            $type_ot = $otType;
+            
+            $remarks = $remarksOt;
+
+            $current_date = getDateDate();
+            $attendance_date_ot_month = substr($attendanceDateOt,0,2);
+	        $attendance_date_ot_day = substr(substr($attendanceDateOt, -7), 0,2);
+            $attendance_date_ot_year = substr($attendanceDateOt, -4);
+            
+            echo $time_from." ".$time_out;
+
+            if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$attendanceDateOt)) {
+                $this->data['status'] = "error";
+                $this->data['msg'] = "<strong>OT Date</strong> not match to the current format mm/dd/yyyy.";
+                
+            }
+            else if($attendance_date_ot_year % 4 == 0 && $attendance_date_ot_month == 2 && $attendance_date_ot_day >= 30){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid overtime date.";
+            }
+            else if ($attendance_date_ot_year % 4 != 0 && $attendance_date_ot_month == 2 && $attendance_date_ot_day >= 29){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid overtime date.";
+            }
+            else if (($attendance_date_ot_month == 4 || $attendance_date_ot_month == 6 || $attendance_date_ot_month == 9 || $attendance_date_ot_month == 11)
+                && $attendance_date_ot_day  >= 31){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid overtime date.";
+            }
+            else if (($period_time_in != "AM" && $period_time_in != "PM") || ($period_time_out != "AM" && $period_time_out != "PM")){
+		        $this->data['status'] = "error";
+                $this->data['msg'] = "Please select AM and PM only.";
+            }
+            else if ($time_out <= $time_from){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "<strong>Time out</strong> cannot be greater than or equal to <strong>Time in</strong>.";
+            }
+            else{
+                $attendance_date = dateDefaultDb($attendanceDateOt);
+                $overTime = $this->attendance_model->get_attendance_overtime($emp_id, $attendance_date);
+                if(!empty($overTime)){
+                    $approve_stat = 0;
+                    // ibig sabihin staff xa
+                    if ($head_emp_id != 0){
+                        $approve_stat = 4;
+                    }
+
+                    // ibig sabihin head xa
+                    else if ($head_emp_id == 0){
+                        $approve_stat = 0;
+                    }
+                    $updateAttendanceOvertimeData = array(
+                        'time_from'=>$time_from,
+                        'time_out'=>$time_out,
+                        'type_ot'=>$type_ot,
+                        'remarks'=>$remarks,
+                        'approve_stat'=>$approve_stat,
+                        'DateCreated'=>$current_date,
+                        'head_emp_id'=>$head_emp_id,
+                    );
+                    $updateAttendanceOvertime = $this->attendance_model->update_attendance_overtime($emp_id, $attendance_date,$updateAttendanceOvertimeData);
+                }
+                else{
+                    $approve_stat = 0;
+                    // ibig sabihin staff xa
+                    if ($head_emp_id != 0){
+                        $approve_stat = 4;
+                    }
+
+                    // ibig sabihin head xa
+                    else if ($head_emp_id == 0){
+                        $approve_stat = 0;
+                    }
+                    $insertAttendanceOvertimeData = array(
+                        'attendance_ot_id'=>'',
+                        'time_from'=>$time_from,
+                        'time_out'=>$time_out,
+                        'type_ot'=>$type_ot,
+                        'remarks'=>$remarks,
+                        'approve_stat'=>$approve_stat,
+                        'DateCreated'=>$current_date,
+                        'head_emp_id'=>$head_emp_id,
+                        'emp_id'=>$emp_id,
+                        'date'=>$attendance_date,
+                    );
+                    $insertAttendanceOvertime = $this->attendance_model->insert_attendance_overtime($insertAttendanceOvertimeData);
+                }
+
+                $emp_id_values = explode("#",getEmpIdByNotification($emp_id));
+                $count = getEmpIdByNotificationCount($emp_id) - 1;
+
+                $final_attendance_date = dateFormat($attendance_date);
+                $date_create = date_create($time_from);
+                $final_time_from = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+                $counter = 0;
+                do{
+                    $emp_id = $emp_id_values[$counter];
+                    $createNotifEmpId = $emp_id;
+                    $notifType = "File Overtime on $final_attendance_date from $final_time_from and time out $final_time_out";
+                    $status = "Pending";
+                    $dateTime = getDateTime();
+                    $attendanceOtId = $this->attendance_model->attendance_ot_last_id();
+                    foreach($attendanceOtId as $value){
+                        $insertNotificationsData = array(
+                            'attendance_notification_id'=>'',
+                            'emp_id'=>$emp_id,
+                            'notif_emp_id'=>$createNotifEmpId,
+                            'attendance_notif_id'=>'0',
+                            'attendance_ot_id'=>$value->attendance_ot_id,
+                            'leave_id'=>'0',
+                            'NotifType'=>$notifType,
+                            'type'=>'Attendance OT',
+                            'Status'=>$status,
+                            'DateTime'=>$dateTime,
+                            'ReadStatus'=>0,
+                        );
+                        
+                    }
+                    $insertOt = $this->attendance_model->insert_notifications($insertNotificationsData);
+                    $counter++;
+                }
+                while($counter <= $count);
+                $this->data['status'] = "success";
+                
+            }
+        }
+        
         echo json_encode($this->data);
     }
 }

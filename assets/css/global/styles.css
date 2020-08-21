@@ -463,6 +463,28 @@
           box-shadow: none;
 }
 
+.view-attendance .attendance-menu-content #addOverTimeModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.view-attendance .attendance-menu-content #addOverTimeModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.view-attendance .attendance-menu-content #addOverTimeModal .modal-body i {
+  color: #158cba;
+}
+
+.view-attendance .attendance-menu-content #addOverTimeModal .modal-body textarea {
+  resize: none;
+}
+
+.view-attendance .attendance-menu-content #addOverTimeModal .modal-footer {
+  padding: 0px 5px;
+}
+
 body {
   background: #ececec;
 }

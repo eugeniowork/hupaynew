@@ -76,6 +76,35 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_attendance_overtime($emp_id, $date){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id, 'date'=>$date));
+        return $query->row_array();
+    }
+    public function update_attendance_overtime($emp_id, $date, $data){
+        $this->db->trans_start();
+        $this->db->where('emp_id',$emp_id);
+        $this->db->where('date',$date);
+        $this->db->update('tb_attendance_overtime',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function insert_attendance_overtime($data){
+        $insert = $this->db->insert('tb_attendance_overtime',$data);
+        return $insert;
+    }
+    public function attendance_ot_last_id(){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_overtime');
+        $this->db->order_by('attendance_ot_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
     // public function get_info_working_hours($id){
     //     $query = $this->db->get_where('tb_working_hours',array('working_hours_id'=>$id));
     //     return $query->row_array();

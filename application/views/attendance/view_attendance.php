@@ -1,5 +1,85 @@
 <div class="div-main-body view-attendance">
+    <div class="div-main-body-head attendance-menu-head">
+        attendance menu 
+    </div>
+    <div class="div-main-body-content attendance-menu-content">
+        <button data-toggle="modal" data-target="#addOverTimeModal">File Overtime</button>
+        <button>Add Attendance</button>
+        <button>File Leave</button>
+        <button>View Leave Status and History</button>
+        <div class="modal fade" id="addOverTimeModal" tabindex="-1" role="dialog" aria-labelledby="addOverTimeModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addOverTimeModalLongTitle">File Overtime</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <span><i class="far fa-calendar-alt"></i>&nbsp;Date: <span class="text-danger">*</span></label></span>
+                        <input type="text" class="form-control datepicker attendance-date-ot" >
+                    </div>
+                    <div class="row time-in-ot">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time In:&nbsp;<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                            <input type="text" class="form-control hour-time-in-ot number-only" placeholder="H">
+                        </div>
+                        <div class="col-sm-1" style="margin-top:10px;">
+                            :
+                        </div>
+                        <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                            <input type="text" class="form-control min-time-in-ot number-only" placeholder="M">
+                        </div>
+                        <div class="col-sm-5" style="">
+                            <select class="form-control period-time-in-ot" required="required">
+                                <option selected disabled>Select Period Time</option>
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                            <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
 
+                        </div>
+                    </div>
+                    <div class="row time-out-ot">
+                        <div class="col-sm-12">
+                            <label class="control-label"><i class="fas fa-clock"></i>&nbsp;Time Out:&nbsp;<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:40px;margin-right:-20px;">
+                            <input type="text" class="form-control hour-time-out-ot number-only" placeholder="H" >
+                        </div>
+                        <div class="col-sm-1" style="margin-top:10px;">
+                            :
+                        </div>
+                        <div class="col-sm-3" style="margin-left:-20px;margin-right:-20px;">
+                            <input type="text" class="form-control min-time-out-ot number-only" placeholder="M" >
+                        </div>
+                        <div class="col-sm-5" style="">
+                            <select class="form-control period-time-out-ot" >
+                                <option selected disabled>Select Period Time</option>
+                                <option value="AM" >AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                            <!--<input type="text" id="number_only" name="sec_time_in" value="" class="form-control" placeholder="S" required="required"> -->
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="control-label"><i class="fas fa-comment"></i>&nbsp;Remarks:&nbsp;<span class="text-danger">*</span></label>
+                        <textarea class="form-control remarks-ot" placeholder="Input Remarks"></textarea>
+                    </div><br/>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary submit-ot-btn">Submit</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
     <div class="div-main-body-head">
         Attendance List
     </div>
@@ -30,11 +110,7 @@
             </div>
             
         </div>
-        
-        
-        
         <br/>
-        
         <div class="attendance">
             <div class="attendance-loading">
                 <div class="d-flex flex-column justify-content-center align-items-center">

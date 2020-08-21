@@ -3,6 +3,10 @@ $(document).ready(function(){
     var attendanceId;
     var searchOption = "";
     $('.datepicker').datepicker();
+    $('.datepicker').datepicker("option","defaultDate", new Date());
+
+
+
     $('.optionSearch').on('click',function(event){
         var id = event.target.id;
         $('input:radio').prop('checked',false);
@@ -14,6 +18,7 @@ $(document).ready(function(){
         var searchResult = "";
         var dateFrom = "";
         var dateTo = "";
+        var proceed = true;
         if(searchOption == "optionSearchAll"){
             url = 'getAllAttendance';
             searchResult = "All";
@@ -27,6 +32,7 @@ $(document).ready(function(){
             dateFrom = $('.date-from').val();
             dateTo = $('.date-to').val();
             url = "getSpecificDateAttendance";
+            proceed = false;
         }
 
         if(url == ""){
@@ -34,7 +40,7 @@ $(document).ready(function(){
             toastr.warning("Please choose from <strong>Search Option</strong>.");
         }
         else{
-            if(dateFrom != "" && dateTo != ""){
+            if(proceed){
                 $('.attendance-loading').show();
                 $('#attendanceTable').dataTable().fnDestroy();
                 $('.attendance-body').hide();
@@ -177,6 +183,9 @@ $(document).ready(function(){
                     if(response.status == "success"){
                         toast_options(4000);
                         toastr.success("Your request has been sent. Page will be reloaded shortly.");
+                        setTimeout(function(){
+                            window.reload();
+                        },1000)
                     }
                     else{
                         render_response('.update-attendance-warning',response.msg, "danger")
@@ -203,4 +212,60 @@ $(document).ready(function(){
         $('.update-attendance-warning').empty();
         $('.remarks').val("");
     });
+
+
+    //for file overtime
+    $('.attendance-date-ot').on('change',function(e){
+        var date = e.target.value;
+
+        $.ajax({
+            url:base_url+'working_days_controller/getOverTimeType',
+            type:'post',
+            dataType:'json',
+            data:{
+                date:date,
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    if(response.finalHolidayType == "Regular"){
+                        $('.hour-time-in-ot').attr('disabled', 'disabled');
+                        $('.min-time-in-ot').attr('disabled', 'disabled');
+                        $('.period-time-in-ot').attr('disabled', 'disabled');
+                    }
+                    else{
+                        $('.hour-time-in-ot').removeAttr('disabled');
+                        $('.min-time-in-ot').removeAttr('disabled');
+                        $('.period-time-in-ot').removeAttr('disabled');
+                    }
+                }
+            },
+            error:function(response){
+
+            }
+        })
+
+    })
+    $('.submit-ot-btn').on('click',function(){
+        $.ajax({
+            url:base_url+'attendance_controller/addOt',
+            type:'post',
+            dataType:'json',
+            data:{
+                attendanceDateOt:$('.attendance-date-ot').val(),
+                hourTimeOutOt:$('.hour-time-out-ot').val(),
+                minTimeOutOt:$('.min-time-out-ot').val(),
+                periodTimeOutOt:$('.period-time-out-ot').val(),
+                hourTimeInOt:$('.hour-time-in-ot').val(),
+                minTimeInOt:$('.min-time-in-ot').val(),
+                periodTimeInOt:$('.period-time-in-ot').val(),
+                remarksOt:$('.remarks-ot').val(),
+            },
+            success:function(response){
+
+            },
+            error:function(response){
+
+            }
+        })
+    })
 })

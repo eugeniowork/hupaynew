@@ -1,3 +1,24 @@
+@mixin modal() {
+    .modal-header{
+        background:#158cba;
+        color:white;
+        padding:5px 10px;
+        .modal-title{
+            font-size: 15px;
+        }
+    }
+    .modal-body{
+        i{
+            color:#158cba;
+        }
+        textarea{
+            resize: none;
+        }
+    }
+    .modal-footer{
+        padding:0px 5px;
+    }
+}
 .view-attendance{
     .div-main-body-content{
         height: auto !important;
@@ -33,25 +54,7 @@
                 padding:10px 10px;
             }
             #editAttendanceModal{
-                .modal-header{
-                    background:#158cba;
-                    color:white;
-                    padding:5px 10px;
-                    .modal-title{
-                        font-size: 15px;
-                    }
-                }
-                .modal-body{
-                    i{
-                        color:#158cba;
-                    }
-                    textarea{
-                        resize: none;
-                    }
-                }
-                .modal-footer{
-                    padding:0px 5px;
-                }
+                @include modal();
             }
         }
         .table{
@@ -75,7 +78,15 @@
         input{
             box-shadow: none;
         }
+        
+    }
+    .attendance-menu-content{
+        #addOverTimeModal{
+            @include modal();
+        }
     }
     padding-bottom: 50px !important;
-    
+    // .attendance-menu-head{
+        
+    // }
 }
