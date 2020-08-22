@@ -9,6 +9,11 @@ class Payroll_controller extends CI_Controller{
         }
         $this->load->model("employee_model", 'employee_model');
         $this->load->model('working_days_model','working_days_model');
+        $this->load->model('company_model','company_model');
+        $this->load->model('department_model','department_model');
+        $this->load->model('minimum_wage_model','minimum_wage_model');
+        $this->load->model('dependent_model','dependent_model');
+        $this->load->model('bir_model','bir_model');
         // $this->load->model("attendance_model", "attendance_model");
         // $this->load->model("payroll_model", "payroll_model");
         // $this->load->model("attendance_model", "attendance_model");
@@ -24,6 +29,7 @@ class Payroll_controller extends CI_Controller{
         $this->load->helper('cut_off_helper');
         $this->load->helper('holiday_helper');
         $this->load->helper('employee_helper');
+        $this->load->helper('attendance_helper');
     }
     public function index(){
         $this->data['pageTitle'] = 'Generate Payroll';
@@ -34,6 +40,8 @@ class Payroll_controller extends CI_Controller{
         $this->load->view('global/footer');
     }
     public function generatePayroll(){
+
+        $sample = "";
         $count = $this->employee_model->get_active_employee();
         $count = count($count);
         $counter = 0;
@@ -49,13 +57,46 @@ class Payroll_controller extends CI_Controller{
 		    $day_to = $row_wd['day_to'];
             
             $working_days_count = getCutOffAttendanceDateCountToPayroll($day_from, $day_to);
+            $days = $working_days_count;
 
-            
-            $this->data['sample'] = $working_days_count;
+            $is_increase = checkExistIncreaseCutOff($emp_id);
+            $gross_income_inc = 0;
+
+            $row_company = $this->company_model->get_company_info($row['company_id']);
+            $logo_source = $row_company['logo_source'];
+
+            $row_dept = $this->department_model->get_department($row['dept_id']);
+            $min_wage = $this->minimum_wage_model->get_minimum_wage();
+            $min_wage = ($min_wage['basicWage'] + $min_wage['COLA']) * 26;
+
+            $taxCode = "";
+            $tax = 0;
+
+            if ($row['Salary'] > $min_wage){
+                $dependentCount = $this->dependent_model->get_dependent_rows($emp_id);
+                $taxStatus = $this->bir_model->get_bir_status_to_payroll($dependentCount)['Status'];
+                $civilStatus = $row['CivilStatus'];
+
+                if ($dependentCount == 0){
+                    $dependentCount = "";
+                }
+
+                if ($civilStatus == "Single"){
+                    $taxCode = "S" . $dependentCount;
+                }
+
+                else {
+                    $taxCode = "ME" . $dependentCount;
+                }
+            }
+            $regularOTmin = round(getOvertimeRegularOt($emp_id)/60,2);
+
+
+            $sample .= " ".$regularOTmin;
             $counter++;
         }
         while($counter < $count);
-        
+        $this->data['sample'] = $sample;
         echo json_encode($this->data);
     }
 }
