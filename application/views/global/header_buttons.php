@@ -250,8 +250,8 @@
                 <i class="caret-right-payroll fas fa-caret-right pull-right"></i>
                 <i class="caret-down-payroll fas fa-caret-down pull-right"></i>
             </button>
-            <div class="side-navbar-sub-buttons loansDropdown">
-                <a class="btn" href="<?php echo base_url();?>createsalary"> Create Salary</a>
+            <div class="side-navbar-sub-buttons payrollDropdown">
+                <a class="btn" href="<?php echo base_url();?>generatepayroll"> Create Salary</a>
                 <a class="btn" href="<?php echo base_url();?>payrollinfo"> View Payroll Info</a>
                 <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
             </div>

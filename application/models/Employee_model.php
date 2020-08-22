@@ -58,6 +58,15 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('working_days_id'=>$working_days_id));
         return $query->result();
     }
-    
+    public function get_active_employee(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('ActiveStatus', 1);
+        $where = '(role_id !="1" or dept_id !="1")';
+        $this->db->where($where);
+        $this->db->order_by('Lastname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
     
 }

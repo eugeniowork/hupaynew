@@ -261,7 +261,7 @@
 }
 
 .side-navbar .side-navbar-buttons .messagingDropdown, .side-navbar .side-navbar-buttons .attendanceDropdown, .side-navbar .side-navbar-buttons .leavesDropdown, .side-navbar .side-navbar-buttons .loansDropdown, .side-navbar .side-navbar-buttons .employeeDropdown,
-.side-navbar .side-navbar-buttons .govTableDropdown, .side-navbar .side-navbar-buttons .adjustmentReportDropdown, .side-navbar .side-navbar-buttons .payrollReportsDropdown {
+.side-navbar .side-navbar-buttons .govTableDropdown, .side-navbar .side-navbar-buttons .adjustmentReportDropdown, .side-navbar .side-navbar-buttons .payrollReportsDropdown, .side-navbar .side-navbar-buttons .payrollDropdown {
   display: none;
 }
 
@@ -632,6 +632,10 @@
 }
 
 .working-schedule #updateWorkingDaysModal .update-working-days-info, .working-schedule #updateWorkingDaysModal .update-working-days-btn {
+  display: none;
+}
+
+.generate-payroll .loading-generating {
   display: none;
 }
 

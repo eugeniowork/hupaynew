@@ -31,6 +31,10 @@ $(document).ready(function(){
         $('.payrollReportsDropdown').slideToggle('fast');
         show_hide_dropdowns('.caret-right-payroll-reports', '.caret-down-payroll-reports')
     })
+    $('.payroll-btn').on('click',function(){
+        $('.payrollDropdown').slideToggle('fast');
+        show_hide_dropdowns('.caret-right-payroll', '.caret-down-payroll')
+    })
     function show_hide_dropdowns(caretRight, caretDown){
         if($(caretRight).css('display') == "block"){
             $(caretRight).hide();
