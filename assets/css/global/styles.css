@@ -261,7 +261,7 @@
 }
 
 .side-navbar .side-navbar-buttons .messagingDropdown, .side-navbar .side-navbar-buttons .attendanceDropdown, .side-navbar .side-navbar-buttons .leavesDropdown, .side-navbar .side-navbar-buttons .loansDropdown, .side-navbar .side-navbar-buttons .employeeDropdown,
-.side-navbar .side-navbar-buttons .govTableDropdown {
+.side-navbar .side-navbar-buttons .govTableDropdown, .side-navbar .side-navbar-buttons .adjustmentReportDropdown, .side-navbar .side-navbar-buttons .payrollReportsDropdown {
   display: none;
 }
 

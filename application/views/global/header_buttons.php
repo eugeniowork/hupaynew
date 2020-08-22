@@ -288,8 +288,23 @@
             </div>
         <?php endif;?>
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 ||
-            $employeeInformation['role_id'] == 2 && $employeeInformation['emp_id'] != 153):?>
-            
+            $employeeInformation['role_id'] == 2 && $employeeInformation['emp_id'] != 153 &&
+            $employeeInformation['emp_id'] != 21 || $employeeInformation['emp_id'] == 47 
+            || $employeeInformation['emp_id'] == 44):?>
+
+            <button class="btn payroll-reports-btn">Payroll Reports
+                <i class="caret-right-payroll-reports fas fa-caret-right pull-right"></i>
+                <i class="caret-down-payroll-reports fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons payrollReportsDropdown">
+                <a class="btn" href="<?php echo base_url();?>payroll"> Payroll</a>
+                <?php if($employeeInformation['role_id'] != 2 && $employeeInformation['emp_id'] != 47
+                    && $employeeInformation['emp_id'] != 44):?>
+
+                    <a class="btn" href="<?php echo base_url();?>adjustments">Adjustments</a>
+                <?php endif;?>
+                
+            </div>
         <?php endif;?>
 
     </div>

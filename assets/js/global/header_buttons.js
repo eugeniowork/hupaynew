@@ -23,6 +23,14 @@ $(document).ready(function(){
         $('.govTableDropdown').slideToggle('fast');
         show_hide_dropdowns('.caret-right-gov-table', '.caret-down-gov-table')
     })
+    $('.adjustment-report-btn').on('click',function(){
+        $('.adjustmentReportDropdown').slideToggle('fast');
+        show_hide_dropdowns('.caret-right-adjustment-report', '.caret-down-adjustment-report')
+    })
+    $('.payroll-reports-btn').on('click',function(){
+        $('.payrollReportsDropdown').slideToggle('fast');
+        show_hide_dropdowns('.caret-right-payroll-reports', '.caret-down-payroll-reports')
+    })
     function show_hide_dropdowns(caretRight, caretDown){
         if($(caretRight).css('display') == "block"){
             $(caretRight).hide();
