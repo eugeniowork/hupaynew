@@ -1204,7 +1204,7 @@ class Attendance_controller extends CI_Controller{
                             'head_emp_id'=>$head_emp_id,
                             'dateFrom'=>$dateFrom,
                             'dateTo'=>$dateTo,
-                            'LeaveType'=>$leaveType,
+                            'LeaveType'=>$name,
                             'lt_id'=>$lt_id,
                             'Remarks'=>$remarksLeave,
                             'FileLeaveType'=>$fileLeaveType,
