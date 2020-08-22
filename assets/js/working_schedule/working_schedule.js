@@ -41,10 +41,95 @@ $(document).ready(function(){
                 }
             })
         }
-        function change_button_to_default(btnName, btnText){
-            $(btnName).prop('disabled', false);
-            $(btnName).css('cursor','pointer');
-            $(btnName).text(btnText);
-        }
+        
     })
+    var id = null;
+    $('.open-update-working-day').on('click',function(e){
+        id = e.target.id;
+        $('.update-working-days-info').hide();
+        $('.update-working-days-btn').hide();
+        $('.loading-update-working-days').show();
+        $.ajax({
+            url:base_url+'working_days_controller/viewUpdateWorkingDays',
+            type:'post',
+            dataType:'json',
+            data:{
+                id:id,
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    $('.update-working-days-info').show();
+                    $('.update-working-days-btn').show();
+                    $('.loading-update-working-days').hide();
+                    $('.day-from-update option[value='+response.day_from+']').attr('selected','selected');
+                    $('.day-to-update option[value='+response.day_to+']').attr('selected','selected');
+                }
+                else{
+                    show_loading_error_in_update_working_days(response.msg);
+                }
+            },
+            error:function(response){
+                show_loading_error_in_update_working_days(response.msg);
+
+            }
+        })
+    })
+    loadingUpdateWorkingDays = false;
+    $('.update-working-days-btn').on('click',function(){
+        var btnName = this;
+        if(!loadingUpdateWorkingDays){
+            loadingUpdateWorkingDays = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.update-working-days-warning').empty();
+            $.ajax({
+                url:base_url+'working_days_controller/updateWorkingDays',
+                type:'post',
+                dataType:'json',
+                data:{
+                    dayFrom:$('.day-from-update').val(),
+                    dayTo:$('.day-to-update').val(),
+                    id:id,
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.update-working-days-warning',response.msg, "danger")
+                        loadingUpdateWorkingDays = false;
+                        change_button_to_default(btnName, 'Submit');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingUpdateWorkingDays = false;
+                    change_button_to_default(btnName, 'Submit');
+                }
+            })
+        }
+        
+    })
+
+
+
+
+    function show_loading_error_in_update_working_days(message){
+        $('.loading-update-working-days').show();
+        $('.loading-update-working-days').empty();
+        $('.loading-update-working-days').append('<p class="text-danger" style="text-align:center">'+message+'</p>');
+        id = null;
+    }
+    function change_button_to_default(btnName, btnText){
+        $(btnName).prop('disabled', false);
+        $(btnName).css('cursor','pointer');
+        $(btnName).text(btnText);
+    }
 })

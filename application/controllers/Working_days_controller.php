@@ -168,5 +168,101 @@ class Working_days_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+
+    public function viewUpdateWorkingDays(){
+        $id = $this->input->post('id');
+
+        $checkWorkingDays = $this->working_days_model->get_working_days_info($id);
+        if(!empty($checkWorkingDays)){
+            $day_from = $checkWorkingDays['day_from'];
+            $day_to = $checkWorkingDays['day_to'];
+            $this->data['status'] = "success";
+            $this->data['day_from'] = $day_from;
+            $this->data['day_to'] = $day_to;
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem, please try again.";
+        }
+        echo json_encode($this->data);
+    }
+    public function updateWorkingDays(){
+        $emp_id = $this->session->userdata('user');
+        $id = $this->input->post('id');
+        $dayFrom = $this->input->post('dayFrom');
+        $dayTo = $this->input->post('dayTo');
+        $this->form_validation->set_rules('dayFrom', 'dayFrom', 'required');
+        $this->form_validation->set_rules('dayTo','dayTo','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required.";
+            
+        }
+        else{
+            $days = array(0,1,2,3,4,5,6);
+            $proceed = true;
+            if(!in_array($dayFrom, $days)){
+                $proceed = false;
+                $this->data['pasok'] = 'asd';
+            }
+            if(!in_array($dayTo, $days)){
+                $proceed = false;
+            }
+            if($proceed){
+                if($dayFrom > $dayTo){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = '<strong>Day From</strong> must be not greater than <strong>Day To</strong>.';
+                }
+                else if($dayFrom == $dayTo){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = '<strong>Day From</strong> must be not equal to <strong>Day To</strong>';
+                }
+                else{
+                    $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                    $working_days = $day_of_the_week[$dayFrom] . "-" . $day_of_the_week[$dayTo];
+                    
+                    $checkWorkingDays = $this->working_days_model->check_working_days($dayFrom, $dayTo);
+                    $checkIfNoChanges = $this->working_days_model->check_working_days_has_no_changes($dayFrom, $dayTo, $id);
+                    if(!empty($checkIfNoChanges)){
+                        $this->data['status'] = "error";
+                        $this->data['msg'] = "No updates were taken, no changes was made.";
+                    }
+                    else if(!empty($checkWorkingDays)){
+                        $this->data['status'] = "error";
+                        $this->data['msg'] = "<strong>$working_days</strong> already exist.";
+                    }
+                    else{
+                        $updateWorkingDaysData = array('day_from'=>$dayFrom, 'day_to'=>$dayTo);
+                        $updateWorkingDays = $this->working_days_model->update_working_days($id,$updateWorkingDaysData);
+                        if($updateWorkingDays == "success"){
+                            $dateTime = getDateTime();
+                            $module = "Working Days";
+                            $insertAuditTrialData = array(
+                                'audit_trail_id'=>'',
+                                'file_emp_id'=>0,
+                                'approve_emp_id'=>0,
+                                'involve_emp_id'=>$emp_id,
+                                'module'=>$module,
+                                'task_description'=>"Edit working days of <b>$working_days</b>",
+                            );
+                            $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                            $this->data['status'] = "success";
+                            $this->data['msg'] = "Working days of <strong>$working_days</strong> was successfully updated to working hours list.";
+                        }
+                        else{
+                            $this->data['status'] = "error";
+                            $this->data['msg'] = "There was a problem, please try again.";
+                        }
+                    }
+                }
+            }
+            else{
+                $this->data['msg'] = "There was a problem, please try again.";
+                $this->data['status'] = "error";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
 }
 

@@ -609,6 +609,32 @@
   padding: 0px 5px;
 }
 
+.working-schedule #updateWorkingDaysModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.working-schedule #updateWorkingDaysModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.working-schedule #updateWorkingDaysModal .modal-body i {
+  color: #158cba;
+}
+
+.working-schedule #updateWorkingDaysModal .modal-body textarea {
+  resize: none;
+}
+
+.working-schedule #updateWorkingDaysModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.working-schedule #updateWorkingDaysModal .update-working-days-info, .working-schedule #updateWorkingDaysModal .update-working-days-btn {
+  display: none;
+}
+
 body {
   background: #ececec;
 }

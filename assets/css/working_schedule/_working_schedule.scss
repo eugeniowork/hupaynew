@@ -6,4 +6,10 @@
     #addWorkingDaysModal{
         @include modal();
     }
+    #updateWorkingDaysModal{
+        @include modal();
+        .update-working-days-info, .update-working-days-btn{
+            display:none;
+        }
+    }
 }

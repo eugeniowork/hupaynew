@@ -17,12 +17,12 @@
                     <?php foreach($finalWorkingDays as $value):?>
                         <tr class="row<?php echo $value['working_days_id']?>">
                             <td><?php echo $value['working_days']?></td>
-                            <?php if($value['action'] == "no"):?>
+                            <?php if($value['action'] == "yes"):?>
                                 <td>No Actions</td>
                             <?php else:?>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i>&nbsp;Delete</button>
+                                    <button data-toggle="modal" data-target="#updateWorkingDaysModal" id="<?php echo $value['working_days_id']?>" class="btn btn-sm btn-outline-success open-update-working-day"><i id="<?php echo $value['working_days_id']?> class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                    <button  class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i>&nbsp;Delete</button>
                                 </td>
                             <?php endif;?>
                         </tr>
@@ -68,6 +68,59 @@
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-primary add-working-days-btn">Submit</button>
                     </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="updateWorkingDaysModal" tabindex="-1" role="dialog" aria-labelledby="updateWorkingDaysModalTitle" aria-hidden="true">
+                <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateWorkingDaysModalLongTitle">Update Working Days</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="update-working-days-info">
+                                <?php
+                                    $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                                ?>
+                                <div>
+                                    <span>Day From <span class="text-danger">*</span</span>
+                                    <select class="day-from-update form-control">
+                                        <option selected disabled>Please select a day</option>
+                                        <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
+                                            <option value="<?php echo $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                        <?php endfor;?>
+                                    </select>
+                                </div><br/>
+                                <div>
+                                    <span>Day To <span class="text-danger">*</span</span>
+                                    <select class="day-to-update form-control">
+                                        <option selected disabled>Please select a day</option>
+                                        
+                                        <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
+                                            <option value="<?php echo $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                        <?php endfor;?>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="loading-update-working-days">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p>Loading Information</p>
+                                </div>
+                            </div><br/>
+                            <div class="update-working-days-warning">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-primary update-working-days-btn">Submit</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
