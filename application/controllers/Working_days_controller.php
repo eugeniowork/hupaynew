@@ -66,5 +66,37 @@ class Working_days_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function viewWorkingSchedule(){
+        $workingDays = $this->working_days_model->get_all_working_days();
+        $finalWorkingDays = array();
+        if(!empty($workingDays)){
+            foreach($workingDays as $value){
+                $alreadyUsed = $this->employee_model->get_working_days_of_employee($value->working_days_id);
+                $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                $working_days = $day_of_the_week[$value->day_from] . "-" . $day_of_the_week[$value->day_to];
+                $action = "no";
+                if(empty($alreadyUsed)){
+                    $emp_id = $this->session->userdata('user');
+                    if($emp_id != 21){
+                        $action = 'yes';
+                    }
+                }
+                array_push($finalWorkingDays, array(
+                    'working_days_id'=>$value->working_days_id,
+                    'working_days'=>$working_days,
+                    'action'=>$action,
+                ));
+                
+            }
+            $this->data['finalWorkingDays'] = $finalWorkingDays;
+        }
+
+        $this->data['pageTitle'] = 'Working Hours and Days';
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('working_schedule/working_schedule');
+        $this->load->view('global/footer');
+    }
 }
 

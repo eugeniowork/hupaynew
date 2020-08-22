@@ -111,7 +111,7 @@
         </div>
         <?php if($employeeInformation['role_id'] != 4):?>
             <a class="btn" href="<?php echo base_url();?>atm">ATM Account No</a>
-            <a class="btn" href="<?php echo base_url();?>workinghours">Working Hours & Days</a>
+            <a class="btn" href="<?php echo base_url();?>workingschedule">Working Hours & Days</a>
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 4 || $employeeInformation['role_id'] ==1):?>
