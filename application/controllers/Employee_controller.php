@@ -119,4 +119,41 @@ class Employee_controller extends CI_Controller{
         echo json_encode($this->data);
         
     }
+    public function printAtmAccountreports(){
+        $this->load->library('excel');
+        $filename = "atm_account_number_reports";
+		/*********************Add column headings START**********************/
+		$this->excel->setActiveSheetIndex(0) 
+					->setCellValue('A1', 'Employee Name')
+                    ->setCellValue('B1', 'ATM Account Number');
+        $count = 1;
+        $atmAccounts = $this->employee_model->get_employee_atm();
+        if(!empty($atmAccounts)){
+            foreach($atmAccounts as $value){
+                $empName = ucwords($value->Lastname.", ".$value->Firstname." ".$value->Middlename);
+                $count++;
+                $this->excel->setActiveSheetIndex(0) 
+                    ->setCellValue('A'.$count, $empName)
+                    ->setCellValue('B'.$count, $value->atmAccountNumber);
+            }
+        }
+        foreach(range('A','B') as $columnID){
+            $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+        $this->excel->getActiveSheet()->getStyle('A1:B1')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()
+            ->getStyle('A1:B1')
+            ->getFill()
+            ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setRGB('abb2b9');
+        $this->excel->getActiveSheet()->setTitle('atm_account_number_reports'); //give title to sheet
+        $this->excel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+		header("Content-Disposition: attachment;Filename=$filename.xls");
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+    }
 }

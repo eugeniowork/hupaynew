@@ -147,4 +147,19 @@ $(document).ready(function(){
         $(btnName).css('cursor','pointer');
         $(btnName).text(btnText);
     }
+
+    $('.print-atm-account-report').on('click',function(response){
+        window.location = base_url+'employee_controller/printAtmAccountreports'
+        // $.ajax({
+        //     url:base_url+'employee_controller/printAtmAccountreports',
+        //     type:'get',
+        //     dataType:'json',
+        //     success:function(response){
+
+        //     },
+        //     error:function(response){
+
+        //     }
+        // })
+    })
 })

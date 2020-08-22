@@ -3,7 +3,7 @@
         List of Employee with ATM (Account No. Information)
     </div>
     <div class="div-main-body-content atm-account-no">
-        <button class="btn btn-sm pull-right btn-outline-success">Print ATM Account No Reports</button>
+        <button class="btn btn-sm pull-right btn-outline-success print-atm-account-report">Print ATM Account No Reports</button>
         <br/><br/>
         <table class="table table-striped" id="atmAccountNoList">
             <thead>
