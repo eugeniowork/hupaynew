@@ -89,6 +89,18 @@
     </div>
     <div class="side-navbar-buttons">
         <a class="btn" href="<?php echo base_url();?>dashboard">Dashboard</a>
+        <?php if($employeeInformation['role_id'] != 4):?>
+            <button class="btn employee-btn">Employee
+                <i class="caret-right-employee fas fa-caret-right pull-right"></i>
+                <i class="caret-down-employee fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons employeeDropdown">
+                <?php if($employeeInformation['role_id'] != 21):?>
+                    <button class="btn" >Registration</button>  
+                <?php endif;?>   
+                <button class="btn" >Employee List</button>   
+            </div>
+        <?php endif;?>
         <button class="btn messaging-btn">Messaging
             <i class="caret-right-messaging fas fa-caret-right pull-right"></i>
             <i class="caret-down-messaging fas fa-caret-down pull-right"></i>

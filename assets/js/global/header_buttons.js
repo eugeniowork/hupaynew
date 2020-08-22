@@ -15,6 +15,10 @@ $(document).ready(function(){
         $('.loansDropdown').slideToggle('fast');
         show_hide_dropdowns('.caret-right-loans', '.caret-down-loans')
     })
+    $('.employee-btn').on('click',function(){
+        $('.employeeDropdown').slideToggle('fast');
+        show_hide_dropdowns('.caret-right-employee', '.caret-down-employee')
+    })
     function show_hide_dropdowns(caretRight, caretDown){
         if($(caretRight).css('display') == "block"){
             $(caretRight).hide();
