@@ -19,6 +19,10 @@ $(document).ready(function(){
         $('.employeeDropdown').slideToggle('fast');
         show_hide_dropdowns('.caret-right-employee', '.caret-down-employee')
     })
+    $('.gov-table-btn').on('click',function(){
+        $('.govTableDropdown').slideToggle('fast');
+        show_hide_dropdowns('.caret-right-gov-table', '.caret-down-gov-table')
+    })
     function show_hide_dropdowns(caretRight, caretDown){
         if($(caretRight).css('display') == "block"){
             $(caretRight).hide();

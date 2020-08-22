@@ -243,5 +243,15 @@
 		return $current_date_time;
 
 	}
-    
+    function checkIfHead(){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        //$name = $sessionData['user_data']['firstname'].' '.$sessionData['user_data']['lastname'];
+        // $data = $sessionData['user_data'];
+        $employeeHead = $CI->employee_model->check_if_head($emp_id);
+
+        return $employeeHead;
+    }
 ?>

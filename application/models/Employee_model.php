@@ -24,4 +24,9 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('role_id'=>1));
         return $query->result();
     }
+
+    public function check_if_head($id){
+        $query = $this->db->get_where('tb_employee_info',array('head_emp_id'=>$id));
+        return $query->row_array();
+    }
 }

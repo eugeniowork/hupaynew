@@ -109,29 +109,122 @@
             <button class="btn" >Create</button>     
             <button class="btn" >Inbox</button>   
         </div>
-        <button class="btn attendance-btn">Attendance
-            <i class="caret-right-attendance fas fa-caret-right pull-right"></i>
-            <i class="caret-down-attendance fas fa-caret-down pull-right"></i>
-        </button>
-        <div class="side-navbar-sub-buttons attendanceDropdown">
-            <a class="btn" href="<?php base_url();?>attendance">View Attendance</a>     
-            <a class="btn" >Sub Attendance List</a>
-            <a class="btn" >File Overtime</a>
-            <a class="btn" >OT List Approved</a>
-            <a class="btn" >Attendance Updates</a>
+        <?php if($employeeInformation['role_id'] != 4):?>
+            <a class="btn" href="<?php echo base_url();?>atm">ATM Account No</a>
+            <a class="btn" href="<?php echo base_url();?>workinghours">Working Hours & Days</a>
+        <?php endif;?>
 
-        </div>
-        <button class="btn leaves-btn">Leaves
-            <i class="caret-right-leaves fas fa-caret-right pull-right"></i>
-            <i class="caret-down-leaves fas fa-caret-down pull-right"></i>
-        </button>
-        <div class="side-navbar-sub-buttons leavesDropdown">
-            <a class="btn" >Leave</a>     
-            
-            <?php if($employeeInformation['role_id'] == 1):?>
-                <a class="btn" >Leave Maintenance</a>
+        <?php if($employeeInformation['role_id'] == 4 || $employeeInformation['role_id'] ==1):?>
+            <a class="btn" href="<?php echo base_url();?>memurandum">Memurandum</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] ==3):?>
+            <a class="btn" href="<?php echo base_url();?>minimumwage">Minimum Wage</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] != 4):?>
+            <a class="btn" href="<?php echo base_url();?>position">Position</a>
+        <?php endif;?>
+        
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
+            <button class="btn gov-table-btn">Gov't Table
+                <i class="caret-right-gov-table fas fa-caret-right pull-right"></i>
+                <i class="caret-down-gov-table fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons govTableDropdown">
+                <a class="btn" href="<?php base_url();?>ssscontribution">SSS</a>     
+                <a class="btn" href="<?php base_url();?>bircontribution">BIR</a>
+                <a class="btn" href="<?php base_url();?>pagibigcontribution">Pag-ibig</a>
+                <a class="btn" href="<?php base_url();?>philhealthcontribution">PhilHealth</a>
+            </div>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] != 1):?>
+            <a class="btn" href="<?php echo base_url();?>holiday">Holiday</a>
+        <?php endif;?>
+        
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2):?>
+            <a class="btn" href="<?php echo base_url();?>events">Events</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2 
+            || $employeeInformation['role_id'] == 3 || $employeeInformation['role_id'] == 4
+            && $employeeInformation['bio_id'] !=0):?>
+            <button class="btn attendance-btn">Attendance
+                <i class="caret-right-attendance fas fa-caret-right pull-right"></i>
+                <i class="caret-down-attendance fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons attendanceDropdown">
+                <!-- <a class="btn" href="<?php base_url();?>attendance">View Attendance</a>     
+                <a class="btn" >Sub Attendance List</a>
+                <a class="btn" >File Overtime</a>
+                <a class="btn" >OT List Approved</a>
+                <a class="btn" >Attendance Updates</a> -->
+                <?php if($employeeInformation['role_id'] == 1):?>
+                    <a class="btn" href="<?php base_url();?>uploadattendance">Upload Attendance</a>
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] == 2 || $employeeInformation['role_id'] == 3 || 
+                    $employeeInformation['role_id'] == 4 && $employeeInformation['bio_id'] !=0):?>
+                    <a class="btn" href="<?php base_url();?>attendance">View Attendance</a>  
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] != 4):?>
+                    <a class="btn" href="<?php base_url();?>attendancelist">Attendance List</a>
+                <?php endif;?>
+                
+                <?php if(!empty(checkIfHead())):?>
+                    <a class="btn" href="<?php base_url();?>subattendancelist">Sub Attendance List</a>
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2
+                    || !empty(checkIfHead())):?>
+                    <?php if($employeeInformation['emp_id'] != 153):?>
+                        <a class="btn" href="<?php base_url();?>fileovertime">File Overtime</a>
+                    <?php endif;?>
+                    
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] !=4 || !empty(checkIfHead())):?>
+                    <?php if($employeeInformation['emp_id'] != 153):?>
+                        <a class="btn" href="<?php base_url();?>otlistapproved">OT List Approved</a>
+                    <?php endif;?>
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2 
+                    || !empty(checkIfHead())):?>
+                    <?php if($employeeInformation['emp_id'] != 153):?>
+                        <a class="btn" href="<?php base_url();?>attendanceupdates">Attendance Updates</a>
+                    <?php endif;?>
+                <?php endif;?>
+
+                <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 ):?>
+                    <a class="btn" href="<?php base_url();?>addattendance">Add Attendance</a>
+                <?php endif;?>
+            </div>
+
+
+        <?php endif;?>
+
+        
+        <?php if($employeeInformation['role_id'] == 2 || $employeeInformation['role_id'] == 3 
+            || $employeeInformation['role_id'] == 1 || !empty(checkIfHead())):?>
+            <?php if($employeeInformation['emp_id'] != 153):?>
+                <button class="btn leaves-btn">Leaves
+                    <i class="caret-right-leaves fas fa-caret-right pull-right"></i>
+                    <i class="caret-down-leaves fas fa-caret-down pull-right"></i>
+                </button>
+                <div class="side-navbar-sub-buttons leavesDropdown">
+                    <a class="btn" >Leave</a>     
+                    
+                    <?php if($employeeInformation['role_id'] == 1):?>
+                        <a class="btn" >Leave Maintenance</a>
+                    <?php endif;?>
+                </div>
             <?php endif;?>
-        </div>
+        <?php endif;?>
+
+
         <button class="btn loans-btn">Loans
             <i class="caret-right-loans fas fa-caret-right pull-right"></i>
             <i class="caret-down-loans fas fa-caret-down pull-right"></i>
@@ -152,9 +245,53 @@
                 File Loan
             </a>
         </div>
-        <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
+        <?php if($employeeInformation['role_id'] == 3 || $employeeInformation['role_id'] == 1):?>
+            <button class="btn payroll-btn">Payroll
+                <i class="caret-right-payroll fas fa-caret-right pull-right"></i>
+                <i class="caret-down-payroll fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons loansDropdown">
+                <a class="btn" href="<?php echo base_url();?>createsalary"> Create Salary</a>
+                <a class="btn" href="<?php echo base_url();?>payrollinfo"> View Payroll Info</a>
+                <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
+            </div>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] != 3 && $employeeInformation['role_id'] != 1):?>
+            <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
+        <?php endif;?>
+
         <a class="btn" href="<?php echo base_url();?>simkimban">SIMKIMBAN</a>
         <a class="btn" href="<?php echo base_url();?>cashbond">Cashbond</a>
+
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
+            <a class="btn" href="<?php echo base_url();?>yeartotaldeduction">Year Total Deduction</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 || 
+            $employeeInformation['emp_id'] == 47):?>
+            <a class="btn" href="<?php echo base_url();?>salaryinformation">Salary Information</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] == 1):?>
+            <a class="btn" href="<?php echo base_url();?>audittrial">Audit Trial</a>
+        <?php endif;?>
+
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
+            <button class="btn adjustment-report-btn">Adjustment Reports
+                <i class="caret-right-adjustment-report fas fa-caret-right pull-right"></i>
+                <i class="caret-down-adjustment-report fas fa-caret-down pull-right"></i>
+            </button>
+            <div class="side-navbar-sub-buttons adjustmentReportDropdown">
+                <a class="btn" href="<?php echo base_url();?>loanadjustment">Loan Adjustment</a>
+                <a class="btn" href="<?php echo base_url();?>simkimbanadjustment">SIMKIMBAN Adjustment</a>
+            </div>
+        <?php endif;?>
+        <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 ||
+            $employeeInformation['role_id'] == 2 && $employeeInformation['emp_id'] != 153):?>
+            
+        <?php endif;?>
+
     </div>
     
 </div>
