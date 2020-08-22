@@ -96,9 +96,9 @@
         $select_qry = $CI->attendance_model->get_attendance_overtime_payroll($emp_id);
         if(!empty($select_qry)){
             foreach($select_qry as $value){
-                $select_emp_qry = $CI->employee_model->employee_information($value->emp_id);
+                //$select_emp_qry = $CI->employee_model->employee_information($value->emp_id);
 
-                $date_create = date_create($select_emp_qry['date']);
+                $date_create = date_create($value->date);
                 $date_format = date_format($date_create, 'F d, Y');
                 date_default_timezone_set("Asia/Manila");
                 $dates = date("Y-m-d H:i:s");
@@ -109,7 +109,7 @@
                 $select_cutoff_qry = $CI->attendance_model->get_cut_off();
                 if(!empty($select_cutoff_qry)){
                     foreach($select_cutoff_qry as $valueCutOff){
-                        $date_from = date_format(date_create($row_cutoff->dateFrom . ", " .$year),'Y-m-d');
+                        $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
                         if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
                             $prev_year = $year - 1;
                             $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
@@ -127,10 +127,10 @@
                         }
                     }
                 }
-                $date_create = date_create($row->date);
+                $date_create = date_create($value->date);
                 $date_format = date_format($date_create, 'F d, Y');
 
-                $attendance_date = date_format(date_create($row->date),"Y-m-d");
+                $attendance_date = date_format(date_create($value->date),"Y-m-d");
                 if ($attendance_date >= $final_date_from && $attendance_date <= $final_date_to){
                     $total_hours = (strtotime($value->time_out) - strtotime($value->time_from)) / 60;
                     if ($ot == "0"){	
