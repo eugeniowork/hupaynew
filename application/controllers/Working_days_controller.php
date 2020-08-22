@@ -98,5 +98,45 @@ class Working_days_controller extends CI_Controller{
         $this->load->view('working_schedule/working_schedule');
         $this->load->view('global/footer');
     }
+    public function addWorkingDays(){
+        $dayFrom = $this->input->post('dayFrom');
+        $dayTo = $this->input->post('dayTo');
+        $this->form_validation->set_rules('dayFrom', 'dayFrom', 'required');
+        $this->form_validation->set_rules('dayTo','dayTo','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required.";
+            
+        }
+        else{
+            $days = array(0,1,2,3,4,5,6);
+            $proceed = true;
+            if(!in_array($dayFrom, $days)){
+                $proceed = false;
+            }
+            if(!in_array($dayTo, $days)){
+                $proceed = false;
+            }
+            if($proceed){
+                if($dayFrom > $dayTo){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = '<strong>Day From</strong> must be not greater than <strong>Day To</strong>';
+                }
+                else if($dayFrom == $dayTo){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = '<strong>Day From</strong> must be not equal to <strong>Day To</strong>';
+                }
+                else{
+                    
+                }
+            }
+            else{
+                $this->data['msg'] = "There was a problem, please try again.";
+                $this->data['status'] = "success";
+            }
+            
+        }
+        echo json_encode($this->data);
+    }
 }
 

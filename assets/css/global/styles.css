@@ -587,6 +587,28 @@
   font-size: 25px;
 }
 
+.working-schedule #addWorkingDaysModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.working-schedule #addWorkingDaysModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.working-schedule #addWorkingDaysModal .modal-body i {
+  color: #158cba;
+}
+
+.working-schedule #addWorkingDaysModal .modal-body textarea {
+  resize: none;
+}
+
+.working-schedule #addWorkingDaysModal .modal-footer {
+  padding: 0px 5px;
+}
+
 body {
   background: #ececec;
 }

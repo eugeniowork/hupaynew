@@ -4,7 +4,7 @@
     </div>
     <div class="div-main-body-content">
         <div class="working-days">
-            <button class="btn btn-success btn-sm pull-right">Add Working Days</button><br/><hr/>
+            <button class="btn btn-outline-success btn-sm pull-right" data-toggle="modal" data-target="#addWorkingDaysModal">Add Working Days</button><br/><hr/>
             <p class="title">Working Days</p><br/>
             <table class="table table-striped" id="workingDaysList">
                 <thead>
@@ -29,6 +29,45 @@
                     <?php endforeach;?>
                 </tbody>
             </table>
+            <div class="modal fade" id="addWorkingDaysModal" tabindex="-1" role="dialog" aria-labelledby="addWorkingDaysModalTitle" aria-hidden="true">
+                <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addWorkingDaysModalLongTitle">Add Working Days</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <?php
+                                $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                            ?>
+                        <div>
+                            <span>Day From <span class="text-danger">*</span</span>
+                            <select class="day-from form-control">
+                                <option selected disabled>Please select a day</option>
+                                <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
+                                    <option value="<?php $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                <?php endfor;?>
+                            </select>
+                        </div><br/>
+                        <div>
+                            <span>Day To <span class="text-danger">*</span</span>
+                            <select class="day-to form-control">
+                                <option selected disabled>Please select a day</option>
+                                
+                                <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
+                                    <option value="<?php $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                <?php endfor;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary add-working-days-btn">Submit</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
