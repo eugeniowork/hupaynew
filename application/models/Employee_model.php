@@ -37,4 +37,21 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function check_atm_no($emp_id, $atmAccountNumber){
+        $query = $this->db->get_where('tb_employee_info',array('emp_id'=>$emp_id, 'atmAccountNumber'=>$atmAccountNumber));
+        return $query->row_array();
+
+    }
+    public function update_atm_no($emp_id,$data){
+        $this->db->trans_start();
+        $this->db->where('emp_id',$emp_id);
+        $this->db->update('tb_employee_info',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

@@ -66,4 +66,57 @@ class Employee_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+    public function getInformationOfAtmAccount(){
+        $id = $this->input->post('id');
+        $employeeInfo = $this->employee_model->employee_information($id);
+        if(!empty($employeeInfo)){
+            $this->data['status'] = "success";
+            $this->data['atmAccountNumber'] = $employeeInfo['atmAccountNumber'];
+        }
+        else{
+            $this->data['status'] ="error";
+            $this->data['msg'] = "There was a problem, please try again.";
+        }
+
+        echo json_encode($this->data);
+    }
+    public function updateAtmAccountNo(){
+        $id = $this->input->post('id');
+        $atmAccountNo = $this->input->post('atmAccountNo');
+
+        if($id != "" || $id != null){
+            $minmaxMsg = "Please enter a 12 digit account number.";
+            $this->form_validation->set_rules('atmAccountNo', 'atmAccountNo', 'required|min_length[12]|max_length[12]',
+            array('required'=>'Please enter a atm account number.', 'min_length'=>$minmaxMsg, 'max_length'=>$minmaxMsg));
+            if($this->form_validation->run() == FALSE){
+                $this->data['status'] = "error";
+                $this->data['msg'] = validation_errors();
+            }
+            else{
+                $checkAtmNo = $this->employee_model->check_atm_no($id, $atmAccountNo);
+                if(!empty($checkAtmNo)){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "No changes, no updates were taken.";
+                }
+                else{
+                    $updateAtmNoData = array('atmAccountNumber'=>$atmAccountNo);
+                    $updateAtmNo = $this->employee_model->update_atm_no($id, $updateAtmNoData);
+                    if($updateAtmNo == "success"){
+                        $this->data['msg'] = "ATM Account No was successfully updated.";
+                    }
+                    else{
+                        $this->data['status'] = "error";
+                        $this->data['msg'] = "There was a problem updating the ATM No, please try again.";
+                    }
+                    $this->data['status'] = $updateAtmNo;
+                }
+            }
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem updating the ATM No, please try again.";
+        }
+        echo json_encode($this->data);
+        
+    }
 }

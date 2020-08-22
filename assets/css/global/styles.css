@@ -552,6 +552,36 @@
   padding: 0px 5px;
 }
 
+.atm-account-no #editAtmNoModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.atm-account-no #editAtmNoModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.atm-account-no #editAtmNoModal .modal-body i {
+  color: #158cba;
+}
+
+.atm-account-no #editAtmNoModal .modal-body textarea {
+  resize: none;
+}
+
+.atm-account-no #editAtmNoModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.atm-account-no #editAtmNoModal .atm-account-info {
+  display: none;
+}
+
+.atm-account-no #editAtmNoModal .update-atm-account-no-btn {
+  display: none;
+}
+
 body {
   background: #ececec;
 }

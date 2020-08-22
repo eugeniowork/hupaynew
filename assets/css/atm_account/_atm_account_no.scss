@@ -1,0 +1,12 @@
+.atm-account-no{
+    #editAtmNoModal{
+        @include modal();
+        .atm-account-info{
+            display: none;
+        }
+        .update-atm-account-no-btn{
+            display:none;
+        }
+    }
+    
+}
