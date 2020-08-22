@@ -47,7 +47,7 @@
                             <select class="day-from form-control">
                                 <option selected disabled>Please select a day</option>
                                 <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
-                                    <option value="<?php $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                    <option value="<?php echo $day?>"><?php echo $day_of_the_week[$day]?></option>
                                 <?php endfor;?>
                             </select>
                         </div><br/>
@@ -57,9 +57,12 @@
                                 <option selected disabled>Please select a day</option>
                                 
                                 <?php for($day = 0; $day<count($day_of_the_week); $day++):?>
-                                    <option value="<?php $day?>"><?php echo $day_of_the_week[$day]?></option>
+                                    <option value="<?php echo $day?>"><?php echo $day_of_the_week[$day]?></option>
                                 <?php endfor;?>
                             </select>
+                        </div><br/>
+                        <div class="add-working-days-warning">
+
                         </div>
                     </div>
                     <div class="modal-footer">

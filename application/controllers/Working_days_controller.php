@@ -11,6 +11,8 @@ class Working_days_controller extends CI_Controller{
         $this->load->model("working_days_model",'working_days_model');
         $this->load->model("employee_model",'employee_model');
         $this->load->model("holiday_model",'holiday_model');
+        $this->load->model("audit_trial_model", "audit_trial_model");
+        $this->load->helper('hupay_helper');
 	}
     public function getOverTimeType(){
         $date = $this->input->post('date');
@@ -99,6 +101,7 @@ class Working_days_controller extends CI_Controller{
         $this->load->view('global/footer');
     }
     public function addWorkingDays(){
+        $emp_id = $this->session->userdata('user');
         $dayFrom = $this->input->post('dayFrom');
         $dayTo = $this->input->post('dayTo');
         $this->form_validation->set_rules('dayFrom', 'dayFrom', 'required');
@@ -113,6 +116,7 @@ class Working_days_controller extends CI_Controller{
             $proceed = true;
             if(!in_array($dayFrom, $days)){
                 $proceed = false;
+                $this->data['pasok'] = 'asd';
             }
             if(!in_array($dayTo, $days)){
                 $proceed = false;
@@ -120,19 +124,45 @@ class Working_days_controller extends CI_Controller{
             if($proceed){
                 if($dayFrom > $dayTo){
                     $this->data['status'] = "error";
-                    $this->data['msg'] = '<strong>Day From</strong> must be not greater than <strong>Day To</strong>';
+                    $this->data['msg'] = '<strong>Day From</strong> must be not greater than <strong>Day To</strong>.';
                 }
                 else if($dayFrom == $dayTo){
                     $this->data['status'] = "error";
                     $this->data['msg'] = '<strong>Day From</strong> must be not equal to <strong>Day To</strong>';
                 }
                 else{
+                    $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                    $working_days = $day_of_the_week[$dayFrom] . "-" . $day_of_the_week[$dayTo];
                     
+                    $checkWorkingDays = $this->working_days_model->check_working_days($dayFrom, $dayTo);
+                    
+                    if(!empty($checkWorkingDays)){
+                        $this->data['status'] = "error";
+                        $this->data['msg'] = "<strong>$working_days</strong> already exist.";
+                    }
+                    else{
+                        $insertWorkingDaysData = array('day_from'=>$dayFrom, 'day_to'=>$dayTo);
+                        $insertWorkingDays = $this->working_days_model->insert_working_days($insertWorkingDaysData);
+
+                        $dateTime = getDateTime();
+                        $module = "Working Days";
+                        $insertAuditTrialData = array(
+                            'audit_trail_id'=>'',
+                            'file_emp_id'=>0,
+                            'approve_emp_id'=>0,
+                            'involve_emp_id'=>$emp_id,
+                            'module'=>$module,
+                            'task_description'=>"Add working days of <b>$working_days</b>",
+                        );
+                        $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                        $this->data['status'] = "success";
+                        $this->data['msg'] = "Working days of <strong>$working_days</strong> was successfully saved.";
+                    }
                 }
             }
             else{
                 $this->data['msg'] = "There was a problem, please try again.";
-                $this->data['status'] = "success";
+                $this->data['status'] = "error";
             }
             
         }
