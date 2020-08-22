@@ -264,5 +264,61 @@ class Working_days_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+    public function deleteWorkingDays(){
+        $id = $this->input->post('id');
+        $emp_id = $this->session->userdata('user');
+        $checkIfNotUsed = $this->employee_model->get_working_days_of_employee($id);
+        if(empty($checkIfNotUsed)){
+            $workingDays = $this->working_days_model->get_working_days_info($id);
+            $day_from = $workingDays['day_from'];
+            $day_to = $workingDays['day_to'];
+
+            $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+            $day_of_the_week_value = [0,1,2,3,4,5,6];
+
+            $count = count($day_of_the_week);
+
+            $counter = 0;
+
+            $day_from_value = "";
+            $day_to_value = "";
+
+            for($countDays = 0; $countDays < $count; $countDays++){
+                if ($day_of_the_week_value[$countDays] == $day_from){
+                    $day_from_value = $day_of_the_week[$countDays];
+                }
+    
+                if ($day_of_the_week_value[$countDays] == $day_to){
+                    $day_to_value = $day_of_the_week[$countDays];
+                }
+            }
+            $deleteWorkingDays = $this->working_days_model->delete_working_days($id);
+            if($deleteWorkingDays == "success"){
+                
+                $dateTime = getDateTime();
+                $module = "Working Days";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>0,
+                    'approve_emp_id'=>0,
+                    'involve_emp_id'=>$emp_id,
+                    'module'=>$module,
+                    'task_description'=>"Delete working days of <b>'.$day_from_value.' - '.$day_to_value.'</b>",
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = '<strong>Working Days</strong> of <strong>'.$day_from_value.' - '.$day_to_value.'</strong> was successfully deleted.';
+            }
+            else{
+                $this->data['msg'] = "There was a problem removing the working days, please try again.";
+            }
+            $this->data['status'] = $deleteWorkingDays;
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "You can't delete a <strong>Working Days</strong> that is being used by other information.";
+        }
+        echo json_encode($this->data);
+    }
 }
 

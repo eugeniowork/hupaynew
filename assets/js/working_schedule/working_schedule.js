@@ -117,8 +117,60 @@ $(document).ready(function(){
         }
         
     })
-
-
+    loadingRemoveWorkingDays = false;
+    $('.remove-working-days-btn').on('click',function(e){
+        var id = e.target.id;
+        var btnName = '.remove-working'+id;
+        if(!loadingRemoveWorkingDays){
+            var workingDaysName = $('.working-days-name'+id).text();
+            loadingRemoveWorkingDays = true;
+            Swal.fire({
+                html: 'Are you sure you want to remove the <strong>Working Days</strong> of <strong>'+workingDaysName+'</strong>?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    //$('.row'+id).hide("slide");
+                    $.ajax({
+                        url:base_url+'working_days_controller/deleteWorkingDays',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            id:id
+                        },
+                        success:function(response){
+                            if(response.status == "success"){
+                                toast_options(4000);
+                                toastr.success(response.msg);
+                                setTimeout(function(){
+                                    window.location.reload();
+                                },1000)
+                                $('.row'+id).hide("slide");
+                            }
+                            else{
+                                toast_options(4000);
+                                toastr.error(response.msg);
+                                loadingRemoveWorkingDays = false;
+                            }
+                        },
+                        error:function(response){
+                            toast_options(4000);
+                            toastr.error("There was a problem, please try again!");
+                            loadingRemoveWorkingDays = false;
+                        }
+                    })
+                }
+                
+            })
+        }
+        else{
+            toast_options(4000);
+            toastr.warning("There is a data that is currently on process, please wait.");
+        }
+    })
 
 
     function show_loading_error_in_update_working_days(message){

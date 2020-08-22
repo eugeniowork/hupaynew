@@ -16,13 +16,13 @@
                 <tbody>
                     <?php foreach($finalWorkingDays as $value):?>
                         <tr class="row<?php echo $value['working_days_id']?>">
-                            <td><?php echo $value['working_days']?></td>
-                            <?php if($value['action'] == "yes"):?>
+                            <td class="working-days-name<?php echo $value['working_days_id']?>"><?php echo $value['working_days']?></td>
+                            <?php if($value['action'] == "no"):?>
                                 <td>No Actions</td>
                             <?php else:?>
                                 <td>
                                     <button data-toggle="modal" data-target="#updateWorkingDaysModal" id="<?php echo $value['working_days_id']?>" class="btn btn-sm btn-outline-success open-update-working-day"><i id="<?php echo $value['working_days_id']?> class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                    <button  class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i>&nbsp;Delete</button>
+                                    <button  id="<?php echo $value['working_days_id']?>" class="btn btn-sm btn-outline-danger remove-working-days-btn"><i id="<?php echo $value['working_days_id']?>" class="fas fa-trash"></i>&nbsp;Delete</button>
                                 </td>
                             <?php endif;?>
                         </tr>
