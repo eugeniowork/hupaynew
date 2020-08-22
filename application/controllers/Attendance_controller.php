@@ -1212,6 +1212,7 @@ class Attendance_controller extends CI_Controller{
                             'DateCreated'=>$dateCreated,
                         );
                         $insertLeave = $this->leave_model->insert_leave($insertLeaveData);
+                        //asd
                     }
                     $emp_id_values = explode("#",getEmpIdByNotification($emp_id));
                     //echo $emp_id_values[0];
