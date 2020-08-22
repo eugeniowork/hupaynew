@@ -209,6 +209,9 @@
                         <textarea class="form-control remarks-leave" placeholder="Input Remarks"></textarea>
                     </div>
                     <br/>
+                    <div class="file-leave-warning">
+
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-primary submit-leave-btn">Submit</button>

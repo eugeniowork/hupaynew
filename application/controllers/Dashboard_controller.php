@@ -852,16 +852,16 @@ class Dashboard_controller extends CI_Controller{
                 }
             }
         }while($next_isHoliday == 1);
-        if ($num_rows_prev == 1 && $num_rows_next == 1){
-			$granted =  "Granted";
-		}
+        // if ($num_rows_prev == 1 && $num_rows_next == 1){
+		// 	$granted =  "Granted";
+		// }
 
-		else {
-			$granted  = "Not Granted";
-		}
+		// else {
+		// 	$granted  = "Not Granted";
+		// }
 		
 
-		return $granted;
+		// return $granted;
         
     }
     public function dateIsHoliday($month,$day,$year){

@@ -355,35 +355,56 @@ $(document).ready(function(){
                         $('.leave-type').append(option);
                     });
                 }
-                else{
-
-
-                }
             },
             error:function(response){
-
+                toast_options(4000);
+                toastr.error("There was a problem, please try again!");
             }
         })
     })
+    loadingSubmitLeave = false;
     $('.submit-leave-btn').on('click',function(response){
-        $.ajax({
-            url:base_url+'attendance_controller/addLeave',
-            type:'post',
-            dataType:'json',
-            data:{
-                leaveType:$('.leave-type').val(),
-                dateFromLeave:$('.date-from-leave').val(),
-                dateToLeave:$('.date-to-leave').val(),
-                remarksLeave:$('.remarks-leave').val(),
-                fileLeaveType:'Leave with pay',
-            },
-            success:function(response){
-
-            },
-            error:function(response){
-
-            }
-        })
+        var btnName = this;
+        if(!loadingSubmitLeave){
+            loadingSubmitLeave = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.file-leave-warning').empty();
+            $.ajax({
+                url:base_url+'attendance_controller/addLeave',
+                type:'post',
+                dataType:'json',
+                data:{
+                    leaveType:$('.leave-type').val(),
+                    dateFromLeave:$('.date-from-leave').val(),
+                    dateToLeave:$('.date-to-leave').val(),
+                    remarksLeave:$('.remarks-leave').val(),
+                    fileLeaveType:'Leave with pay',
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.file-leave-warning',response.msg, "danger")
+                        loadingSubmitLeave = false;
+                        change_button_to_default(btnName, 'Submit');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingSubmitLeave = false;
+                    change_button_to_default(btnName, 'Submit');
+                }
+            })
+        }
     })
 
 
