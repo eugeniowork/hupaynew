@@ -29,4 +29,12 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('head_emp_id'=>$id));
         return $query->row_array();
     }
+    public function get_employee_atm(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('withAtm', 1);
+        $this->db->order_by('Lastname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
