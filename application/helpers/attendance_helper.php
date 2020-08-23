@@ -145,4 +145,35 @@
         return $ot;
     }
     
+    function getOvertimeRegularHolidayOt($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $CI->load->model('working_hours_model');
+        $CI->load->model('attendance_model');
+
+        $ot = "0";
+
+		
+		$afternoon_ot = 0;
+        $morning_ot = 0;
+        $select_qry = $CI->attendance_model->get_regular_holiday_overtime($emp_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $select_emp_qry = $CI->employee_model->employee_information($value->emp_id);
+
+                $date_create = date_create($select_emp_qry['date']);
+                $date_format = date_format($date_create, 'F d, Y');
+                
+                date_default_timezone_set("Asia/Manila");
+                //$date = date_create("1/1/1990");
+
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+
+                //echo $current_date_time;
+                $year = date("Y");
+            }
+        }
+    }
 ?>

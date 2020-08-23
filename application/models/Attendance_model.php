@@ -113,6 +113,10 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id, 'type_ot'=>'Regular', 'approve_stat'=>1));
         return $query->result();
     }
+    public function get_regular_holiday_overtime($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Regular Holiday','approve_stat'=>1));
+        return $query->result();
+    }
     // public function get_info_working_hours($id){
     //     $query = $this->db->get_where('tb_working_hours',array('working_hours_id'=>$id));
     //     return $query->row_array();
