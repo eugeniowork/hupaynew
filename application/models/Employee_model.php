@@ -8,10 +8,10 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('bio_id'=>$id));
         return $query->num_rows();
     }
-    // public function get_employee_by_bio_id_data($id){
-    //     $query = $this->db->get_where('tb_employee_info',array('bio_id'=>$id));
-    //     return $query->row_array();
-    // }
+    public function get_employee_by_bio_id_data($id){
+        $query = $this->db->get_where('tb_employee_info',array('bio_id'=>$id));
+        return $query->row_array();
+    }
     public function get_employee_by_role(){
         $this->db->select('*');
         $this->db->from('tb_employee_info');

@@ -19,5 +19,22 @@ class Sss_model extends CI_Model{
         $query = $this->db->get_where('tb_sss_loan',array('emp_id'=>$id, 'remainingBalance !='=>0));
         return $query->result();
     }
+    public function get_sss_contribution(){
+        $query = $this->db->get('tb_sss_contrib_table');
+        return $query->result();
+    }
+    public function get_pending_sss_loan($date_payroll, $emp_id){
+        $this->db->select('*');
+        $this->db->from('tb_sss_loan');
+        $this->db->where('dateFrom <=', $date_payroll);
+        $this->db->where('emp_id',$emp_id);
+        $this->db->where('remainingBalance !=',0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_employee_sss_loan($emp_id){
+        $query = $this->db->get_where('tb_sss_loan',array('emp_id'=>$emp_id));
+        return $query->result();
+    }
 
 }

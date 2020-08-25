@@ -15,4 +15,22 @@ class Pagibig_model extends CI_Model{
         $query = $this->db->get_where('tb_pagibig_loan',array('emp_id'=>$id, 'remainingBalance !='=>0));
         return $query->row_array();
     }
+    public function get_pagibig_contribution(){
+        $query = $this->db->get('tb_pagibig_contrib_table');
+        return $query->result();
+    }
+    public function get_pending_pagibig_loan($date_payroll, $emp_id){
+        $this->db->select('*');
+        $this->db->from('tb_pagibig_loan');
+        $this->db->where('dateFrom <=', $date_payroll);
+        $this->db->where('dateTo >=', $date_payroll);
+        $this->db->where('emp_id',$emp_id);
+        $this->db->where('remainingBalance !=',0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_employee_pagibig_loan($emp_id){
+        $query = $this->db->get_where('tb_pagibig_loan',array('emp_id'=>$emp_id));
+        return $query->result();
+    }
 }

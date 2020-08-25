@@ -8,6 +8,14 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get_where('tb_attendance', array('bio_id'=>$id, 'date'=>$date));
         return $query->num_rows();
     }
+    public function attendance_info_data($id, $date){
+        $query = $this->db->get_where('tb_attendance', array('bio_id'=>$id, 'date'=>$date));
+        return $query->row_array();
+    }
+    public function get_all_attendance_info_by_bio_id($bio_id){
+        $query = $this->db->get_where('tb_attendance', array('bio_id'=>$bio_id));
+        return $query->result();
+    }
     public function attendance_info_all($id){
         $this->db->select('*');
         $this->db->from('tb_attendance');
@@ -115,6 +123,26 @@ class Attendance_model extends CI_Model{
     }
     public function get_regular_holiday_overtime($emp_id){
         $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Regular Holiday','approve_stat'=>1));
+        return $query->result();
+    }
+    public function get_special_holiday_overtime($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Special Holiday','approve_stat'=>1));
+        return $query->result();
+    }
+    public function get_regular_holiday_rd_overtime($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Restday / Regular Holiday','approve_stat'=>1));
+        return $query->result();
+    }
+    public function get_special_holiday_rd_overtime($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Restday / Special Holiday','approve_stat'=>1));
+        return $query->result();
+    }
+    public function get_restday_overtime($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$emp_id,'type_ot'=>'Restday','approve_stat'=>1));
+        return $query->result();
+    }
+    public function get_leave_date($bio_id, $leave_date){
+        $query = $this->db->get_where('tb_attendance', array('bio_id'=>$bio_id,'date'=>$leave_date));
         return $query->result();
     }
     // public function get_info_working_hours($id){

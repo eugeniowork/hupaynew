@@ -24,6 +24,34 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$id, 'approveStat' => 1, 'FileLeaveType'=>'Leave with pay'));
         return $query->result();
     }
+    public function get_leave_info_by_condition_with_date($emp_id, $attendance_date){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$emp_id);
+        $where = '(FileLeaveType ="Morning Halfday Leave with pay" or
+            FileLeaveType ="Afternoon Halfday Leave with pay" 
+        )';
+        $this->db->where($where);
+        $this->db->where('dateFrom ', $attendance_date);
+        $this->db->where('dateTo', $attendance_date);
+        $this->db->where('approveStat',1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    public function get_leave_info_by_condition_with_date_rows($emp_id, $attendance_date){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$emp_id);
+        $where = '(FileLeaveType ="Morning Halfday Leave with pay" or
+            FileLeaveType ="Afternoon Halfday Leave with pay" 
+        )';
+        $this->db->where($where);
+        $this->db->where('dateFrom ', $attendance_date);
+        $this->db->where('dateTo', $attendance_date);
+        $this->db->where('approveStat',1);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
     public function get_leave_info($emp_id, $date){
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$emp_id, 'approveStat' => 1,'dateFrom <=' => $date, 'dateTo >='=>$date));
         return $query->result();

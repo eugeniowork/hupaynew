@@ -6,7 +6,10 @@
         $CI->load->model('payroll_model');
 
         $payroll = $CI->payroll_model->get_payroll_date($datePayroll);
-
-        return count($payroll);
+        $count = 0;
+        if(!empty($payroll)){
+            $count = count($payroll);
+        }
+        return $count;
     }
 ?>

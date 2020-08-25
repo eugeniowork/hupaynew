@@ -16,4 +16,19 @@ class Salary_model extends CI_Model{
         $query = $this->db->get_where('tb_increase_salary',array('emp_id'=>$emp_id));
         return $query->row_array();
     }
+    public function get_pending_salary_loan($date_payroll, $emp_id){
+        $this->db->select('*');
+        $this->db->from('tb_salary_loan');
+        $this->db->where('dateFrom <=', $date_payroll);
+        $this->db->where('dateTo >=', $date_payroll);
+        $this->db->where('emp_id',$emp_id);
+        $this->db->where('remainingBalance !=',0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_employee_salary_loan($emp_id){
+        $query = $this->db->get_where('tb_salary_loan',array('emp_id'=>$emp_id));
+        return $query->result();
+    }
+    
 }
