@@ -9,6 +9,7 @@ class Payroll_controller extends CI_Controller{
         }
         $this->load->model("employee_model", 'employee_model');
         $this->load->model('working_days_model','working_days_model');
+        $this->load->model('working_hours_model','working_hours_model');
         $this->load->model('company_model','company_model');
         $this->load->model('department_model','department_model');
         $this->load->model('minimum_wage_model','minimum_wage_model');
@@ -19,6 +20,7 @@ class Payroll_controller extends CI_Controller{
         // $this->load->model("attendance_model", "attendance_model");
         $this->load->model("payroll_model", "payroll_model");
         $this->load->model('deduction_model','deduction_model');
+        $this->load->model('salary_model','salary_model');
         // $this->load->model("attendance_model", "attendance_model");
         // $this->load->model('holiday_model','holiday_model');
         // $this->load->model('leave_model','leave_model');
@@ -42,6 +44,8 @@ class Payroll_controller extends CI_Controller{
         $this->load->helper('tardiness_helper');
         $this->load->helper('incentives_helper');
         $this->load->helper('allowance_helper');
+        $this->load->helper('hupay_helper');
+        
     }
     public function index(){
         $this->data['pageTitle'] = 'Generate Payroll';
@@ -52,7 +56,7 @@ class Payroll_controller extends CI_Controller{
         $this->load->view('global/footer');
     }
     public function generatePayroll(){
-
+        $finalPayrollData = array();
         $sample = "";
         $count = $this->employee_model->get_active_employee();
         $count = count($count);
@@ -256,7 +260,7 @@ class Payroll_controller extends CI_Controller{
             if ($cutOff_day == "30") {
                 $payrollTotalGross = $this->payroll_model->get_payroll_last_total_gross_income_rows($emp_id);
                 if ($payrollTotalGross != 0){
-                    $totalGrossIncome = $this->payroll_model->get_payroll_last_total_gross_income($emp_id);
+                    $totalGrossIncomeData = $this->payroll_model->get_payroll_last_total_gross_income($emp_id);
                     $last_total_gross_income = $totalGrossIncome['totalGrossIncome'] - ($totalGrossIncome['sssDeduction'] + $totalGrossIncome['philhealthDeduction'] + $totalGrossIncome['pagibigDeduction']);
                 }
                 if (($taxableIncome + $last_total_gross_income) <= 20833){
@@ -292,12 +296,439 @@ class Payroll_controller extends CI_Controller{
             $final_totalDeduction = $totalDeduction + $tax;
 
             $netPay = round($total  -  $final_totalDeduction + $incentives,2);
-            
+            $basicPay = 0;
+            if($min_wage >= $row['Salary']){
+                $basicPay = round(($row['Salary']/2),2);
+            }
+            else{
+                $basicPay = $basicCutOffPay;
+            }
+            $december_15_2019_13_pay_basic = 0;
+            $december_15_2019_13_pay_allowance = 0;
+
+            $december_30_2019_13_pa_basic = 0;
+            $december_30_2019_13_pay_allowance = 0;
+
+            $january_15_2020_13_pay_basic = 0;
+            $january_15_2020_13_pay_allowance = 0;
+
+            $cut_off_13_pay_basic = $basicCutOffPay;		
+            $cut_off_13_pay_allowance = $allowanceValue;	
+            if(checkIfHiredWithinCutOff($row['DateHired']) == 1){
+                $daily_basic_13_month_pay = round($basicCutOffPay / $working_days_count,2);
+                $dayily_allowance_13_month_pay = round($allowance / $working_days_count,2);
+                $cut_off_13_pay_basic = round($daily_basic_13_month_pay * $present,2);	
+                $cut_off_13_pay_allowance = round($dayily_allowance_13_month_pay * $present,2);
+            }	
+            if(getCutOffPeriodLatest() == "January 11, 2020 - January 25, 2020"){
+                if($this->payroll_model->get_cut_off_13_month_pay_old($emp_id,"November 26, 2019 - December 10, 2019") != 0){
+                    $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($emp_id,"November 26, 2019 - December 10, 2019");
+                    $december_15_2019_13_pay_basic = $row_13['ratePayPrd'];
+                    $december_15_2019_13_pay_allowance = $row_13['allowancePay'];
+                }
+                if ($this->payroll_model->get_cut_off_13_month_pay_old($emp_id,"December 11, 2019 - December 25, 2019") != 0){
+                    $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($emp_id,"December 11, 2019 - December 25, 2019");
+
+                    $december_30_2019_13_pa_basic = $row_13['ratePayPrd'];
+                    $december_30_2019_13_pay_allowance = $row_13['allowancePay'];
+                }
+                if ($this->payroll_model->get_cut_off_13_month_pay_old($emp_id,"December 26, 2019 - January 10, 2020") != 0){
+
+                    $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($emp_id,"December 26, 2019 - January 10, 2020");
+
+                    $january_15_2020_13_pay_basic = $row_13['ratePayPrd'];
+                    $january_15_2020_13_pay_allowance = $row_13['allowancePay'];
+                }
+            }
+            $total_13_basic_pay = round($december_15_2019_13_pay_basic/12,2) + round($december_30_2019_13_pa_basic/12,2) + round($january_15_2020_13_pay_basic /12,2) + round($cut_off_13_pay_basic/12,2);
+            $total_13_allowance_pay = round($december_15_2019_13_pay_allowance/12,2) + round($december_30_2019_13_pay_allowance/12,2) + round($january_15_2020_13_pay_allowance/12,2) + round($cut_off_13_pay_allowance/12,2);
+            $netPay += ($total_13_basic_pay + $total_13_allowance_pay);
+            array_push($finalPayrollData, array(
+                'logo_source'=>$logo_source,
+                'emp_id'=>$emp_id,
+                'row_salary'=>$row['Salary'],
+                'payroll_period'=>getCutOffPeriodLatest(),
+                'getDatePayroll'=>getDatePayroll(),
+                'department'=>$row_dept['Department'],
+                'basic_pay'=>$basicPay,
+                'name'=>ucwords($row['Lastname'].", ". $row['Firstname']. " ". $row['Middlename']),
+                'tax_code'=>$taxCode,
+                'bio_id'=>$row['bio_id'],
+                'reg_ot_amount'=>$reg_ot_amount,
+                'rd_ot_amount'=>$rd_ot_amount,
+                'regHoliday_ot_amount'=>$regHoliday_ot_amount,
+                'specialHoliday_ot_amount'=>$specialHoliday_ot_amount,
+                'rdRegularHoliday_ot_amount'=>$rdRegularHoliday_ot_amount,
+                'rdSpecialHoliday_ot_amount'=>$rdSpecialHoliday_ot_amount,
+                'tardinessAmount'=>$tardinessAmount,
+                'absencesAmount'=>$absencesAmount,
+                'present'=>round($daily_rate_basic * $present,2),
+                'basicCutOffPay'=>$basicCutOffPay,
+                'totalGrossIncome'=>$totalGrossIncome,
+                'sssContribution'=>$sssContribution,
+                'sss_loan_amount'=>$sss_loan_amount,
+                'philhealthContribution'=>$philhealthContribution,
+                'pagibigContribution'=>$pagibigContribution,
+                'pagibig_loan_amount'=>$pagibig_loan_amount,
+                'cashBond'=>$cashbondValue,
+                'totalCashAdvance'=>$totalCashAdvance,
+                'totalDeduction'=>round($totalDeduction,2),
+                'tax'=>$tax,
+                'incentives'=>number_format($incentives,2),
+                'present_allowance'=>$present_allowance,
+                'dec_15_2019_basic'=>number_format($december_15_2019_13_pay_basic,2),
+                'dec_15_2019_allowance'=>number_format($december_15_2019_13_pay_allowance,2),
+                'dec_30_2019_basic'=>number_format($december_30_2019_13_pa_basic,2),
+                'dec_30_2019_allowance'=>number_format($december_30_2019_13_pay_allowance,2),
+                'jan_15_2019_basic'=>number_format($january_15_2020_13_pay_basic,2),
+                'jan_15_2019_allowance'=>number_format($january_15_2020_13_pay_allowance,2),
+                'current_cut_off_13th_basic_date'=>getDatePayroll(),
+                'current_cut_off_13th_basic_value'=>number_format($cut_off_13_pay_basic,2),
+                'current_cut_off_13th_allowance_date'=>getDatePayroll(),
+                'current_cut_off_13th_allowance_value'=>number_format($cut_off_13_pay_allowance,2),
+                'total_basic'=>number_format($december_15_2019_13_pay_basic + $december_30_2019_13_pa_basic + $january_15_2020_13_pay_basic + $cut_off_13_pay_basic,2),
+                'total_allowance'=>number_format($december_15_2019_13_pay_allowance + $december_30_2019_13_pay_allowance + $january_15_2020_13_pay_allowance + $cut_off_13_pay_allowance,2),
+                'total_13_basic_pay'=>number_format($total_13_basic_pay,2),
+                'total_13_allowance_pay'=>number_format($total_13_allowance_pay,2),
+                'net_pay'=>$netPay,
+                'last_total_gross_income'=>$last_total_gross_income,
+
+            ));
             $counter++;
         }
         while($counter < $count);
         //$this->data['pasok'] = "assdasdasdd";
         //$this->data['sample'] = $sample;
+        $this->data['finalPayrollData'] = $finalPayrollData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    public function appendTaxValue(){
+        $totalGrossIncome = $this->input->post('totalGrossIncome');
+        $empId = $this->input->post('empId');
+        $lastTotalGrossIncome = $this->input->post('lastTotalGrossIncome');
+        $cutOffDay = $this->input->post('cutOffDay');
+        $sssContribution = $this->input->post('sssContribution');
+        $pagibigContribution = $this->input->post('pagibigContribution');
+        $philhealthContribution = $this->input->post('philhealthContribution');
+        $check = $this->employee_model->employee_information($empId);
+        if(empty($check)){
+            $this->data['status'] = "error";
+        }
+        else{
+            $taxable_income = $totalGrossIncome - ($sssContribution + $pagibigContribution + $philhealthContribution);
+            $tax = 0;
+			$taxableIncome = $taxable_income;
+			if ($cutOffDay == "30"){
+
+				if (($taxableIncome + $last_total_gross_income) <= 20833){
+					$tax = 0;
+				}
+
+				else if (($taxableIncome + $last_total_gross_income) > 20833 && ($taxableIncome + $last_total_gross_income) < 33333){
+					$tax = round(((($taxableIncome + $last_total_gross_income) - 20833) * .20),2);
+
+				}
+
+				else if (($taxableIncome + $last_total_gross_income) > 33333 && $taxableIncome < 66667){
+					$tax = round(((($taxableIncome + $last_total_gross_income) - 33333) * .25) + 2500,2);
+				}
+				
+				else if (($taxableIncome + $last_total_gross_income) > 66667 && ($taxableIncome + $last_total_gross_income) < 166667){
+					$tax = round(((($taxableIncome + $last_total_gross_income) - 66667) * .30) + 10833.33,2);
+				}
+
+				else if (($taxableIncome + $last_total_gross_income) > 166667 && ($taxableIncome + $last_total_gross_income) < 666667){
+					$tax = round(((($taxableIncome + $last_total_gross_income) - 166667) * .32) + 40833.33,2);
+				}
+
+				else if (($taxableIncome + $last_total_gross_income) >= 666667){
+					$tax = round(((($taxableIncome + $last_total_gross_income) - 666667) * .35) + 200833.33,2);
+				}
+            }
+            $this->data['status'] = "success";
+            $this->data['tax'] = $tax;
+        }
+
+        echo json_encode($this->data);
+    }
+    public function savePayroll(){
+        $finalData = $this->input->post('finalData');
+        $cut_off_count = getCutOffAttendanceDateCount();
+        $holiday_cut_off_count = holidayCutOffTotalCount();
+        if(!empty($finalData)){
+            foreach($finalData as $finalDataValue){
+                $emp_id = $finalDataValue['emp_id'];
+                $row = $this->employee_model->employee_information($emp_id);
+                $row_wd = $this->working_days_model->get_working_days_info($row['working_days_id']);
+                $day_from = $row_wd['day_from'];
+                $day_to = $row_wd['day_to'];
+                $working_days_count = getCutOffAttendanceDateCountToRunningBalance($day_from, $day_to);
+                $days = $working_days_count;
+                $dept_id = $row['dept_id'];
+                $company_id = $row['company_id'];
+                $cutOffPeriod = getCutOffPeriodLatest();
+                $salary = round($row['Salary'],2);
+                $minimumWage = $this->minimum_wage_model->get_minimum_wage();
+                $min_wage = ($minimumWage['basicWage'] + $minimumWage['COLA']) * 26;
+                $taxCode = "";
+                if ($row['Salary'] > $min_wage) {
+                    $dependentCount = $this->dependent_model->get_dependent_rows($emp_id);
+                    $taxStatus = $this->bir_model->get_bir_status_to_payroll($dependentCount);
+                    $taxStatus = $taxStatus['Status'];
+                    $civilStatus = $row['CivilStatus'];
+                    if ($dependentCount == 0){
+                        $dependentCount = "";
+                    }
+                    if ($civilStatus == "Single"){
+                        $taxCode = "S" . $dependentCount;
+                    }
+                    else {
+                        $taxCode = "ME" . $dependentCount;
+                    }
+                }
+                $allowance = getAllowanceInfoToPayslip($row['emp_id']);
+                $dailyAllowance = round(($allowance / 2)/$days,2);
+                $row_wh = $this->working_hours_model->get_info_working_hours($row['working_hours_id']);
+                $timeFrom = $row_wh['timeFrom'];
+                $timeTo = $row_wh['timeTo'];
+
+                $timeFrom = strtotime($timeFrom);
+                $timeTo = strtotime($timeTo);
+
+                $total_hours = (($timeTo - $timeFrom) / 3600) - 1;
+                $daily_rate =  (($row['Salary'] + $allowance ) / 2)/ $days;
+                $hourly_rate = round($daily_rate / $total_hours,2);
+                $regular_ot_rate = round($hourly_rate + ($hourly_rate * .25),2);
+                $reg_ot_amount = $finalDataValue['regOT'];
+                $regularOTmin = round($reg_ot_amount / $regular_ot_rate,2);
+
+                $regHoliday_ot_rate = round($hourly_rate,2);
+			    $regHoliday_ot_amount = round($finalDataValue['regHolidayOT'],2); 
+                $regHolidayOTmin = round($regHoliday_ot_amount/$regHoliday_ot_rate,2);
+                
+                $specialHoliday_ot_rate = round($hourly_rate * .3,2);
+			    $specialHoliday_ot_amount = round($finalDataValue['specialHolidayOT'],2); 
+                $specialHolidayOTmin = round($specialHoliday_ot_amount/$specialHoliday_ot_rate,2);
+                
+                $rdRegularHoliday_ot_rate = round($hourly_rate * 2.6,2);
+			    $rdRegularHoliday_ot_amount = round($finalDataValue['rdREgHolidayOT'],2); 
+                $rd_regularHolidayOTmin = round($rdRegularHoliday_ot_amount / $rdRegularHoliday_ot_rate,2);
+                
+                $rdSpecialHoliday_ot_rate = round($hourly_rate + ($hourly_rate * .6) ,2);
+			    $rdSpecialHoliday_ot_amount = round($finalDataValue['rdSpecialHolidayOT'],2); 
+			    $rd_specialHolidayOTmin = round($rdSpecialHoliday_ot_amount / $rdSpecialHoliday_ot_rate,2);
+
+                $rd_ot_rate = round($hourly_rate + ($hourly_rate * .3),2);
+                $rd_ot_amount = round($finalDataValue['rdOT'],2); 
+                $restdayOTmin = round($rd_ot_amount / $rd_ot_rate,2);
+
+                $attendance_rate = 0;
+                $tardinessAmount = round($finalDataValue['tardiness'],2);
+                $tardinessMin = 0;
+
+                $absencesRate = 0;
+
+                $absencesAmount = 0;
+                $absencesMin = 0;
+                
+                $present = getPresentToPayroll($row['bio_id'],$day_from,$day_to);
+                $present_amount = round($finalDataValue['present'],2);
+                
+                $adjustmentEarnings = $finalDataValue['adjustment'];
+			    $adjustmentDeduction = $finalDataValue['adjustmentDeduction'];
+                $adjustmentAfterTax = $finalDataValue['adjustmentAfter'];
+                
+                $adjustmentBefore = $adjustmentEarnings;
+			
+                $totalAdjustment = ($adjustmentEarnings - $adjustmentDeduction) + $adjustmentAfterTax; 
+
+                $adjustmentAfterTax = $adjustmentAfterTax + $adjustmentDeduction;
+                $totalGrossIncome = $finalDataValue['grossIncome'];
+                $nontaxAllowance = $finalDataValue['nontaxAllowance'];
+
+                $totalEarnings = $totalGrossIncome + $nontaxAllowance + $totalAdjustment;
+                $tax = $finalDataValue['witholdingTax'];
+                $sssContribution = $finalDataValue['sssContrib'];
+                $philhealthContribution = $finalDataValue['philhealthContrib'];
+                $pagibigContribution = $finalDataValue['pagibigContrib'];
+                $sss_loan_amount = $finalDataValue['sssLoan'];
+                $pagibig_loan_amount = $finalDataValue['pagibigLoan'];
+                $totalCashAdvance = $finalDataValue['cashAdvance'];
+                $cashBond = $finalDataValue['cashBond'];
+                $totalDeductions = $finalDataValue['totalDeductions'];
+                $netPay = $finalDataValue['netPay'];
+
+                $basicRate = $salary;
+                $dailyRate = (($row['Salary']) / 2)/ $days;
+                $dailyAllowance =  (($allowance ) / 2)/ $days;
+                $ratePayPeriod = round($salary / 2,2);
+                $allowancePay = round($allowance/2,2);
+
+                $row_ytd = $this->deduction_model->get_yearly_deduction($emp_id);
+
+                $existSimkimban = existPendingSimkimban($emp_id);
+                $simkimban_bal = 0;
+                if ($existSimkimban != 0) {
+                    $simkimban_bal = getAllRemainingBalanceSimkimban($emp_id);
+                }
+                $existSalaryLoan = $this->salary_model->check_if_has_salary($emp_id);
+                $salary_loan_bal = 0;
+                if ($existSalaryLoan != 0){
+
+                    $salary_loan_bal = getAllSalaryLoan($emp_id);
+                    //$salary_loan_bal = $salary_loan_row->remainingBalance;
+                }
+                $currentRemainingBal = $simkimban_bal + $salary_loan_bal;
+                $cashAdvanceBal = $currentRemainingBal - $totalCashAdvance;
+                $datePayroll = getDatePayroll();
+                if (date_format(date_create($datePayroll),'m-d') == "01-15"){
+                    $ytdGross =  $totalGrossIncome;
+                    $ytdAllowance = $nontaxAllowance;
+                    $ytdTax = $tax;
+                }
+                else {
+                    $ytdGross = $row_ytd['ytd_Gross'] + $totalGrossIncome;
+                    $ytdAllowance = $row_ytd['ytd_Allowance'] + $nontaxAllowance;
+                    $ytdTax = $row_ytd['ytd_Tax'] + $tax;
+                }
+                $approveStat = 0;
+		   	    $dateCreated = getDateDate();
+                $remarks = $finalDataValue['adjustmentRemarks'];
+                $december_15_2019_13_pay_basic = 0;
+                $december_15_2019_13_pay_allowance = 0;
+
+                $december_30_2019_13_pa_basic = 0;
+                $december_30_2019_13_pay_allowance = 0;
+
+                $january_15_2020_13_pay_basic = 0;
+                $january_15_2020_13_pay_allowance = 0;
+
+                $cut_off_13_pay_basic = round($ratePayPeriod / 12,2);		
+                $cut_off_13_pay_allowance = round($allowancePay / 12,2);
+                $insertPayrollData = array(
+                    'payroll_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'dept_id'=>$dept_id,
+                    'company_id'=>$company_id,
+                    'CutOffPeriod'=>$cutOffPeriod,
+                    'salary'=>$salary,
+                    'taxCode'=>$taxCode,
+                    'reg_OThour'=>$regularOTmin,
+                    'reg_OTrate'=>$regular_ot_rate,
+                    'regularOT'=>$reg_ot_amount,
+                    'rd_OThour'=>$restdayOTmin,
+                    'rd_OTrate'=>$rd_ot_rate,
+                    'restdayOT'=>$rd_ot_amount,
+                    'reg_holiday_OThour'=>$regHolidayOTmin,
+                    'reg_holiday_OTrate'=>$regHoliday_ot_rate,
+                    'reg_holidayOT'=>$regHoliday_ot_amount,
+                    'special_holiday_OThour'=>$specialHolidayOTmin,
+                    'special_holiday_OTrate'=>$specialHoliday_ot_rate,
+                    'special_holidayOT'=>$specialHoliday_ot_amount,
+                    'rd_reg_holiday_OThour'=>$rd_regularHolidayOTmin,
+                    'rd_reg_holiday_OTrate'=>$rdRegularHoliday_ot_rate,
+                    'rd_reg_holidayOT'=>$rdSpecialHoliday_ot_amount,
+                    'rd_special_holiday_OThour'=>$rd_specialHolidayOTmin,
+                    'rd_special_holiday_OTrate'=>$rdSpecialHoliday_ot_rate,
+                    'rd_special_holidayOT'=>$rdSpecialHoliday_ot_amount,
+                    'tardinessHour'=>$tardinessMin,
+                    'tardinessRate'=>$attendance_rate,
+                    'Tardiness'=>$tardinessAmount,
+                    'absencesHour'=>$absencesMin,
+                    'absencesRate'=>$absencesRate,
+                    'Absences'=>$absencesAmount,
+                    'present'=>$present,
+                    'present_amount'=>$present_amount,
+                    'adjustmentEarnings'=>$adjustmentEarnings,
+                    'adjustmentDeductions'=>$adjustmentDeduction,
+                    'adjustmentBefore'=>$adjustmentBefore,
+                    'adjustmentAfter'=>$adjustmentAfterTax,
+                    'Adjustment'=>$totalAdjustment,
+                    'totalGrossIncome'=>$totalGrossIncome,
+                    'NontaxAllowance'=>$nontaxAllowance,
+                    'totalEarnings'=>$totalEarnings,
+                    'Tax'=>$tax,
+                    'sssDeduction'=>$sssContribution,
+                    'philhealthDeduction'=>$philhealthContribution,
+                    'pagibigDeduction'=>$pagibigContribution,
+                    'sssLoan'=>$sss_loan_amount,
+                    'pagibigLoan'=>$pagibig_loan_amount,
+                    'cashAdvance'=>$totalCashAdvance,
+                    'CashBond'=>$cashBond,
+                    'totalDeductions'=>$totalDeductions,
+                    'netPay'=>$netPay,
+                    'basicRate'=>$basicRate,
+                    'Allowance'=>$allowance,
+                    'dailyRate'=>$dailyRate,
+                    'dailyAllowance'=>$dailyAllowance,
+                    'ratePayPrd'=>$ratePayPeriod,
+                    'allowancePay'=>$allowancePay,
+                    'cut_off_13_pay_basic'=>$cut_off_13_pay_basic,
+                    'cut_off_13_pay_allowance'=>$cut_off_13_pay_allowance,
+                    'ytdGross'=>$ytdGross,
+                    'ytdAllowance'=>$ytdAllowance,
+                    'ytdWithTax'=>$ytdTax,
+                    'cashAdvBal'=>$cashAdvanceBal,
+                    'datePayroll'=>$datePayroll,
+                    'remarks'=>$remarks,
+                    'payrollStatus'=>$approveStat,
+                    'DateCreated'=>$dateCreated,
+                );
+                $insertPayroll = $this->payroll_model->insert_payroll($insertPayrollData);
+                
+                
+            }
+            $insertPayrollApprovalData = array(
+                'approve_payroll_id'=>'',
+                'CutOffPeriod'=>$cutOffPeriod,
+                'approveStat'=>'3',
+                'DateCreated'=>$dateCreated
+            );
+            $insertPayrollApproval = $this->payroll_model->insert_payroll_approval($insertPayrollApprovalData);
+            $this->data['msg'] = 'The Payroll for the <strong>Cut off '.$cutOffPeriod.'</strong> was successfully submitted';
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        
+        }
+
+        echo json_encode($this->data);
+    }
+    // public function payroll(){
+
+    //     $try = array();
+    //     $all_emp_id = getEmpIdAllActiveEmp();
+    //     $current_emp_id = explode("#",$all_emp_id);
+    //     $count = 0;
+    //     if(!empty($current_emp_id)){
+    //         $count = count($current_emp_id);
+    //     }
+    //     $cut_off_count = getCutOffAttendanceDateCount();
+    //     $holiday_cut_off_count = holidayCutOffTotalCount();
+    //     $counter = 0;
+    //     do{
+    //         $emp_id = $current_emp_id[$counter];
+    //         foreach($this->input->post('addmore') as $value){
+    //             array_push($try, array('asd'=>$this->input->post('addmore'),'id'=>$emp_id));
+    //         }
+            
+    //         $counter++;
+    //     }while($counter < $count);
+    //     $this->data['try'] = $try;
+
+    //     echo json_encode($this->data);
+    // }
+    public function getActive(){
+        $all_emp_id = getEmpIdAllActiveEmp();
+        $current_emp_id = explode("#",$all_emp_id);
+        $ids = array();
+        foreach($current_emp_id as $value){
+            array_push($ids, array('id'=>$value));
+        }
+
+        $this->data['ids'] = $ids;
         echo json_encode($this->data);
     }
 }

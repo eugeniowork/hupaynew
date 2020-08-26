@@ -224,9 +224,9 @@
             $attendance_date = date_format($date_create, 'F d, Y');
 
             $day = date_format($date_create, 'w');
-           if ($day >= $day_from && $day <= $day_to){
+            if ($day >= $day_from && $day <= $day_to){
                $name_count++;    			    	
-           }
+            }
            $counter++;
            
 
@@ -264,5 +264,110 @@
             }
         }
         return $date_payroll;
+    }
+    function checkIfHiredWithinCutOff($date_hired){
+        $CI =& get_instance();
+        $CI->load->model('cut_off_model');
+        $dates = date("Y-m-d H:i:s");
+		$date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+
+        $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+        $select_qry = $CI->attendance_model->get_cut_off();
+        $final_date_from = "";
+        $final_date_to = "";
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $value){
+                $date_from = date_format(date_create($value->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($value->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($value->dateFrom),'m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($value->dateTo),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($value->datePayroll),'Y-m-d');
+                }
+                    
+            }
+        }
+        $status = 0;
+        if ($date_hired >= $final_date_from && $date_hired <= $final_date_to){
+			$status = 1;
+		}
+		return $status;
+    }
+    function getCutOffAttendanceDateCountToRunningBalance($day_from,$day_to){
+        $CI =& get_instance();
+        $CI->load->model('cut_off_model');
+
+        $dates = date("Y-m-d H:i:s");
+		$date = date_create($dates);
+		$current_date_time = date_format($date, 'Y-m-d');
+
+		$year = date("Y");
+
+        
+        $cutOff = $CI->cut_off_model->get_cut_off();
+        if(!empty($cutOff)){
+            foreach($cutOff as $value){
+                $date_from = date_format(date_create($value->dateFrom),'Y-m-d');
+				if (date_format(date_create($value->dateFrom),'m-d') == "12-26"){
+					$prev_year = $year - 1;
+					$date_from = $prev_year . "-" .date_format(date_create($value->dateFrom),'m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($value->dateTo),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+
+				
+				if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+					$final_date_from = $date_from;
+					$final_date_to = $date_to;
+				}
+            }
+        }
+        $dates = array();
+	    $from = strtotime($final_date_from);
+	    $last = strtotime($final_date_to);
+	    $output_format = 'Y-m-d';
+	    $step = '+1 day';
+
+	    $count = 0;
+	    while( $from <= $last ) {
+
+    		$count++;
+	        $dates[] = date($output_format, $from);
+	        $from = strtotime($step, $from);
+	       
+        }
+        
+        $count = $count - 1;
+	    
+	    $weekdays = array();
+
+	    $counter = 0;
+
+	    $weekdays_count = 0;
+        $name_count = 0;
+        do {
+            $date_create = date_create($dates[$counter]);
+            $attendance_date = date_format($date_create, 'F d, Y');
+
+            $day = date_format($date_create, 'w');
+            if ($day >= $day_from && $day <= $day_to){
+               $name_count++;    			    	
+            }
+           $counter++;
+           
+
+        }while($counter < $count);
+        return $name_count;
     }
 ?>

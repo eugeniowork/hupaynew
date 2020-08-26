@@ -92,4 +92,16 @@
         }
         return $salary_loan_amount;
     }
+    function getAllSalaryLoan($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('salary_model');
+        $remainingBalance = 0;
+        $select_qry = $CI->salary_model->get_info_salary($emp_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $remainingBalance += $value->remainingBalance;
+            }
+        }
+        return $remainingBalance;
+    }
 ?>

@@ -635,8 +635,42 @@
   display: none;
 }
 
+.generate-payroll .generate-payroll-notes {
+  height: 100%;
+}
+
 .generate-payroll .loading-generating {
   display: none;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content {
+  height: auto;
+  width: 100%;
+  border: 1px solid gray;
+  padding: 20px 20px;
+  margin-top: 10px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content img {
+  height: 30px;
+  width: 30px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .title-lloyds {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .titles {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .earnings {
+  background: #ECECED;
+  border-radius: 5px;
+  padding: 10px 10px;
+  margin-top: 10px;
 }
 
 body {
