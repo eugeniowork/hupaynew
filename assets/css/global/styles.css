@@ -651,6 +651,28 @@
   margin-top: 10px;
 }
 
+.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body i {
+  color: #158cba;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body textarea {
+  resize: none;
+}
+
+.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-footer {
+  padding: 0px 5px;
+}
+
 .generate-payroll .generated-payroll-body .generated-payroll-content img {
   height: 30px;
   width: 30px;

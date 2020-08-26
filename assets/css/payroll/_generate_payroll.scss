@@ -7,6 +7,9 @@
     }
     .generated-payroll-body{
         .generated-payroll-content{
+            .payrollRemarksModal{
+                @include modal();
+            }
             height: auto;
             width: 100%;
             border: 1px solid gray;

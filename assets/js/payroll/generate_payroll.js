@@ -197,6 +197,25 @@ $(document).ready(function(){
                                             '<input id='+data.emp_id+' class="input_payroll form-control netPay_'+data.emp_id+'" value='+netPay+' type="text" class="form-control">'+
                                         '</div>'+
                                     '</div>'+
+                                    '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#payrollRemarksModal'+data.emp_id+'">Adjustment</button>'+
+                                    '<div class="modal fade payrollRemarksModal" id="payrollRemarksModal'+data.emp_id+'" tabindex="-1" role="dialog" aria-labelledby="payrollRemarksModalTitle" aria-hidden="true">'+
+                                        '<div class="modal-dialog modal-dialog-centered" role="document">'+
+                                            '<div class="modal-content">'+
+                                                '<div class="modal-header">'+
+                                                    '<h5 class="modal-title" id="payrollRemarksModalLongTitle">Remarks</h5>'+
+                                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+                                                    '<span aria-hidden="true">&times;</span>'+
+                                                    '</button>'+
+                                                '</div>'+
+                                                '<div class="modal-body">'+
+                                                    '<textarea class="form-control remarksModal'+data.emp_id+'" id='+data.emp_id+' placeholder="Input Remarks" rows="3"></textarea>'+
+                                                '</div>'+
+                                                '<div class="modal-footer">'+
+                                                    '<button class="btn btn-sm btn-primary "   data-dismiss="modal">Submit</button>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
                                     '<input type="hidden" class="form-control taxCode_'+data.emp_id+'" value='+data.tax_code+' type="text" class="form-control">'+
                                     '<input type="hidden" class="form-control adjustmentRemarks_'+data.emp_id+'" type="text" class="form-control">'+
                                     '<input type="hidden" class="form-control id='+data.emp_id+' getCuttOffDay_'+data.emp_id+'" type="text" class="form-control">'+
@@ -429,7 +448,7 @@ $(document).ready(function(){
                 var cashBond = 'cashBond_'+data.id;
                 var totalDeductions = 'totalDeductions_'+data.id;
                 var netPay = 'netPay_'+data.id;
-                var adjustmentRemarks = 'adjustmentRemarks_'+data.id;
+                var adjustmentRemarks = 'remarksModal'+data.id;
                 finalData.push({
                     'emp_id':data.id,
                     'regOT':$('.'+regOT).val(),
@@ -462,7 +481,6 @@ $(document).ready(function(){
                     'adjustmentRemarks':$('.'+adjustmentRemarks).val(),
                 })
             })
-            console.log(finalData);
             $.ajax({
                 url:base_url+'payroll_controller/savePayroll',
                 type:'post',
