@@ -34,6 +34,12 @@ UNFINISHED TASK
     - HOLIDAYS
  - WORKING HOURS AND DAYS
     - modify working hours
+ - PAYROLL
+    - create salary bugs in condition
+    - view payroll info bugs in update and no print (ajax/ append search employee)
+FINISHED TASK
+ - ATM ACCOUNT NO
+ - MINIMUM WAGE
 VIEW ATTENDANCE
  - FINISHED VIEWING
 

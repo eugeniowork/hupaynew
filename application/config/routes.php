@@ -49,6 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['minimumwage'] = 'minimum_wage_controller';
 $route['payrollinformation'] = 'payroll_controller/viewPayrollInfo';
 $route['generatepayroll'] = 'payroll_controller';
 $route['workingschedule'] = 'working_days_controller/viewWorkingSchedule';

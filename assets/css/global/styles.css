@@ -755,6 +755,28 @@
   resize: none;
 }
 
+.minimum-wage #editMinWageModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.minimum-wage #editMinWageModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.minimum-wage #editMinWageModal .modal-body i {
+  color: #158cba;
+}
+
+.minimum-wage #editMinWageModal .modal-body textarea {
+  resize: none;
+}
+
+.minimum-wage #editMinWageModal .modal-footer {
+  padding: 0px 5px;
+}
+
 body {
   background: #ececec;
 }

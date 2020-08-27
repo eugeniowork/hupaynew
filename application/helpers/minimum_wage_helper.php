@@ -54,4 +54,88 @@
 
         return $minimumWage;
     }
+
+    function getMinWageEffectiveDate(){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+
+        $minWage = $CI->minimum_wage_model->get_minimum_wage();
+        $date_create = date_create($minWage['effectiveDate']);
+        $date_format = date_format($date_create, 'F d, Y');
+        
+        return $date_format;
+    }
+    function existMinWage(){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+        $minWage = $CI->minimum_wage_model->get_all_min_wage();
+        $count = 0;
+        if(!empty($minWage)){
+            $count = count($minWage);
+        }
+        return $count;
+    }
+    function getLatestMinimumWage(){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+        $CI->load->model('employee_model');
+        $CI->load->helper('hupay_helper');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        $employeeInformation = $CI->employee_model->employee_information($emp_id);
+        $minWage = $CI->minimum_wage_model->get_minimum_wage();
+
+        $minWageData = array();
+        if(!empty($minWage)){
+            $action = 'no';
+            if($employeeInformation['role_id'] == 1){
+                $action='yes';
+            }
+            array_push($minWageData, array(
+                'min_wage_id'=>$minWage['min_wage_id'],
+                'basic_wage'=>moneyConvertion($minWage['basicWage']),
+                'cola'=>moneyConvertion($minWage['COLA']),
+                'min_wage_rates'=>moneyConvertion($minWage['basicWage'] + $minWage['COLA']),
+                'action'=>$action,
+            ));
+        }
+        return $minWageData;
+    }
+
+    function sameMinWageInfo($effectiveDate,$basicWage,$cola, $id){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+        $minWage = $CI->minimum_wage_model->get_min_wage_id($id);
+        $minWageBasicWage = $minWage['basicWage'];
+        $minWageCola = $minWage['COLA'];
+        $minWageEffectiveDate = $minWage['effectiveDate'];
+        $count = 0;
+        if($minWageEffectiveDate == $effectiveDate && $minWageBasicWage == $basicWage && $minWageCola == $cola){
+            $count = 1;
+        }   
+        return $count;
+    }
+    function getMinimumWageHistory(){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+        $CI->load->helper('hupay_helper');
+        $select_qry = $CI->minimum_wage_model->get_all_minimum_wage_sorted();
+        $minWageData = array();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $date_create = date_create($value->effectiveDate);
+                $date_format = date_format($date_create, 'F d, Y');
+                
+                array_push($minWageData, array(
+                    'date_format'=>$date_format,
+                    'basic_wage'=>moneyConvertion($value->basicWage),
+                    'cola'=>moneyConvertion($value->COLA),
+                    'min_wage_rates'=>moneyConvertion($value->basicWage + $value->COLA),
+                    'monthly_rate'=>moneyConvertion(($value->basicWage + $value->COLA) * 26),
+                ));
+            }
+        }
+        return $minWageData;
+    }
+    
 ?>

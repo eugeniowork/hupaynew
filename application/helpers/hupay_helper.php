@@ -69,6 +69,7 @@
     function moneyConvertion($value){
         $ci =& get_instance();
         $ci->load->helper('money_convertion_helper');
+        $final_value = 0;
         if ($value < 0){
             $final_value = $value;
         }
@@ -107,7 +108,7 @@
             $ten = substr($value,0,1);
             $one = substr(substr($value,1),0,1);
 
-            if (is_decima($value) == 1) {
+            if (is_decimal($value) == 1) {
                 $decimal = substr($value,2);
                 $final_value = $ten . $one . $decimal;
             }
