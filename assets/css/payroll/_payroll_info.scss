@@ -1,0 +1,38 @@
+.payroll-info{
+    .loading-generating{
+        display:none;
+    }
+    .generated-payroll-info-body{
+        .generated-payroll-info-content{
+            .payrollRemarksModal{
+                @include modal();
+            }
+            height: auto;
+            width: 100%;
+            border: 1px solid gray;
+            padding:20px 20px;
+            margin-top: 10px;
+            img{
+                height: 30px;
+                width: 30px;
+            }
+            .title-lloyds{
+                font-weight: bold;
+                font-size: 12px;
+            }
+            .titles{
+                font-weight:bold;
+                font-size: 13px;
+            }
+            .earnings{
+                background:#ECECED;
+                border-radius: 5px;
+                padding:10px 10px;
+                margin-top: 10px;
+            }
+            textarea{
+                resize: none;
+            }
+        }
+    }
+}

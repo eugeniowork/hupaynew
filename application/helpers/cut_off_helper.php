@@ -370,4 +370,23 @@
         }while($counter < $count);
         return $name_count;
     }
+
+    function checkExistCutOffPeriod($cutOffPeriod){
+        $CI =& get_instance();
+        $CI->load->model('cut_off_model');
+        $has_error = 1;
+        $select_qry = $CI->cut_off_model->get_cut_off();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $date_from = date_format(date_create($value->dateFrom),'F d');
+				$date_to = date_format(date_create($value->dateTo),'F d');
+				$cut_off_period_db = $date_from . " - " . $date_to;
+
+				if ($cutOffPeriod == $cut_off_period_db){
+					$has_error = 0;
+				}
+            }
+        }
+        return $has_error;
+    }
 ?>

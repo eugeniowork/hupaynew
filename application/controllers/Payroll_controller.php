@@ -21,6 +21,7 @@ class Payroll_controller extends CI_Controller{
         $this->load->model("payroll_model", "payroll_model");
         $this->load->model('deduction_model','deduction_model');
         $this->load->model('salary_model','salary_model');
+        $this->load->model('department_model','department_model');
         // $this->load->model("attendance_model", "attendance_model");
         // $this->load->model('holiday_model','holiday_model');
         // $this->load->model('leave_model','leave_model');
@@ -45,7 +46,7 @@ class Payroll_controller extends CI_Controller{
         $this->load->helper('incentives_helper');
         $this->load->helper('allowance_helper');
         $this->load->helper('hupay_helper');
-        
+        $this->load->helper('payroll_helper');
     }
     public function index(){
         $this->data['pageTitle'] = 'Generate Payroll';
@@ -696,30 +697,7 @@ class Payroll_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
-    // public function payroll(){
-
-    //     $try = array();
-    //     $all_emp_id = getEmpIdAllActiveEmp();
-    //     $current_emp_id = explode("#",$all_emp_id);
-    //     $count = 0;
-    //     if(!empty($current_emp_id)){
-    //         $count = count($current_emp_id);
-    //     }
-    //     $cut_off_count = getCutOffAttendanceDateCount();
-    //     $holiday_cut_off_count = holidayCutOffTotalCount();
-    //     $counter = 0;
-    //     do{
-    //         $emp_id = $current_emp_id[$counter];
-    //         foreach($this->input->post('addmore') as $value){
-    //             array_push($try, array('asd'=>$this->input->post('addmore'),'id'=>$emp_id));
-    //         }
-            
-    //         $counter++;
-    //     }while($counter < $count);
-    //     $this->data['try'] = $try;
-
-    //     echo json_encode($this->data);
-    // }
+   
     public function getActive(){
         $all_emp_id = getEmpIdAllActiveEmp();
         $current_emp_id = explode("#",$all_emp_id);
@@ -729,6 +707,228 @@ class Payroll_controller extends CI_Controller{
         }
 
         $this->data['ids'] = $ids;
+        echo json_encode($this->data);
+    }
+
+    public function viewPayrollInfo(){
+        $this->data['pageTitle'] = 'Payroll Information';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('payroll/payroll_info');
+        $this->load->view('global/footer');
+    }
+    public function generatePayrollPerEmployee(){
+        $empName = $this->input->post('empName');
+        $cutOffPeriod = $this->input->post('cutOffPeriod');
+        $year = $this->input->post('year');
+        $employeePayrollData = array();
+        if(checkExistCutOffPeriod($cutOffPeriod) == 1){
+            $this->data['status'] = "error";
+            $this->data['msg'] = '<strong>'.$cutOffPeriod.'</strong> doest not exist on Cut Off Period List.';
+        }
+        else{
+            if ($cutOffPeriod == "December 26 - January 10"){
+                $cut_off = explode("-",$cutOffPeriod);
+                $dateFrom = substr($cut_off[0],0,-1);
+                $dateFrom = $dateFrom.", " .($year - 1);
+    
+                $dateTo = substr($cut_off[1],1);
+                $dateTo = $dateTo.", " .$year;
+            }
+    
+            else {
+                $cut_off = explode("-",$cutOffPeriod);
+                $dateFrom = substr($cut_off[0],0,-1);
+                $dateFrom = $dateFrom.", " .$year;
+    
+                $dateTo = substr($cut_off[1],1);
+                $dateTo = $dateTo.", " .$year;
+            }
+            $final_cut_off_period = $dateFrom . " - " . $dateTo;
+            if(checkExistPayrollInformation($empName, $final_cut_off_period) == 0){
+                $this->data['status'] = "error";
+                $this->data['msg'] = 'No information found.';
+            }
+            else{
+                $row = getPayrollInfoByCutOffPeriodEmpName($empName,$final_cut_off_period);
+                $payroll_id = $row['payroll_id'];
+                $allowance = getAllowanceInfoToPayslip($row['emp_id']);
+
+                $row_emp = $this->employee_model->employee_information($row['emp_id']);
+                $inCutOff = checkMinWageEffectiveDateInCutOff($row['emp_id'],($allowance+$row_emp['Salary']));
+                $min_wage = getMinimumWage();
+                $has_tax = 0;
+                if ($min_wage < $row['salary']){
+                    $has_tax = 1;
+                }
+                $row_dept = $this->department_model->get_department($row['dept_id']);
+                $department = $row_dept['Department'];
+                //$row_emp
+                $current_cut_off = getCutOffPeriodLatest();
+                $is_cut_off = 0;
+                if ($final_cut_off_period == $current_cut_off){
+                    $payrollApproval = $this->payroll_model->get_payroll_approval_by_cut_off_period($current_cut_off);
+                    
+                    if (!empty($payrollApproval)){
+                        $is_cut_off = 1;
+                    }
+                }
+                $totalDeductions = $row['sssDeduction'] + $row['sssLoan'] + $row['philhealthDeduction']+ $row['pagibigDeduction'] + $row['pagibigLoan']+ $row['CashBond']+ $row['cashAdvance'];
+                $basicCutOffPay = round($row_emp['Salary'] / 2,2);
+                if ($inCutOff == 1){
+                    $basicCutOffPay = round(getBasicPayAmount($row_emp['emp_id']),2);
+                }
+                $incentives = $row['totalGrossIncome'] - ($row['ratePayPrd'] + ($row['regularOT'] + $row['restdayOT'] + $row['reg_holidayOT'] + $row['special_holidayOT'] + $row['rd_reg_holidayOT'] + $row['rd_special_holidayOT']) - ($row['Tardiness'] + $row['Absences']));
+                if ($row['datePayroll'] >= "2020-01-15"){
+                    $incentives = $row['netPay'] - $row['totalGrossIncome'] + $row['totalDeductions'] - $row['Tax'] - $row['NontaxAllowance'] - $row['adjustmentAfter'] - $row['cut_off_13_pay_basic'] - $row['cut_off_13_pay_allowance'];
+                }
+                if ($row['datePayroll'] == "2020-01-30"){
+                    $cut_off_13_pay_basic = $row['cut_off_13_pay_basic'];
+                    $cut_off_13_pay_allowance = $row['cut_off_13_pay_allowance'];
+
+                    $december_15_2019_13_pay_basic = 0;
+                    $december_15_2019_13_pay_allowance = 0;
+
+                    $december_30_2019_13_pa_basic = 0;
+                    $december_30_2019_13_pay_allowance = 0;
+
+                    $january_15_2020_13_pay_basic = 0;
+                    $january_15_2020_13_pay_allowance = 0;
+                    if ($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"November 26, 2019 - December 10, 2019") != 0){
+
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"November 26, 2019 - December 10, 2019");
+    
+                        $december_15_2019_13_pay_basic = $row_13['ratePayPrd'];
+                        $december_15_2019_13_pay_allowance = $row_13['allowancePay'];
+                    }
+                    if ($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 11, 2019 - December 25, 2019") != 0){
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 11, 2019 - December 25, 2019");
+    
+                        $december_30_2019_13_pa_basic = $row_13['ratePayPrd'];
+                        $december_30_2019_13_pay_allowance = $row_13['allowancePay'];
+                    }
+                    if ($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 26, 2019 - January 10, 2020") != 0){
+
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 26, 2019 - January 10, 2020");
+    
+                        $january_15_2020_13_pay_basic = $row_13['ratePayPrd'];
+                        $january_15_2020_13_pay_allowance = $row_13['allowancePay'];
+                    }
+
+                    $cut_off_13_pay_basic += round($december_15_2019_13_pay_basic/12,2) + round($december_30_2019_13_pa_basic/12,2) + round($january_15_2020_13_pay_basic/12,2);
+
+
+				    $cut_off_13_pay_allowance += round($december_15_2019_13_pay_allowance /12 ,2) + round($december_30_2019_13_pay_allowance /12,2) + round($january_15_2020_13_pay_allowance/12,2);
+
+
+				    //echo $cut_off_13_pay_basic . " " . $cut_off_13_pay_allowance;
+
+
+			 	    $incentives = $row['netPay'] - $row['totalGrossIncome'] + $row['totalDeductions'] - $row['Tax'] - $row['NontaxAllowance'] - $row['adjustmentAfter'] - $cut_off_13_pay_basic - $cut_off_13_pay_allowance;
+                }
+                if ($row['datePayroll'] >= "2020-02-15"){
+
+                    $incentives = $row['netPay'] - $row['totalGrossIncome'] + $row['totalDeductions'] - $row['Tax'] - $row['NontaxAllowance'] - $row['adjustmentAfter'] - $row['cut_off_13_pay_basic'] - $row['cut_off_13_pay_allowance'];
+                }
+                $last_total_gross_income = 0;
+			    if (date_format(date_create($row['datePayroll']),"d") == "30"){
+                    if($this->payroll_model->get_payroll_last_total_gross_income_rows($row['emp_id']) !=0){
+                        $payrollGross = $this->payroll_model->get_payroll_last_total_gross_income($row['emp_id']);
+                        $last_total_gross_income = $payrollGross['totalGrossIncome'] - ($payrollGross['sssDeduction'] + $payrollGross['philhealthDeduction'] + $payrollGross['pagibigDeduction']);
+                    }
+                }
+                $december_15_2019_13_pay_basic = 0;
+                $december_15_2019_13_pay_allowance = 0;
+
+                $december_30_2019_13_pa_basic = 0;
+                $december_30_2019_13_pay_allowance = 0;
+
+                $january_15_2020_13_pay_basic = 0;
+                $january_15_2020_13_pay_allowance = 0;
+                $cut_off_13_pay_basic = $row['ratePayPrd'];		
+                $cut_off_13_pay_allowance = $row['allowancePay'];
+                
+                if ($row['CutOffPeriod'] == "January 11, 2020 - January 25, 2020"){
+                    if($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"November 26, 2019 - December 10, 2019") != 0){
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($row['emp_id'],"November 26, 2019 - December 10, 2019");
+                        $december_15_2019_13_pay_basic = $row_13['ratePayPrd'];
+                        $december_15_2019_13_pay_allowance = $row_13['allowancePay'];
+                    }
+                    if ($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 11, 2019 - December 25, 2019") != 0){
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($row['emp_id'],"December 11, 2019 - December 25, 2019");
+    
+                        $december_30_2019_13_pa_basic = $row_13['ratePayPrd'];
+                        $december_30_2019_13_pay_allowance = $row_13['allowancePay'];
+                    }
+                    if ($this->payroll_model->get_cut_off_13_month_pay_old($row['emp_id'],"December 26, 2019 - January 10, 2020") != 0){
+
+                        $row_13 = $this->payroll_model->get_cut_off_13_month_pay_old_data($row['emp_id'],"December 26, 2019 - January 10, 2020");
+    
+                        $january_15_2020_13_pay_basic = $row_13['ratePayPrd'];
+                        $january_15_2020_13_pay_allowance = $row_13['allowancePay'];
+                    }
+                    
+                }
+                $total_13_basic_pay = round($december_15_2019_13_pay_basic/12,2) + round($december_30_2019_13_pa_basic/12,2) + round($january_15_2020_13_pay_basic /12,2) + round($cut_off_13_pay_basic/12,2);
+                $total_13_allowance_pay = round($december_15_2019_13_pay_allowance/12,2) + round($december_30_2019_13_pay_allowance/12,2) + round($january_15_2020_13_pay_allowance/12,2) + round($cut_off_13_pay_allowance/12,2);
+                array_push($employeePayrollData, array(
+                    'emp_id'=>$row['emp_id'],
+                    'cutOffPeriod'=>$row['CutOffPeriod'],
+                    'department'=>$department,
+                    'basic_pay'=>round($row['salary']/2,2),
+                    'basic_cut_off_pay'=>$basicCutOffPay,
+                    'name'=>ucwords($row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename']),
+                    'tax_code'=>$row['taxCode'],
+                    'has_tax'=>$has_tax,
+                    'date_payroll'=>$row['datePayroll'],
+                    'incentives'=>number_format($incentives,2),
+                    'is_cut_off'=>$is_cut_off,
+                    'regularOT'=>$row['regularOT'],
+                    'restdayOT'=>$row['restdayOT'],
+                    'reg_holidayOT'=>$row['reg_holidayOT'],
+                    'special_holidayOT'=>$row['special_holidayOT'],
+                    'rd_reg_holidayOT'=>$row['rd_reg_holidayOT'],
+                    'rd_special_holidayOT'=>$row['rd_special_holidayOT'],
+                    'tardiness'=>$row['Tardiness'],
+                    'absences'=>$row['Absences'],
+                    'present_amount'=>$row['present_amount'],
+                    'totalGrossIncome'=>$row['totalGrossIncome'],
+                    'adjustmentEarnings'=>$row['adjustmentEarnings'],
+                    'sssDeduction'=>$row['sssDeduction'],
+                    'sssLoan'=>$row['sssLoan'],
+                    'philhealthDeduction'=>$row['philhealthDeduction'],
+                    'pagibigDeduction'=>$row['pagibigDeduction'],
+                    'pagibigLoan'=>$row['pagibigLoan'],
+                    'cashBond'=>$row['CashBond'],
+                    'cashAdvance'=>$row['cashAdvance'],
+                    'totalDeductions'=>round($totalDeductions,2),
+                    'adjustmentDeductions'=>$row['adjustmentDeductions'],
+                    'tax'=>$row['Tax'],
+                    'nontaxAllowance'=>$row['NontaxAllowance'],
+                    'adjustmentAfter'=>$row['adjustmentAfter'],
+                    'dec_15_2019_basic'=>number_format($december_15_2019_13_pay_basic,2),
+                    'dec_15_2019_allowance'=>number_format($december_15_2019_13_pay_allowance,2),
+                    'dec_30_2019_basic'=>number_format($december_30_2019_13_pa_basic,2),
+                    'dec_30_2019_allowance'=>number_format($december_30_2019_13_pay_allowance,2),
+                    'jan_15_2019_basic'=>number_format($january_15_2020_13_pay_basic,2),
+                    'jan_15_2019_allowance'=>number_format($january_15_2020_13_pay_allowance,2),
+                    'current_cut_off_13th_basic_date'=>getDatePayroll(),
+                    'current_cut_off_13th_basic_value'=>number_format($cut_off_13_pay_basic,2),
+                    'current_cut_off_13th_allowance_date'=>getDatePayroll(),
+                    'current_cut_off_13th_allowance_value'=>number_format($cut_off_13_pay_allowance,2),
+                    'total_basic'=>number_format($december_15_2019_13_pay_basic + $december_30_2019_13_pa_basic + $january_15_2020_13_pay_basic + $cut_off_13_pay_basic,2),
+                    'total_allowance'=>number_format($december_15_2019_13_pay_allowance + $december_30_2019_13_pay_allowance + $january_15_2020_13_pay_allowance + $cut_off_13_pay_allowance,2),
+                    'total_13_basic_pay'=>number_format($total_13_basic_pay,2),
+                    'total_13_allowance_pay'=>number_format($total_13_allowance_pay,2),
+                    'net_pay'=>$row['netPay'],
+                    'remarks'=>$row['remarks'],
+                ));
+                $this->data['status'] = "success";
+                $this->data['employeePayrollData'] = $employeePayrollData;
+            }
+
+        }
         echo json_encode($this->data);
     }
 }

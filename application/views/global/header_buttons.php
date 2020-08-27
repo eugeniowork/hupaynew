@@ -252,7 +252,7 @@
             </button>
             <div class="side-navbar-sub-buttons payrollDropdown">
                 <a class="btn" href="<?php echo base_url();?>generatepayroll"> Create Salary</a>
-                <a class="btn" href="<?php echo base_url();?>payrollinfo"> View Payroll Info</a>
+                <a class="btn" href="<?php echo base_url();?>payrollinformation"> View Payroll Info</a>
                 <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
             </div>
         <?php endif;?>

@@ -68,5 +68,22 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_active_employee_row_array(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('ActiveStatus', 1);
+        $where = '(role_id !="1" or dept_id !="1")';
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_employee_with_cut_off($emp_id, $cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_info',array('emp_id'=>$emp_id, 'CutOffPeriod'=>$cutOffPeriod));
+        return $query->result();
+    }
+    public function get_employee_with_cut_off_row_array($emp_id, $cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_info',array('emp_id'=>$emp_id, 'CutOffPeriod'=>$cutOffPeriod));
+        return $query->row_array();
+    }
     
 }

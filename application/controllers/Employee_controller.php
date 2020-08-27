@@ -156,4 +156,23 @@ class Employee_controller extends CI_Controller{
         $objWriter->save('php://output');
         exit;
     }
+    public function getEmployeeNames(){
+        $array= array();
+        $select_qry = $this->employee_model->get_active_employee();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $name = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+
+				if ($value->Middlename == ""){
+					$name = $value->Lastname . ", " . $value->Firstname;
+				}
+
+				$array[] = $name;
+            }
+        }
+        $this->data['status'] = "success";
+        $this->data['employeeNames'] = $array;
+
+        echo json_encode($this->data);
+    }
 }

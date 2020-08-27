@@ -695,6 +695,66 @@
   margin-top: 10px;
 }
 
+.payroll-info .loading-generating {
+  display: none;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content {
+  height: auto;
+  width: 100%;
+  border: 1px solid gray;
+  padding: 20px 20px;
+  margin-top: 10px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body i {
+  color: #158cba;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body textarea {
+  resize: none;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content img {
+  height: 30px;
+  width: 30px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .title-lloyds {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .titles {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content .earnings {
+  background: #ECECED;
+  border-radius: 5px;
+  padding: 10px 10px;
+  margin-top: 10px;
+}
+
+.payroll-info .generated-payroll-info-body .generated-payroll-info-content textarea {
+  resize: none;
+}
+
 body {
   background: #ececec;
 }
@@ -731,5 +791,66 @@ body {
   opacity: 1;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   filter: alpha(opacity=100);
+}
+
+.bs-example {
+  font-family: sans-serif;
+  position: relative;
+  margin: 100px;
+}
+
+.typeahead, .tt-query, .tt-hint {
+  border: 2px solid #CCCCCC;
+  border-radius: 8px;
+  /*font-size: 22px; /* Set input font size */
+  /*height: 30px;*/
+  line-height: 30px;
+  outline: medium none;
+  padding: 8px 12px;
+  /*width: 396px;*/
+}
+
+.typeahead {
+  background-color: #FFFFFF;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097CF;
+}
+
+.tt-query {
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+.tt-hint {
+  color: #999999;
+}
+
+.tt-menu {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 12px;
+  padding: 8px 0;
+  width: 300px;
+}
+
+.tt-suggestion {
+  font-size: 15px;
+  /* Set suggestion dropdown font size */
+  padding: 3px 12px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  background-color: #0097CF;
+  color: #FFFFFF;
+}
+
+.tt-suggestion p {
+  margin: 0;
 }
 /*# sourceMappingURL=styles.css.map */

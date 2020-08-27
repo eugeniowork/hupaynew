@@ -37,13 +37,21 @@
 		if ($row['effectiveDate'] >= $final_date_from AND $row['effectiveDate'] <= $final_date_to){
 
 
-			$monthly_min_wage = $this->getMinimumWage();
-
+			$monthly_min_wage = $CI->minimum_wage->get_minimum_wage();
+            $monthly_min_wage = ($monthly_min_wage['basicWage'] + $monthly_min_wage['COLA']) * 26;
 			if ($monthly_rate_with_allowance <= $monthly_min_wage) {
 				$inCutOff = 1;
 			}
 			//echo $monthly_rate_with_allowance;	
         }
         return $inCutOff;
+    }
+    function getMinimumWage(){
+        $CI =& get_instance();
+        $CI->load->model('minimum_wage_model');
+        $monthly_min_wage = $CI->minimum_wage_model->get_minimum_wage();
+        $minimumWage = ($monthly_min_wage['basicWage'] + $monthly_min_wage['COLA']) * 26;
+
+        return $minimumWage;
     }
 ?>

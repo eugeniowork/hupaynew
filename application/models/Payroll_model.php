@@ -50,4 +50,8 @@ class Payroll_model extends CI_Model{
         $query = $this->db->get_where('tb_ready_generate_payroll',array('CutOffPeriod'=>$cutOffPeriod));
         return $query->result();
     }
+    public function get_payroll_approval_by_cut_off_period($cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_approval',array('CutOffPeriod'=>$cutOffPeriod, 'approveStat'=>'3'));
+        return $query->row_array();
+    }
 }
