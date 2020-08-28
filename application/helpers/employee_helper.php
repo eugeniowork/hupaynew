@@ -69,4 +69,27 @@
         }
         return $exist;
     }
+
+    function getEmpIdRoleAdmin(){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+
+        $emp_id_values = "";
+        $count = "";
+        $select_qry = $CI->employee_model->get_active_admin();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                if ($emp_id_values == ""){
+					$emp_id_values = $value->emp_id;
+				}
+
+				else {
+					$emp_id_values = $emp_id_values . "#" . $value->emp_id;
+				}
+
+				$count++;
+            }
+        }
+        return $emp_id_values;
+    }
 ?>

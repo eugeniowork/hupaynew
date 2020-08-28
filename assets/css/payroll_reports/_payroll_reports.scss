@@ -1,0 +1,8 @@
+.payroll-reports{
+    #approvePayrollModal{
+        @include modal();
+    }
+    #preApprovePayrollModal{
+        @include modal();
+    }
+}

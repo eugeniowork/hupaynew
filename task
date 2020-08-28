@@ -37,6 +37,8 @@ UNFINISHED TASK
  - PAYROLL
     - create salary bugs in condition
     - view payroll info bugs in update and no print (ajax/ append search employee)
+ - PAYROLL REPORTS-
+    - print in adjusment report
 FINISHED TASK
  - ATM ACCOUNT NO
  - MINIMUM WAGE
@@ -51,3 +53,5 @@ VIEW ATTENDANCE
 continue to 237
 continue to 1879 class/attendance_overtime.php
 continue to 175 attendance_helper
+continue to 67 phpscript/approve_payroll_script
+continue to payroll_reports_controller

@@ -54,4 +54,77 @@ class Payroll_model extends CI_Model{
         $query = $this->db->get_where('tb_payroll_approval',array('CutOffPeriod'=>$cutOffPeriod, 'approveStat'=>'3'));
         return $query->row_array();
     }
+    public function get_all_payroll_approval(){
+        $query = $this->db->get('tb_payroll_approval');
+        return $query->result();
+    }
+    public function get_payroll_approval_adjustment($adjustment){
+        $query = $this->db->get_where('tb_payroll_info',array('Adjustment !='=>$adjustment));
+        return $query->result();
+    }
+    public function get_payroll_approval_id($id){
+        $query = $this->db->get_where('tb_payroll_approval',array('approve_payroll_id'=>$id));
+        return $query->row_array();
+    }
+    public function get_payroll_info_adjustment_cut_off_period($cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_info',array('CutOffPeriod'=>$cutOffPeriod, 'Adjustment !='=> 0));
+        return $query->result();
+    }
+
+    public function get_all_payroll_approval_by_date(){
+        $this->db->select('*');
+        $this->db->from('tb_payroll_approval');
+        $this->db->order_by('DateCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_approve_payroll_by_id($id){
+        $query = $this->db->get_where('tb_payroll_approval',array('approve_payroll_id'=>$id, 'approveStat'=> 1));
+        return $query->row_array();
+    }
+    public function update_payroll_approval($id,$data){
+        $this->db->trans_start();
+        $this->db->where('approve_payroll_id',$id);
+        $this->db->update('tb_payroll_approval',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function insert_payroll_notifications($data){
+        $insert = $this->db->insert('tb_payroll_notif',$data);
+        return $insert;
+    }
+    public function update_payroll_info($cutOffPeriod,$data){
+        $this->db->trans_start();
+        $this->db->where('CutOffPeriod',$cutOffPeriod);
+        $this->db->update('tb_payroll_info',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function get_payroll_info_id_sort_date($id){
+        $this->db->select('*');
+        $this->db->from('tb_payroll_info');
+        $this->db->where('emp_id',$id);
+        $this->db->order_by('DateCreated', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    public function get_payroll_info($cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_approval',array('CutOffPeriod'=>$cutOffPeriod));
+        return $query->row_array();
+    }
+    public function get_all_payroll_info($cutOffPeriod){
+        $query = $this->db->get_where('tb_payroll_info',array('CutOffPeriod'=>$cutOffPeriod));
+        return $query->result();
+    }
 }

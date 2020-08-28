@@ -777,6 +777,50 @@
   padding: 0px 5px;
 }
 
+.payroll-reports #approvePayrollModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.payroll-reports #approvePayrollModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.payroll-reports #approvePayrollModal .modal-body i {
+  color: #158cba;
+}
+
+.payroll-reports #approvePayrollModal .modal-body textarea {
+  resize: none;
+}
+
+.payroll-reports #approvePayrollModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.payroll-reports #preApprovePayrollModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.payroll-reports #preApprovePayrollModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.payroll-reports #preApprovePayrollModal .modal-body i {
+  color: #158cba;
+}
+
+.payroll-reports #preApprovePayrollModal .modal-body textarea {
+  resize: none;
+}
+
+.payroll-reports #preApprovePayrollModal .modal-footer {
+  padding: 0px 5px;
+}
+
 body {
   background: #ececec;
 }

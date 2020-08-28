@@ -37,4 +37,20 @@ class Sss_model extends CI_Model{
         return $query->result();
     }
 
+    public function get_sss_with_balance(){
+        $query = $this->db->get_where('tb_sss_loan',array('remainingBalance !='=>0));
+        return $query->result();
+    }
+    public function update_sss_loan_data($id,$data){
+        $this->db->trans_start();
+        $this->db->where('sss_loan_id',$id);
+        $this->db->update('tb_sss_loan',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }
