@@ -465,7 +465,7 @@ class Payroll_reports_controller extends CI_Controller{
                         'readStatus'=>$readStatus,
                     );
                     $insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
-
+                    //$this->data['asd'] = $payroll_admin_id;
                     $emp_counter++;
 
                 }while($emp_counter < $emp_count);
