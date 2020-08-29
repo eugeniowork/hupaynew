@@ -103,4 +103,16 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function update_employee_info($emp_id,$data){
+        $this->db->trans_start();
+        $this->db->where('emp_id',$emp_id);
+        $this->db->update('tb_employee_info',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

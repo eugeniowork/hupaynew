@@ -105,4 +105,37 @@ class Leave_model extends CI_Model{
         $query = $this->db->get();
         return $query->row_array();
     }
+    public function get_leave_info_by_condition_not_emergency_birthday($id){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$id);
+        $this->db->where('approveStat',1);
+        $where = '(FileLeaveType ="Leave with pay" or FileLeaveType ="Morning Halfday Leave with pay" or
+            FileLeaveType ="Afternoon Halfday Leave with pay)';
+        $this->db->where($where);
+        $this->db->where('LeaveType !=','Reserve Emergency Leave');
+        $this->db->where('LeaveType !=','Birthday Leave');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_leave_info_by_condition_with_emergency($id){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$id);
+        $this->db->where('approveStat',1);
+        $this->db->where('FileLeaveType =','Leave with pay');
+        $this->db->where('LeaveType =','Reserve Emergency Leave');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_leave_info_by_condition_with_birthday($id){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$id);
+        $this->db->where('approveStat',1);
+        $this->db->where('FileLeaveType =','Leave with pay');
+        $this->db->where('LeaveType =','Birthday Leave');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

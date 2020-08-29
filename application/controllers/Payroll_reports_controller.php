@@ -23,6 +23,7 @@ class Payroll_reports_controller extends CI_Controller{
         $this->load->helper('salary_helper', 'salary_helper');
         $this->load->helper('simkimban_helper', 'simkimban_helper');
         $this->load->helper('cashbond_helper', 'cashbond_helper');
+        $this->load->helper('leave_helper', 'leave_helper');
     }
     public function index(){
         
@@ -435,6 +436,7 @@ class Payroll_reports_controller extends CI_Controller{
                 deductSimkimban($cutOffPeriod);
                 addYTDcurrentYear($cutOffPeriod);
                 insertEmpCashbondHistory($current_date);
+                deductLeaveCount();
                 $this->data['status'] = "success";
             }
             else{
