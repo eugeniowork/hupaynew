@@ -133,22 +133,49 @@ $(document).ready(function(){
         approvePayrollId = id;
         
     })
+    
+    loadingApprove = false;
     $('.approve-payroll-btn').on('click',function(){
-        $.ajax({
-            url:base_url+'payroll_reports_controller/approvePayroll',
-            type:'post',
-            dataType:'json',
-            data:{
-                id:approvePayrollId,
-                password:$('.approve-password').val(),
-            },
-            success:function(response){
+        var btnName = this;
 
-            },
-            error:function(response){
-
-            }
-        })
+        if(!loadingApprove){
+            loadingApprove = true;
+        
+            $('.approve-payroll-warning').empty();
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>&nbsp;Validating...</span>');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $.ajax({
+                url:base_url+'payroll_reports_controller/approvePayroll',
+                type:'post',
+                dataType:'json',
+                data:{
+                    id:approvePayrollId,
+                    password:$('.approve-password').val(),
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success("Payroll status has been successfully changed into approved!");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.approve-payroll-warning',response.msg, "danger")
+                        change_button_to_default(btnName, 'Approve');
+                        loadingApprove = false;
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    change_button_to_default(btnName, 'Approve');
+                    loadingApprove = false;
+                }
+            })
+        }
     })
 
 
