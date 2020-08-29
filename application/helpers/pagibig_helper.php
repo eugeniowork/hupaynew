@@ -175,7 +175,7 @@
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 $select_payroll_info_qry = $CI->payroll_model->get_payroll_info_id_sort_date($value->emp_id);
-                $remainingBalance = $value['remainingBalance'] - $select_payroll_info_qry['pagibigLoan'];
+                $remainingBalance = $value->remainingBalance - $select_payroll_info_qry['pagibigLoan'];
                 $update_qryData = array(
                     'remainingBalance'=>$remainingBalance,
                 );
