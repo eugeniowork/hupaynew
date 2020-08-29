@@ -119,12 +119,16 @@ class Payroll_model extends CI_Model{
         $query = $this->db->get();
         return $query->row_array();
     }
-    public function get_payroll_info($cutOffPeriod){
-        $query = $this->db->get_where('tb_payroll_approval',array('CutOffPeriod'=>$cutOffPeriod));
-        return $query->row_array();
-    }
+    // public function get_payroll_info($cutOffPeriod){
+    //     $query = $this->db->get_where('tb_payroll_approval',array('CutOffPeriod'=>$cutOffPeriod));
+    //     return $query->row_array();
+    // }
     public function get_all_payroll_info($cutOffPeriod){
         $query = $this->db->get_where('tb_payroll_info',array('CutOffPeriod'=>$cutOffPeriod));
         return $query->result();
+    }
+    public function get_notif_payroll_by_admin($id){
+        $query = $this->db->get_where('tb_payroll_notif',array('approve_payroll_id'=>$id));
+        return $query->row_array();
     }
 }

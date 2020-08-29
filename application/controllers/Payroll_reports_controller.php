@@ -24,6 +24,7 @@ class Payroll_reports_controller extends CI_Controller{
         $this->load->helper('simkimban_helper', 'simkimban_helper');
         $this->load->helper('cashbond_helper', 'cashbond_helper');
         $this->load->helper('leave_helper', 'leave_helper');
+        $this->load->helper('allowance_helper', 'allowance_helper');
     }
     public function index(){
         
@@ -437,6 +438,50 @@ class Payroll_reports_controller extends CI_Controller{
                 addYTDcurrentYear($cutOffPeriod);
                 insertEmpCashbondHistory($current_date);
                 deductLeaveCount();
+                insertPayslipAllowance($cutOffPeriod,$current_date);
+                $cutOffPeriod = getCutOffPeriodLatest();
+                $emp_count = 0;
+                $getActiveEmp = $this->employee_model->get_active_employee();
+                if(!empty($getActiveEmp)){
+                    $emp_count = count($getActiveEmp);
+                }
+                $notfi_emp_id = explode("#",getEmpIdAllActiveEmp());
+                $notifType = "Already Computed";
+                $emp_counter = 0;
+                do {
+                    $payroll_admin_id = $this->payroll_model->get_notif_payroll_by_admin($approve_payroll_id);
+                    $row_payroll_info = $this->payroll_model->get_cut_off_13_month_pay_old_data($notfi_emp_id[$emp_counter],$cutOffPeriod);
+                    $readStatus = '0';
+                    $insertPayrollData = array(
+                        'payroll_notif_id'=>'',
+                        'payroll_admin_id'=>$payroll_admin_id,
+                        'emp_id'=>$notfi_emp_id[$emp_counter],
+                        'payroll_id'=>$row_payroll_info['payroll_id'],
+                        'approve_payroll_id'=>0,
+                        'file_salary_loan_id'=>0,
+                        'notifType'=>$notifType,
+                        'cutOffPeriod'=>$cutOffPeriod,
+                        'readStatus'=>$readStatus,
+                    );
+                    $insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
+
+                    $emp_counter++;
+
+                }while($emp_counter < $emp_count);
+
+                $module = "Approve Payroll Reports";
+                $task_description = "Approve Payroll Reports, " . $cutOffPeriod;
+                $dateTime = getDateTime();
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>0,
+                    'approve_emp_id'=>0,
+                    'involve_emp_id'=>$this->session->userdata('user'),
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
                 $this->data['status'] = "success";
             }
             else{

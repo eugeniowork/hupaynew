@@ -126,4 +126,32 @@
 
         return round($latest_min_wage + $oldest_min_wage,2);
     }
+
+    function insertPayslipAllowance($CutOffPeriod,$date_created){
+        $CI =& get_instance();
+        $CI->load->model('allowance_model');
+        $CI->load->model('employee_model');
+
+        $select_qry = $CI->allowance_model->get_all_payroll_info();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $select_pay_qry = $CI->allowance_model->get_info_allowance($value->emp_id);
+                if(!empty($select_pay_qry)){
+                    foreach($select_pay_qry as $valuePay){
+                        $allowance = $valuePay->AllowanceValue / 2;
+                        $insert_qryData = array(
+                            'payroll_id'=>$value->payroll_id,
+                            'CutOffPeriod'=>$CutOffPeriod,
+                            'emp_id'=>$value->emp_id,
+                            'allowanceType'=>$value->AllowanceType,
+                            'allowanceValue'=>$allowance,
+                            'date_created'=>$date_created,
+                        );
+                        $insert_qry = $CI->allowance_model->insert_allowance_date($insert_qryData);
+                    }
+                }
+            }
+        }
+        return 'success';
+    }
 ?>
