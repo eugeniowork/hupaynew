@@ -8,7 +8,7 @@
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 $year = date_format(date_create($value->DateCreated), 'Y');
-                $exist_year = $CI->deduction_model->get_total_year_deduction_by_year($year);
+                $exist_year = $CI->deduction_model->get_total_year_deduction_by_year($year,$value->emp_id);
                 if(!empty($exist_year)){
                     $ytd_Gross = $exist_year['ytd_Gross'];
                     $ytd_Allowance = $exist_year['ytd_Allowance'];

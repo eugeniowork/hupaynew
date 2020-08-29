@@ -168,6 +168,7 @@
         }
 
         $select_qry = $CI->sss_model->get_sss_with_balance();
+        $sss_loan_amount = 0;
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 if ($value->deduction >= $value->remainingBalance){
@@ -180,8 +181,8 @@
                 $remainingBalance = $value->remainingBalance - $sss_loan_amount;
                 $update_qryData = array(
                     'remainingBalance'=>$remainingBalance,
-                )
-                $update_qry = $CI->sss_model->update_sss_loan_data($value->sss_load_id, $update_qryData);
+                );
+                $update_qry = $CI->sss_model->update_sss_loan_data($value->sss_loan_id, $update_qryData);
 
             }
         }

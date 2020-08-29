@@ -111,7 +111,7 @@ class Leave_model extends CI_Model{
         $this->db->where('emp_id',$id);
         $this->db->where('approveStat',1);
         $where = '(FileLeaveType ="Leave with pay" or FileLeaveType ="Morning Halfday Leave with pay" or
-            FileLeaveType ="Afternoon Halfday Leave with pay)';
+            FileLeaveType ="Afternoon Halfday Leave with pay")';
         $this->db->where($where);
         $this->db->where('LeaveType !=','Reserve Emergency Leave');
         $this->db->where('LeaveType !=','Birthday Leave');

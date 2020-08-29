@@ -4,7 +4,7 @@ class Allowance_model extends CI_Model{
         $query = $this->db->get_where('tb_emp_allowance',array('emp_id'=>$id));
         return $query->result();
     }
-    public function insert_allowance_date($data){
+    public function insert_allowance_data($data){
         $insert = $this->db->insert('tb_payslip_allowance',$data);
         return $insert;
     }

@@ -174,14 +174,12 @@
         $select_qry = $CI->pagibig_model->get_pagibig_with_balance();
         if(!empty($select_qry)){
             foreach($select_qry as $value){
-                $select_payroll_info_qry = $CI->payroll_model->get_payroll_info_id_sort_date($value->emp_id){
-                    $remainingBalance = $select_payroll_info_qry['remainingBalance'] - $select_payroll_info_qry['pagibigLoan'];
-                    $update_qryData = array(
-                        'remainingBalance'=>$remainingBalance,
-                    )
-                    $update_qry = $CI->pagibig_model->update_pagibig_loan_data($value->pagibig_loan_id, $update_qryData);
-
-                }
+                $select_payroll_info_qry = $CI->payroll_model->get_payroll_info_id_sort_date($value->emp_id);
+                $remainingBalance = $value['remainingBalance'] - $select_payroll_info_qry['pagibigLoan'];
+                $update_qryData = array(
+                    'remainingBalance'=>$remainingBalance,
+                );
+                $update_qry = $CI->pagibig_model->update_pagibig_loan_data($value->pagibig_loan_id, $update_qryData);
             }
         }
         return 'success';

@@ -25,6 +25,7 @@ class Payroll_reports_controller extends CI_Controller{
         $this->load->helper('cashbond_helper', 'cashbond_helper');
         $this->load->helper('leave_helper', 'leave_helper');
         $this->load->helper('allowance_helper', 'allowance_helper');
+        $this->load->helper('deduction_helper', 'deduction_helper');
     }
     public function index(){
         
@@ -431,13 +432,13 @@ class Payroll_reports_controller extends CI_Controller{
                     'payrollStatus'=>0,
                 );
                 $this->payroll_model->update_payroll_info($cutOffPeriod, $approveInfoPayrollData);
-                deductPagibigLoan();
-                deductionSSSLoan();
-                deductSalaryLoan($cutOffPeriod);
-                deductSimkimban($cutOffPeriod);
-                addYTDcurrentYear($cutOffPeriod);
-                insertEmpCashbondHistory($current_date);
-                deductLeaveCount();
+                //deductPagibigLoan();
+                //deductionSSSLoan();
+                //deductSalaryLoan($cutOffPeriod);
+                //deductSimkimban($cutOffPeriod);
+                //addYTDcurrentYear($cutOffPeriod);
+                //insertEmpCashbondHistory($current_date);
+                //deductLeaveCount();
                 insertPayslipAllowance($cutOffPeriod,$current_date);
                 $cutOffPeriod = getCutOffPeriodLatest();
                 $emp_count = 0;
@@ -463,7 +464,7 @@ class Payroll_reports_controller extends CI_Controller{
                         'cutOffPeriod'=>$cutOffPeriod,
                         'readStatus'=>$readStatus,
                     );
-                    $insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
+                    //$insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
 
                     $emp_counter++;
 
@@ -480,8 +481,18 @@ class Payroll_reports_controller extends CI_Controller{
                     'module'=>$module,
                     'task_description'=>$task_description,
                 );
-                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                //$insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                //if disapprove
+                $payroll_class->disappovePayroll($approve_payroll_id,$current_date);
 
+                // for updating table payrol info
+                // $row = $payroll_class->getInfoPayrollAppoval($approve_payroll_id);
+
+                // $cutOffPeriod = $row->CutOffPeriod;
+
+                // $payroll_class->disapproveInfoPayroll($cutOffPeriod);
+
+                // $_SESSION["approve_payroll_failed"] = "failed";
                 $this->data['status'] = "success";
             }
             else{

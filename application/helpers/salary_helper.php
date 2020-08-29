@@ -182,7 +182,7 @@
                                 'date_payroll'=>$date_payroll,
                                 'dateCreated'=>$current_date_time,
                             );
-                            insert_salary_loan_history_data($salaryHistoryInsertData);
+                            $CI->salary_model->insert_salary_loan_history_data($value->salary_loan_id,$salaryHistoryInsertData);
                         }
                     }
                 }

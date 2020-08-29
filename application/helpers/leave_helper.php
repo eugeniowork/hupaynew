@@ -127,7 +127,7 @@
                 }
 			    $count = $count- 1;
                 $emp_id = $value->emp_id;
-                $get_leave_rows = $CI->leave_model->get_leave_rows($emp_id);
+                $num_rows_leave = $CI->leave_model->get_leave_rows($emp_id);
                 if($num_rows_leave != 0){
                     $select_leave_qry = $CI->leave_model->get_leave_info_by_condition_not_emergency_birthday($emp_id);
                     if(!empty($select_leave_qry)){

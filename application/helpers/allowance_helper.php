@@ -132,7 +132,7 @@
         $CI->load->model('allowance_model');
         $CI->load->model('employee_model');
 
-        $select_qry = $CI->allowance_model->get_all_payroll_info();
+        $select_qry = $CI->payroll_model->get_all_payroll_info($CutOffPeriod);
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 $select_pay_qry = $CI->allowance_model->get_info_allowance($value->emp_id);
@@ -143,11 +143,11 @@
                             'payroll_id'=>$value->payroll_id,
                             'CutOffPeriod'=>$CutOffPeriod,
                             'emp_id'=>$value->emp_id,
-                            'allowanceType'=>$value->AllowanceType,
+                            'allowanceType'=>$valuePay->AllowanceType,
                             'allowanceValue'=>$allowance,
                             'date_created'=>$date_created,
                         );
-                        $insert_qry = $CI->allowance_model->insert_allowance_date($insert_qryData);
+                        $insert_qry = $CI->allowance_model->insert_allowance_data($insert_qryData);
                     }
                 }
             }
