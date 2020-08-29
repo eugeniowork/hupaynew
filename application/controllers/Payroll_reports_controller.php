@@ -432,13 +432,13 @@ class Payroll_reports_controller extends CI_Controller{
                     'payrollStatus'=>0,
                 );
                 $this->payroll_model->update_payroll_info($cutOffPeriod, $approveInfoPayrollData);
-                //deductPagibigLoan();
-                //deductionSSSLoan();
-                //deductSalaryLoan($cutOffPeriod);
-                //deductSimkimban($cutOffPeriod);
-                //addYTDcurrentYear($cutOffPeriod);
-                //insertEmpCashbondHistory($current_date);
-                //deductLeaveCount();
+                deductPagibigLoan();
+                deductionSSSLoan();
+                deductSalaryLoan($cutOffPeriod);
+                deductSimkimban($cutOffPeriod);
+                addYTDcurrentYear($cutOffPeriod);
+                insertEmpCashbondHistory($current_date);
+                deductLeaveCount();
                 insertPayslipAllowance($cutOffPeriod,$current_date);
                 $cutOffPeriod = getCutOffPeriodLatest();
                 $emp_count = 0;
@@ -455,7 +455,7 @@ class Payroll_reports_controller extends CI_Controller{
                     $readStatus = '0';
                     $insertPayrollData = array(
                         'payroll_notif_id'=>'',
-                        'payroll_admin_id'=>$payroll_admin_id,
+                        'payroll_admin_id'=>$payroll_admin_id['payroll_admin_id'],
                         'emp_id'=>$notfi_emp_id[$emp_counter],
                         'payroll_id'=>$row_payroll_info['payroll_id'],
                         'approve_payroll_id'=>0,
@@ -464,7 +464,7 @@ class Payroll_reports_controller extends CI_Controller{
                         'cutOffPeriod'=>$cutOffPeriod,
                         'readStatus'=>$readStatus,
                     );
-                    //$insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
+                    $insertPayroll = $this->payroll_model->insert_payroll_notifications($insertPayrollData);
 
                     $emp_counter++;
 
@@ -481,9 +481,9 @@ class Payroll_reports_controller extends CI_Controller{
                     'module'=>$module,
                     'task_description'=>$task_description,
                 );
-                //$insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
                 //if disapprove
-                $payroll_class->disappovePayroll($approve_payroll_id,$current_date);
+                //$payroll_class->disappovePayroll($approve_payroll_id,$current_date);
 
                 // for updating table payrol info
                 // $row = $payroll_class->getInfoPayrollAppoval($approve_payroll_id);
