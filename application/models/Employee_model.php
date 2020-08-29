@@ -90,5 +90,17 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('role_id'=>1, 'ActiveStatus'=>1));
         return $query->result();
     }
-    
+    public function get_all_employee(){
+        $query = $this->db->get('tb_employee_info');
+        return $query->result();
+    }
+    public function get_employee_order_by_and_limit($id, $orderBy, $orderType, $limit){
+        $this->db->select('*');
+        $this->db->from('tb_payroll_info');
+        $this->db->where('emp_id',$id);
+        $this->db->order_by($orderBy, $orderType);
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

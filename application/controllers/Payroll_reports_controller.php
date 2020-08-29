@@ -22,6 +22,7 @@ class Payroll_reports_controller extends CI_Controller{
         $this->load->helper('sss_helper', 'sss_helper');
         $this->load->helper('salary_helper', 'salary_helper');
         $this->load->helper('simkimban_helper', 'simkimban_helper');
+        $this->load->helper('cashbond_helper', 'cashbond_helper');
     }
     public function index(){
         
@@ -432,7 +433,8 @@ class Payroll_reports_controller extends CI_Controller{
                 deductionSSSLoan();
                 deductSalaryLoan($cutOffPeriod);
                 deductSimkimban($cutOffPeriod);
-                addYTDcurrentYear($cutOffPeriod)
+                addYTDcurrentYear($cutOffPeriod);
+                insertEmpCashbondHistory($current_date);
                 $this->data['status'] = "success";
             }
             else{
