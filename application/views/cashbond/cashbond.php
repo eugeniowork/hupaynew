@@ -74,8 +74,21 @@
                         <div class="cashbond-history-info">
                             <div class="row cashbond-history-info-employee">
 
-                            </div>
-                            
+                            </div><br/>
+                            <table class="table table-striped" id="cashbondHistoryList">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-calendar-alt"></i>&nbsp;Posting Date</th>
+                                        <th><i class="fas fa-clock"></i>&nbsp;Deposit</th>
+                                        <th><i class="fas fa-wrench"></i>&nbsp;Interest</th>
+                                        <th><i class="fas fa-wrench"></i>&nbsp;Withdrawal</th>
+                                        <th><i class="fas fa-wrench"></i>&nbsp;Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                         <div class="loading-cashbond-history">
                             <div class="d-flex flex-column justify-content-center align-items-center">

@@ -165,6 +165,8 @@ $(document).ready(function(){
         $('.print-cashbond-history-btn').hide();
         $('.loading-cashbond-history').show();
         $('.cashbond-history-info-employee').empty()
+        $('#cashbondHistoryList tbody').empty()
+        $('#cashbondHistoryList').DataTable().clear().destroy();
         $.ajax({
             url:base_url+'cashbond_controller/getCashbondHistory',
             type:'post',
@@ -210,6 +212,39 @@ $(document).ready(function(){
                         '</div>';
                         $('.cashbond-history-info-employee').append(interestTotal)
                     })
+
+                    response.finalCashbondHistoryData.forEach(function(data,key){
+                        var reference = '';
+                        if(data.amount_withdraw !=0){
+                            if(data.reference_no != ""){
+                                reference += '<br/>'+
+                                '<small style="background-color: #158cba;color:#fff">'+
+                                    data.reference_no+
+                                '</small>';
+                                reference +='<input type="text" value='+data.reference_no+' class="ref-no ref-no-'+data.emp_cashbond_history+' form-control" placeholder="Enter ref no">'
+                            }
+                            else{
+                                reference += '<br/>'+
+                                '<small class="ref-no-text-'+data.emp_cashbond_history+'" style="background-color: #158cba;color:#fff">No Ref No.</small>';
+                                reference +='<input type="text" class="ref-no ref-no-'+data.emp_cashbond_history+' form-control" placeholder="Enter ref no">'
+                            }
+                            reference +='&nbsp;<button id='+data.emp_cashbond_history+' class="btn btn-sm btn-link edit-ref-no-btn edit-ref-no-btn-'+data.emp_cashbond_history+'"><i id='+data.emp_cashbond_history+' class="fas fa-edit"></i></button>'
+                        }
+                        var append = '<tr class='+data.emp_cashbond_history+'>'+
+                            '<td>'+data.posting_date+'</td>'+
+                            '<td>Php. '+data.cash_deposit+'</td>'+
+                            '<td>Php. '+data.interest+'</td>'+
+                            '<td>Php. '+
+                                data.amount_withdraw+
+                                reference
+                            +'</td>'+
+                            '<td>Php. '+data.cashbond_balance+'</td>'+
+                        '</tr>';
+                        $('#cashbondHistoryList tbody').append(append);
+                    })
+                    $('#cashbondHistoryList').dataTable({
+                        "ordering": false,
+                    });
                 }
                 else{
                     $('.loading-cashbond-history').show();
@@ -226,6 +261,21 @@ $(document).ready(function(){
             }
         })
 
+    })
+    var cashbondHistoryUpdateId = null;
+    $(document).on('click','.edit-ref-no-btn',function(e){
+        var id = e.target.id;
+        cashbondHistoryUpdateId = id;
+        $('.ref-no-'+id).show();
+        $('.ref-no-'+id).focus();
+        $('.ref-no-text-'+id).hide();
+        $('.edit-ref-no-btn-'+id).hide();
+    })
+    $(document).on('focusout','.ref-no',function(e){
+        $('.ref-no-'+cashbondHistoryUpdateId).hide();
+        $('.ref-no-text-'+cashbondHistoryUpdateId).show();
+        $('.edit-ref-no-btn-'+cashbondHistoryUpdateId).show();
+        cashbondHistoryUpdateId = null;
     })
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);

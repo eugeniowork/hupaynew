@@ -166,10 +166,10 @@ class Cashbond_controller extends CI_Controller{
                         'emp_cashbond_history' => $value->emp_cashbond_history,
                         'posting_date'=>$posting_date,
                         'cash_deposit'=>moneyConvertion($value->cashbond_deposit),
-                        'interset'=>moneyConvertion($value->interest),
+                        'interest'=>moneyConvertion($value->interest),
                         'amount_withdraw'=>moneyConvertion($value->amount_withdraw),
                         'reference_no'=>$value->reference_no,
-                        'cashbond_balance'=>$value->cashbond_balance,
+                        'cashbond_balance'=>moneyConvertion($value->cashbond_balance),
                     ));
                     
                 }

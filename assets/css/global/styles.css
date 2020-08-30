@@ -877,6 +877,10 @@
   display: none;
 }
 
+.cashbond #viewCashbondHistoryModal .cashbond-history-info .ref-no {
+  display: none;
+}
+
 .cashbond #viewCashbondHistoryModal .print-cashbond-history-btn {
   display: none;
 }

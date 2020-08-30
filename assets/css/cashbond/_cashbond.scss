@@ -12,6 +12,9 @@
         @include modal();
         .cashbond-history-info{
             display:none;
+            .ref-no{
+                display:none;
+            }
         }
         .print-cashbond-history-btn{
             display: none;
