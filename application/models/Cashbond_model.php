@@ -37,7 +37,8 @@ class Cashbond_model extends CI_Model{
         }
     }
     public function get_all_cashbond(){
-
+        $query = $this->db->get_where('tb_cashbond');
+        return $query->result();
     }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
