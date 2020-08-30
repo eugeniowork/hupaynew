@@ -549,6 +549,62 @@ class Cashbond_controller extends CI_Controller{
 
         );
         $this->cashbond_model->insert_cashbond_history_data($insertCashbondHistoryData);
+
+        $row_emp = $this->employee_model->employee_information($row['emp_id']);
+
+        $filer_name = $row_emp['Firstname'] . " " . $row_emp['Lastname'];
+
+        $amount_withdraw = $row['amount_withdraw'];
+        $module = "Approve File Cashbond Withdrawal";
+        $task_description = "Approve File Cashbond Withdrawal amounting of Php " . $amount_withdraw . "";
+        $dateTime = getDateTime();
+        $insertAuditTrialData = array(
+            'audit_trail_id'=>'',
+            'file_emp_id'=>$row['emp_id'],
+            'approve_emp_id'=>$approver_id,
+            'involve_emp_id'=>0,
+            'module'=>$module,
+            'task_description'=>$task_description,
+        );
+        $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+        $this->data['status'] = "success";
+
+
+        echo json_encode($this->data);
+    }
+    public function disapproveCashWithdrawal(){
+        $id = $this->input->post('id');
+
+        $row = $this->cashbond_model->get_cashbond_withdrawal_by_withdrawal_id($id);
+        $row_cashbond = $this->cashbond_model->get_cashbond($row['emp_id']);
+
+        $totalCashbond = $row_cashbond['totalCashbond'] - $row['amount_withdraw'];
+        $approver_id = $this->session->userdata('user');
+        $dateApprove = getDateDate();
+
+        $stats = 2;
+        $approveCashbondWithdrawalData = array(
+            'approver_id'=>$approver_id,
+            'approve_stats'=>$stats,
+            'dateApprove'=>$dateApprove,
+
+        );
+        $this->cashbond_model->update_cashbond_withdrawal_data($id, $approveCashbondWithdrawalData);
+        $amount_withdraw = $row['amount_withdraw'];
+        $module = "Approve File Cashbond Withdrawal";
+        $task_description = "Disapprove File Cashbond Withdrawal amounting of Php " . $amount_withdraw . "";
+        $dateTime = getDateTime();
+        $insertAuditTrialData = array(
+            'audit_trail_id'=>'',
+            'file_emp_id'=>$row['emp_id'],
+            'approve_emp_id'=>$approver_id,
+            'involve_emp_id'=>0,
+            'module'=>$module,
+            'task_description'=>$task_description,
+        );
+        $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
         $this->data['status'] = "success";
 
 
