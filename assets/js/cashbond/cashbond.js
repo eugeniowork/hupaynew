@@ -19,7 +19,7 @@ $(document).ready(function(){
                             '<td>'+
                             '<button id='+data.cashbond_id+' class="edit-cashbond-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#editCashbondValueNoModal"><i id='+data.cashbond_id+' class="fas fa-pencil-alt"></i></button>&nbsp;'+
                             '<button id='+data.cashbond_id+' class="view-cashbond-history btn btn-sm btn-outline-success" data-toggle="modal" data-target="#viewCashbondHistoryModal"><i id='+data.cashbond_id+' class="fas fa-eye"></i></button>&nbsp;'+
-                            '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-plus-circle"></i></button>&nbsp;'+
+                            '<button id='+data.cashbond_id+' class="add-cashbond-deposit-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#addCashbondDepositModal" ><i class="fas fa-plus-circle" id='+data.cashbond_id+'></i></button>&nbsp;'+
                             '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-adjust"></i></button>&nbsp;'+
                             '</td>'+
                         '</tr>';
@@ -39,7 +39,7 @@ $(document).ready(function(){
         })
     }
 
-    $("#float_only").keydown(function (e) {
+    $(".float-only").keydown(function (e) {
 
         // for decimal pint
         if (e.keyCode == "190") {
@@ -64,12 +64,12 @@ $(document).ready(function(){
     });
 
         // for security purpose return false
-    $("#float_only").on("paste", function(){
+    $(".float-only").on("paste", function(){
         return false;
     });
 
 
-    $("#float_only").on('input', function(){
+    $(".float-only").on('input', function(){
         if ($(this).attr("maxlength") != 9){
             if ($(this).val().length > 9){
                 $(this).val($(this).val().slice(0,-1));
@@ -318,6 +318,87 @@ $(document).ready(function(){
         }
         
     })
+
+    var addCashbondDepositId = null;
+    $(document).on('click','.add-cashbond-deposit-btn',function(e){
+        addCashbondDepositId = e.target.id;
+        $('.deposit-cashbond-info').hide();
+        $('.submit-deposit-cashbond-btn').hide();
+        $('.loading-deposit-cashbond').show();
+        $.ajax({
+            url:base_url+'cashbond_controller/getAddDepositCashbond',
+            type:'post',
+            dataType:'json',
+            data:{
+                id:addCashbondDepositId
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    $('.deposit-cashbond-info').show();
+                    $('.submit-deposit-cashbond-btn').show();
+                    $('.loading-deposit-cashbond').hide();
+                    $('.deposit-cashbond-value').val(response.total_cashbond);
+                }
+                else{
+                    $('.loading-deposit-cashbond').show();
+                    $('.loading-deposit-cashbond').empty();
+                    $('.loading-deposit-cashbond').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                    addCashbondDepositId = null
+                }
+            },
+            error:function(response){
+                $('.loading-deposit-cashbond').show();
+                $('.loading-deposit-cashbond').empty();
+                $('.loading-deposit-cashbond').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                addCashbondDepositId = null
+            }
+        })
+    })
+
+    var loadingAddCashbondDeposit = false;
+    $('.submit-deposit-cashbond-btn').on('click',function(){
+        var btnName = this;
+        if(!loadingAddCashbondDeposit){
+            loadingAddCashbondDeposit = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.update-deposit-cashbond-warning').empty();
+            $.ajax({
+                url:base_url+'cashbond_controller/addDepositCashbond',
+                type:'post',
+                dataType:'json',
+                data:{
+                    id : addCashbondDepositId,
+                    deposit:$('.deposit-value').val(),
+                    remarks:$('.deposit-remarks').val(),
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.update-deposit-cashbond-warning',response.msg, "danger")
+                        loadingAddCashbondDeposit = false;
+                        change_button_to_default(btnName, 'Deposit');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAddCashbondDeposit = false;
+                    change_button_to_default(btnName, 'Deposit');
+                }
+            })
+        }
+    })
+
+
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');

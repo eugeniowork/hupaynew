@@ -885,6 +885,36 @@
   display: none;
 }
 
+.cashbond #addCashbondDepositModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.cashbond #addCashbondDepositModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.cashbond #addCashbondDepositModal .modal-body i {
+  color: #158cba;
+}
+
+.cashbond #addCashbondDepositModal .modal-body textarea {
+  resize: none;
+}
+
+.cashbond #addCashbondDepositModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.cashbond #addCashbondDepositModal .deposit-cashbond-info {
+  display: none;
+}
+
+.cashbond #addCashbondDepositModal .submit-deposit-cashbond-btn {
+  display: none;
+}
+
 body {
   background: #ececec;
 }

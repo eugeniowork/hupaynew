@@ -41,7 +41,7 @@
                     <div class="modal-body">
                         <div class="cashbond-info">
                             <span>Cashbond.</span>
-                            <input type="text" id="float_only" class="form-control cashbond-value" placeholder="Enter cashbond">
+                            <input type="text" class="float-only form-control cashbond-value" placeholder="Enter cashbond">
                         
                         </div>
                         <div class="loading-cashbond">
@@ -102,6 +102,40 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-link print-cashbond-history-btn ">Print Cashbond History</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addCashbondDepositModal" tabindex="-1" role="dialog" aria-labelledby="addCashbondDepositModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCashbondDepositModalLongTitle">Deposit Form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="deposit-cashbond-info">
+                            <span>Cashbond:</span>
+                            <input type="text" readonly class="deposit-cashbond-value form-control" placeholder="Enter cashbond">
+                            <span>Deposit:</span>
+                            <input type="text" class="float-only deposit-value form-control" placeholder="Enter deposit">
+                            <span>Remarks:</span>
+                            <textarea class="form-control deposit-remarks" placeholder="Enter remarks"></textarea>
+                        </div>
+                        <div class="loading-deposit-cashbond">
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p>Loading Information</p>
+                            </div>
+                        </div><br/>
+                        <div class="update-deposit-cashbond-warning">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary submit-deposit-cashbond-btn">Deposit</button>
                     </div>
                 </div>
             </div>

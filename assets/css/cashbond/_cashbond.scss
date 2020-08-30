@@ -20,5 +20,14 @@
             display: none;
         }
     }
+    #addCashbondDepositModal{
+        @include modal();
+        .deposit-cashbond-info{
+            display:none;
+        }
+        .submit-deposit-cashbond-btn{
+            display:none;
+        }
+    }
     
 }

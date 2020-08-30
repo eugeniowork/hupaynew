@@ -72,6 +72,19 @@ class Cashbond_model extends CI_Model{
             return "error";
         }
     }
+    public function get_all_employee_cashbond_history_limit($emp_id,$orderBy,$orderType, $limit){
+        $this->db->select('*');
+        $this->db->from('tb_emp_cashbond_history');
+        $this->db->where('emp_id',$emp_id);
+        $this->db->order_by($orderBy, $orderType);
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    public function insert_cashbond_history_data($data){
+        $insert = $this->db->insert('tb_emp_cashbond_history',$data);
+        return $insert;
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();

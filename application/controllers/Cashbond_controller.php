@@ -21,6 +21,7 @@ class Cashbond_controller extends CI_Controller{
         // $this->load->helper('leave_helper');
         //$this->load->library('../controllers/holiday_controller');
         $this->load->model("cashbond_model", 'cashbond_model');
+        $this->load->model("audit_trial_model", 'audit_trial_model');
         $this->load->helper('date_helper');
         $this->load->helper('hupay_helper');
         $this->load->helper('allowance_helper');
@@ -199,6 +200,98 @@ class Cashbond_controller extends CI_Controller{
         );
         $update = $this->cashbond_model->update_cashbond_history_data($id,$data);
         $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    public function getAddDepositCashbond(){
+        $id = $this->input->post('id');
+        $checkCashbond = $this->cashbond_model->get_cashbond_by_id($id);
+        if(!empty($checkCashbond)){
+            $this->data['total_cashbond'] = $checkCashbond['totalCashbond'];
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem getting the deposit form data, please try again.";
+        }
+        
+        echo json_encode($this->data);
+    }
+    public function addDepositCashbond(){
+        $cashbond_id = $this->input->post('id');
+		$deposit = $this->input->post('deposit');
+        $remarks = $this->input->post('remarks');
+
+        $this->form_validation->set_rules('deposit', 'deposit', 'required');
+        $this->form_validation->set_rules('remarks', 'remarks', 'required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required.";
+        }
+        else{
+            $row = $this->cashbond_model->get_cashbond_by_id($cashbond_id);
+            $totalCashbond = $row['totalCashbond'];
+            $emp_id = $row['emp_id'];
+            $row_ch = $this->cashbond_model->get_all_employee_cashbond_history_limit($emp_id, 'posting_date', 'DESC', '1');
+            $previous_ending_balance_amount = $row_ch['cashbond_balance'];
+
+            $date1 = $row_ch['posting_date'];
+            $date1= date_create($date1);
+
+            $date2 = date("Y-m-d");
+            $date2= date_create($date2);
+
+            $percentage = .05;
+            if ($previous_ending_balance_amount >= 30000){
+                $percentage = .07;
+            }
+
+            $diff =date_diff($date1,$date2);
+            $wew =  $diff->format("%R%a");
+            $days = str_replace("+","",$wew);
+
+            $interest = round(($days) * $previous_ending_balance_amount * ($percentage/360),2);
+
+            $updateCashbondData = array(
+                'totalCashbond'=>$totalCashbond + $deposit + $interest,
+            );
+            $this->cashbond_model->update_cashbond_data($emp_id,$updateCashbondData);
+            $insertCashbondHistoryData = array(
+                'emp_cashbond_history'=>'',
+                'emp_id'=>$emp_id,
+                'cashbond_deposit'=>$deposit,
+                'remarks'=>$remarks,
+                'interest'=>$interest,
+                'posting_date'=>date("Y-m-d"),
+                'amount_withdraw'=>0,
+                'cashbond_balance'=>($totalCashbond + $deposit + $interest),
+                'interest_rate'=>0,
+                'dateCreated'=>date("Y-m-d"),
+
+            );
+            $this->cashbond_model->insert_cashbond_history_data($insertCashbondHistoryData);
+
+            $row_emp = $this->employee_model->employee_information($emp_id);
+
+            $filer_name = $row_emp['Firstname'] . " " . $row_emp['Lastname'];
+
+            $this->data['msg'] = 'You successfully added a deposit to <strong>'.$filer_name.'</strong>, amounting <strong>Php. '.number_format($deposit,2).'</strong> ';
+            
+            $module = "Add Deposit";
+            $task_description = "Add deposit amounting of Php " . $deposit . "";
+            $dateTime = getDateTime();
+            $approver_id = $this->session->userdata('user');
+            $insertAuditTrialData = array(
+                'audit_trail_id'=>'',
+                'file_emp_id'=>$emp_id,
+                'approve_emp_id'=>$approver_id,
+                'involve_emp_id'=>0,
+                'module'=>$module,
+                'task_description'=>$task_description,
+            );
+            $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+            $this->data['status'] = "success";
+        }
         echo json_encode($this->data);
     }
 }
