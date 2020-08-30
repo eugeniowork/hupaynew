@@ -434,4 +434,58 @@ class Cashbond_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+    public function getApproveCashbondWithdraw(){
+        $emp_id = $this->session->userdata('user');
+
+        $approveWithdraw = $this->cashbond_model->get_approve_cashbond_withdraw($emp_id);
+        $finalCashbondWithdrawData = array();
+        if(!empty($approveWithdraw)){
+            foreach ($approveWithdraw as $value) {
+                $dateFile = date_format(date_create($value->dateCreated), 'F d, Y');
+                $approveDate = date_format(date_create($value->dateApprove), 'F d, Y');
+
+                array_push($finalCashbondWithdrawData, array(
+                    'date_file'=>$dateFile,
+                    'approve_date'=>$approveDate,
+                    'amount'=>moneyConvertion($value->amount_withdraw),
+                ));
+            }
+            $this->data['status'] = "success";
+            $this->data['finalCashbondWithdrawData'] = $finalCashbondWithdrawData;
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    public function getPendingCashbondWithdraw(){
+        $emp_id = $this->session->userdata('user');
+
+        $pendingWithdraw = $this->cashbond_model->get_pending_cashbond_withdraw($emp_id);
+        $finalPendingWithdrawData = array();
+        if(!empty($pendingWithdraw)){
+            foreach ($pendingWithdraw as $value) {
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+                $emp_name = $select_emp_qry['Lastname'] . ", " . $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'];
+                if ($select_emp_qry['Middlename'] == ""){
+                    $emp_name = $select_emp_qry['Lastname'] . ", " . $select_emp_qry['Firstname'];
+                }
+                $dateFile = date_format(date_create($value->dateCreated), 'F d, Y');
+
+                array_push($finalPendingWithdrawData, array(
+                    'file_cashbond_withdrawal_id'=>$value->file_cashbond_withdrawal_id,
+                    'emp_name'=>$emp_name,
+                    'amount'=>moneyConvertion($value->amount_withdraw),
+                    'date_file'=>$dateFile
+                ));
+            }
+            $this->data['status'] = "success";
+            $this->data['finalPendingWithdrawData'] = $finalPendingWithdrawData;
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+        echo json_encode($this->data);
+    }
 }

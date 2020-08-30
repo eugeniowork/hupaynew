@@ -189,7 +189,7 @@
     <?php $totalCashbond = $row_cashbond['totalCashbond'];?>
     <div class="div-main-body cash-withdrawal" >
         <div class="div-main-body-head">
-            Cash withdraw History
+            Cash Withdraw History
         </div>
         <div class="div-main-body-content">
             <span>
@@ -198,7 +198,7 @@
             </span><br/>
             <button class="btn-outline-success btn btn-sm pull-right" data-toggle="modal" data-target="#cashWithdrawalModal">File Cashbond Withdrawal</button>
             <br/><br/>
-            <table class="table table-striped" id="cashbondWithdrawHistory">
+            <table class="table table-striped" id="cashbondWithdrawHistoryApprove">
                 <thead>
                     <tr>
                         <th><i class="fas fa-calendar-alt"></i>&nbsp;Date File</th>
@@ -269,6 +269,31 @@
     </div>
 
 <?php endif;?>
+<?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3): ?>
+    <div class="div-main-body list-of-filed-cash-withdrawal" >
+        <div class="div-main-body-head">
+            List of Filed Cashbond Withdrawal
+        </div>
+        <div class="div-main-body-content">
+            <table class="table table-striped" id="pendingCashbondWithdrawal">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-calendar-alt"></i>&nbsp;Employee Name</th>
+                        <th><i class="fas fa-clock"></i>&nbsp;Amount Withdraw</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Date File</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php endif;?>
+
+
+
 <br/><br/>
 <script src="<?php echo base_url();?>assets/js/cashbond/cashbond.js"></script>
 <script src="<?php echo base_url();?>assets/js/cashbond/cash_withdrawal.js"></script>
