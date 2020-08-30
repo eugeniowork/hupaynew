@@ -291,9 +291,33 @@
         </div>
     </div>
 <?php endif;?>
+<?php $file_amount_withdraw = 0;?>
+<?php if(checkExistFileCashbondWithdrawal($employeeInformation['emp_id']) == 1):?>
+    <?php
+        $row_file_cashbond_withdrawal = getLastestFileCashbondWithdrawal($employeeInformation['emp_id']);
+        $file_amount_withdraw = $row_file_cashbond_withdrawal['amount_withdraw'];
+    ?>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="div-main-body pending-cashbond-withdrawable-information" >
+                <div class="div-main-body-head">
+                    Pending File Cashbond Withdrawal Information
+                </div>
+                <div class="div-main-body-content">
+                    <span><strong>Date File:</strong>&nbsp;<?php echo dateFormat($row_file_cashbond_withdrawal['dateCreated'])?></span>
+                    <br/>
+                    <span><strong>Amount:</strong>&nbsp;Php.&nbsp;<?php echo moneyConvertion($row_file_cashbond_withdrawal['amount_withdraw']) ?></span>
+                    <br/><br/>
+                    <button class="btn btn-sm btn-outline-success">Edit</button>
+                    <button class="btn btn-sm btn-outline-danger cancel-cashbond-withdrawal-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif;?>
 
 
-
+<br/><br/>
 <br/><br/>
 <script src="<?php echo base_url();?>assets/js/cashbond/cashbond.js"></script>
 <script src="<?php echo base_url();?>assets/js/cashbond/cash_withdrawal.js"></script>

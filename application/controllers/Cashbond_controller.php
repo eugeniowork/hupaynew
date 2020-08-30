@@ -610,4 +610,24 @@ class Cashbond_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+
+    public function cancelCashbondWithdrawal(){
+        $emp_id = $this->session->userdata('user');
+        $allPendingWithdrawal = $this->cashbond_model->get_all_pending_cashbond_withdrawal();
+        if(!empty($allPendingWithdrawal)){
+
+            $updateData = array(
+                'approve_stats'=>3,
+
+            );
+            $this->cashbond_model->update_cashbond_withdrawal_data_by_emp_id($emp_id, $updateData);
+
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
 }

@@ -215,4 +215,22 @@
         $cashbond = $CI->cashbond_model->get_cashbond($emp_id);
         return $cashbond;
     }
+    function checkExistFileCashbondWithdrawal($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+        $cashbond = $CI->cashbond_model->get_pending_cashbond_withdraw($emp_id);
+        $count = 0;
+        if(!empty($cashbond)){
+            $count = count($cashbond);
+        }
+        return $count;
+    }
+    function getLastestFileCashbondWithdrawal($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+        $latestWithdrawal = $CI->cashbond_model->get_latest_file_cashbond_withdrawal($emp_id, '0', 'dateCreated', 'DESC', 1);
+
+        return $latestWithdrawal;
+        
+    }
 ?>

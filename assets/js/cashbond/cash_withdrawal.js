@@ -193,6 +193,44 @@ $(document).ready(function(){
         });
 	})
 
+	$('.cancel-cashbond-withdrawal-btn').on('click',function(){
+		Swal.fire({
+            html: 'Are you sure you want to cancel your file cashbond withdrawal?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+        	if (result.value) {
+        		$.ajax({
+        			url:base_url+'cashbond_controller/cancelCashbondWithdrawal',
+        			type:'delete',
+        			dataType:'json',
+        			success:function(response){
+        				if(response.status == "success"){
+        					toast_options(4000);
+	                        toastr.success('Your cashbond withdrawal was successfully cancelled.');
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+        				}
+        				else{
+        					toast_options(4000);
+                			toastr.error("There was a problem, please try again!");
+        				}
+        			},
+        			error:function(response){
+        				toast_options(4000);
+                		toastr.error("There was a problem, please try again!");
+        			}
+        		})
+			}
+		});
+	})
+
+
+
 	function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');

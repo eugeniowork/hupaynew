@@ -579,7 +579,8 @@
   padding: 0px 5px; }
 
 body {
-  background: #ececec; }
+  background: #ececec;
+  overflow-x: hidden !important; }
 
 .div-main-body {
   width: 100%;
