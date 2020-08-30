@@ -48,7 +48,18 @@ class Cashbond_model extends CI_Model{
         $query = $this->db->get_where('tb_cashbond',array('cashbondValue'=>$cashbond_value,'cashbond_id'=>$cashbond_id));
         return $query->row_array();
     }
-    
+    public function get_all_employee_cashbond($emp_id){
+        $query = $this->db->get_where('tb_emp_cashbond_history',array('emp_id'=>$emp_id));
+        return $query->result();
+    }
+    public function get_all_employee_cashbond_history($emp_id,$orderBy,$orderType){
+        $this->db->select('*');
+        $this->db->from('tb_emp_cashbond_history');
+        $this->db->where('emp_id',$emp_id);
+        $this->db->order_by($orderBy, $orderType);
+        $query = $this->db->get();
+        return $query->result();
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();

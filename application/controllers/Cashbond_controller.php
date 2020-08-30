@@ -20,8 +20,12 @@ class Cashbond_controller extends CI_Controller{
         // $this->load->helper('date_helper');
         // $this->load->helper('leave_helper');
         //$this->load->library('../controllers/holiday_controller');
-        $this->load->helper('allowance_helper');
         $this->load->model("cashbond_model", 'cashbond_model');
+        $this->load->helper('date_helper');
+        $this->load->helper('hupay_helper');
+        $this->load->helper('allowance_helper');
+        $this->load->helper('cashbond_helper');
+        
     }
     public function index(){
         $this->data['pageTitle'] = 'Cashbond';
@@ -118,6 +122,72 @@ class Cashbond_controller extends CI_Controller{
             
         }
 
+        echo json_encode($this->data);
+    }
+    public function getCashbondHistory(){
+        $cashbond_id = $this->input->post('id');
+        $checkCashbond = $this->cashbond_model->get_cashbond_by_id($cashbond_id);
+        $finalCashbondHistoryEmployeeData = array();
+        $finalCashbondHistoryData = array();
+        if(!empty($checkCashbond)){
+            $emp_id = $checkCashbond['emp_id'];
+
+            
+            $current_date = dateFormat(getDateDate());
+            $row_emp = $this->employee_model->employee_information($emp_id);
+            $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            if ($row_emp['Middlename'] == ""){
+                $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'];
+            }
+
+            $tmpGetEndingBalance = $this->cashbond_model->get_cashbond_current_ending_balance_order_by($emp_id);
+            $percentage = "5%";
+            //echo ;
+            if (str_replace(",","",str_replace("Php","",moneyConvertion($tmpGetEndingBalance['cashbond_balance']))) >= 30000){
+                $percentage = "7%";
+            }
+
+            $totalDebits = getTotalDebitsCashbondHistory($emp_id);
+            $totalInterestEarned = getTotalInterestEarnedCashbondHistory($emp_id);
+            array_push($finalCashbondHistoryEmployeeData, array(
+                'date'=>$current_date,
+                'name'=>$fullName,
+                'percentage'=>$percentage,
+                'total_credit'=>moneyConvertion($tmpGetEndingBalance['cashbond_balance']),
+                'total_debits'=>moneyConvertion($totalDebits),
+                'total_interest'=>moneyConvertion($totalInterestEarned),
+            ));
+
+            $tmpCashbondHistory = $this->cashbond_model->get_all_employee_cashbond_history($emp_id, 'posting_date', 'ASC');
+            if(!empty($tmpCashbondHistory)){
+                foreach($tmpCashbondHistory as $value){
+                    $posting_date = date_format(date_create($value->posting_date), 'F d, Y');
+                    array_push($finalCashbondHistoryData,array(
+                        'emp_cashbond_history' => $value->emp_cashbond_history,
+                        'posting_date'=>$posting_date,
+                        'cash_deposit'=>moneyConvertion($value->cashbond_deposit),
+                        'interset'=>moneyConvertion($value->interest),
+                        'amount_withdraw'=>moneyConvertion($value->amount_withdraw),
+                        'reference_no'=>$value->reference_no,
+                        'cashbond_balance'=>$value->cashbond_balance,
+                    ));
+                    
+                }
+            }
+
+
+
+            $this->data['status'] = "success";
+            $this->data['finalCashbondHistoryEmployeeData'] = $finalCashbondHistoryEmployeeData;
+            $this->data['finalCashbondHistoryData'] = $finalCashbondHistoryData;
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem getting the cashbond history, please try again.";
+        }
+
+
+        
         echo json_encode($this->data);
     }
 }

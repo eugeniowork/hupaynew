@@ -18,7 +18,7 @@ $(document).ready(function(){
                             '<td>'+data.total_cashbond+'</td>'+
                             '<td>'+
                             '<button id='+data.cashbond_id+' class="edit-cashbond-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#editCashbondValueNoModal"><i id='+data.cashbond_id+' class="fas fa-pencil-alt"></i></button>&nbsp;'+
-                            '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-eye"></i></button>&nbsp;'+
+                            '<button id='+data.cashbond_id+' class="view-cashbond-history btn btn-sm btn-outline-success" data-toggle="modal" data-target="#viewCashbondHistoryModal"><i id='+data.cashbond_id+' class="fas fa-eye"></i></button>&nbsp;'+
                             '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-plus-circle"></i></button>&nbsp;'+
                             '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-adjust"></i></button>&nbsp;'+
                             '</td>'+
@@ -158,6 +158,26 @@ $(document).ready(function(){
         }
     })
 
+    var cashbondHistoryId = null;
+    $(document).on('click','.view-cashbond-history',function(e){
+        cashbondHistoryId = e.target.id;
+
+        $.ajax({
+            url:base_url+'cashbond_controller/getCashbondHistory',
+            type:'post',
+            dataType:'json',
+            data:{
+                id:cashbondHistoryId,
+            },
+            success:function(response){
+
+            },
+            error:function(response){
+
+            }
+        })
+
+    })
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');

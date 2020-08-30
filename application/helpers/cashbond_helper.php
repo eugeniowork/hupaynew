@@ -149,4 +149,42 @@
 
 
     // }
+
+    function getTotalDebitsCashbondHistory($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+
+        $totalDebits = 0;
+        $select_qry = $CI->cashbond_model->get_all_employee_cashbond($emp_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                if ($totalDebits == 0){
+					$totalDebits = $value->amount_withdraw;
+				}
+
+				else {
+					$totalDebits = $totalDebits + $value->amount_withdraw;
+				}
+            }
+        }
+        return $totalDebits;
+    }
+    function getTotalInterestEarnedCashbondHistory($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+        $totalInterestEarned = 0;
+        $select_qry = $CI->cashbond_model->get_all_employee_cashbond($emp_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                if ($totalInterestEarned == 0){
+					$totalInterestEarned = $value->interest;
+				}
+
+				else {
+					$totalInterestEarned = $totalInterestEarned + $value->interest;
+				}
+            }
+        }
+        return $totalInterestEarned;
+    }
 ?>

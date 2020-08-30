@@ -851,6 +851,28 @@
   display: none;
 }
 
+.cashbond #viewCashbondHistoryModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.cashbond #viewCashbondHistoryModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.cashbond #viewCashbondHistoryModal .modal-body i {
+  color: #158cba;
+}
+
+.cashbond #viewCashbondHistoryModal .modal-body textarea {
+  resize: none;
+}
+
+.cashbond #viewCashbondHistoryModal .modal-footer {
+  padding: 0px 5px;
+}
+
 body {
   background: #ececec;
 }
