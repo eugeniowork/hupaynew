@@ -242,7 +242,7 @@
                         <br/>
                         <span>
                             <strong>Withdrawable amount: </strong>
-                            Php.<?php echo number_format($amount_can_withdraw,2);?>
+                            Php.&nbsp;<?php echo number_format($amount_can_withdraw,2);?>
                         </span><br/><hr>
                         <div class="row">
                             <div class="col-lg-6">

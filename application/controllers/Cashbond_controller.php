@@ -480,12 +480,78 @@ class Cashbond_controller extends CI_Controller{
                     'date_file'=>$dateFile
                 ));
             }
-            $this->data['status'] = "success";
-            $this->data['finalPendingWithdrawData'] = $finalPendingWithdrawData;
+            
+            
         }
-        else{
-            $this->data['status'] = "error";
+        $this->data['finalPendingWithdrawData'] = $finalPendingWithdrawData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    public function approveCashWithdrawal(){
+        $id = $this->input->post('id');
+
+        $row = $this->cashbond_model->get_cashbond_withdrawal_by_withdrawal_id($id);
+        $row_cashbond = $this->cashbond_model->get_cashbond($row['emp_id']);
+
+        $totalCashbond = $row_cashbond['totalCashbond'] - $row['amount_withdraw'];
+        $approver_id = $this->session->userdata('user');
+        $dateApprove = getDateDate();
+        $stats = '1';
+
+        $row_ch = $this->cashbond_model->get_all_employee_cashbond_history_limit($row['emp_id'], 'posting_date', 'DESC', '1');
+        $previous_ending_balance_amount = $row_ch['cashbond_balance'];
+
+        $date1 = $row_ch['posting_date'];
+        $date1= date_create($date1);
+
+        $date2 = date("Y-m-d");
+        $date2= date_create($date2);
+
+
+        $percentage = .05;
+        if ($previous_ending_balance_amount >= 30000){
+            $percentage = .07;
         }
+
+
+        //echo $row_ch->posting_date;
+        $diff =date_diff($date1,$date2);
+        $wew =  $diff->format("%R%a");
+        $days = str_replace("+","",$wew);
+
+        //echo $days;
+        $interest = round(($days) * $previous_ending_balance_amount * ($percentage/360),2);
+
+        $approveCashbondWithdrawalData = array(
+            'approver_id'=>$approver_id,
+            'approve_stats'=>$stats,
+            'dateApprove'=>$dateApprove,
+
+        );
+        $this->cashbond_model->update_cashbond_withdrawal_data($id, $approveCashbondWithdrawalData);
+
+        $updateCashWithdrawalData = array(
+            'totalCashbond'=>($totalCashbond + $interest),
+        );
+        $this->cashbond_model->update_cashbond_data($row['emp_id'],$updateCashWithdrawalData);
+
+        $insertCashbondHistoryData = array(
+            'emp_cashbond_history'=>'',
+            'emp_id'=>$row['emp_id'],
+            'cashbond_deposit'=>0,
+            'remarks'=>'',
+            'interest'=>$interest,
+            'posting_date'=>$dateApprove,
+            'amount_withdraw'=>$row['amount_withdraw'],
+            'cashbond_balance'=>($totalCashbond + $interest),
+            'interest_rate'=>0,
+            'dateCreated'=>$dateApprove,
+
+        );
+        $this->cashbond_model->insert_cashbond_history_data($insertCashbondHistoryData);
+        $this->data['status'] = "success";
+
+
         echo json_encode($this->data);
     }
 }

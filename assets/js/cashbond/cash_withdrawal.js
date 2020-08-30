@@ -74,6 +74,7 @@ $(document).ready(function(){
 	}
 
 	get_pending_cashbond_withdraw();
+
 	function get_pending_cashbond_withdraw(){
 		$('#pendingCashbondWithdrawal tbody').empty();
 		$.ajax({
@@ -82,15 +83,22 @@ $(document).ready(function(){
 			dataType:'json',
 			success:function(response) {
 				if(response.status == "success"){
-					response.finalPendingWithdrawData.forEach(function(data,key){
-						var append = '<tr '+data.file_cashbond_withdrawal_id+'>'+
-							'<td>'+data.emp_name+'</td>'+
-							'<td>Php. '+data.amount+'</td>'+
-							'<td>'+data.date_file+'</td>'+
-							'<td>'+data.date_file+'</td>'+
-						'</tr>';
-						$('#pendingCashbondWithdrawal tbody').append(append);
-					})
+					if(response.finalPendingWithdrawData.length > 0){
+						response.finalPendingWithdrawData.forEach(function(data,key){
+							var append = '<tr '+data.file_cashbond_withdrawal_id+'>'+
+								'<td class="withdrawal-name-'+data.file_cashbond_withdrawal_id+'">'+data.emp_name+'</td>'+
+								'<td>Php. '+data.amount+'</td>'+
+								'<td>'+data.date_file+'</td>'+
+								'<td>'+
+									'<button id='+data.file_cashbond_withdrawal_id+' class="btn btn-sm btn-outline-primary approve-withdrawal-btn">Approve</button>'+
+									'&nbsp;'+
+									'<button id='+data.file_cashbond_withdrawal_id+' class="btn btn-sm btn-outline-danger">Disapprove</button>'+
+								'</td>'+
+							'</tr>';
+							$('#pendingCashbondWithdrawal tbody').append(append);
+						})
+					}
+					
 					$('#pendingCashbondWithdrawal').dataTable();
 				}
 				else{
@@ -105,7 +113,45 @@ $(document).ready(function(){
 		})
 	}
 
-
+	$(document).on('click','.approve-withdrawal-btn',function(e){
+		var id = e.target.id;
+		Swal.fire({
+            html: 'Are you sure you want to approve this filed cashbond by <strong>'+$('.withdrawal-name-'+id).text()+'</strong>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+        	if (result.value) {
+        		$.ajax({
+        			url:base_url+'cashbond_controller/approveCashWithdrawal',
+        			type:'post',
+        			dataType:'json',
+        			data:{
+        				id:id,
+        			},
+        			success:function(response){
+        				if(response.status == "success"){
+        					toast_options(4000);
+	                        toastr.success('Cashbond withdrawal by <strong>'+$('.withdrawal-name-'+id).text()+'</strong> was successfully approved.');
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+        				}
+        				else{
+        					toast_options(4000);
+                			toastr.error("There was a problem, please try again!");
+        				}
+        			},
+        			error:function(response){
+        				toast_options(4000);
+                		toastr.error("There was a problem, please try again!");
+        			}
+        		})
+			}
+		});
+	})
 
 
 	function change_button_to_default(btnName, btnText){

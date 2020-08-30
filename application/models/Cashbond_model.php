@@ -106,6 +106,23 @@ class Cashbond_model extends CI_Model{
         $query = $this->db->get_where('tb_file_cashbond_withdrawal',array('emp_id'=>$emp_id, 'approve_stats'=>0));
         return $query->result();
     }
+    public function get_cashbond_withdrawal_by_withdrawal_id($id){
+        $query = $this->db->get_where('tb_file_cashbond_withdrawal',array('file_cashbond_withdrawal_id'=>$id));
+        return $query->row_array();
+    }
+
+    public function update_cashbond_withdrawal_data($id,$data){
+        $this->db->trans_start();
+        $this->db->where('file_cashbond_withdrawal_id',$id);
+        $this->db->update('tb_file_cashbond_withdrawal',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();
