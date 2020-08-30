@@ -438,6 +438,7 @@ class Payroll_reports_controller extends CI_Controller{
                 deductSimkimban($cutOffPeriod);
                 addYTDcurrentYear($cutOffPeriod);
                 insertEmpCashbondHistory($current_date);
+                //addCashbondTotalValue();
                 deductLeaveCount();
                 insertPayslipAllowance($cutOffPeriod,$current_date);
                 $cutOffPeriod = getCutOffPeriodLatest();

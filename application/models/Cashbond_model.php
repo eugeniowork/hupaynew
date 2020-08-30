@@ -9,8 +9,8 @@ class Cashbond_model extends CI_Model{
         return $query->row_array();
     }
     public function get_cashbond_current_ending_balance_order_by($emp_id){
-        $query = $this->db->get_where('tb_emp_cashbond_history',array('emp_id'=>$emp_id));
-        return $query->row_array();
+        // $query = $this->db->get_where('tb_emp_cashbond_history',array('emp_id'=>$emp_id));
+        // return $query->row_array();
 
         $this->db->select('*');
         $this->db->from('tb_emp_cashbond_history');
@@ -35,6 +35,9 @@ class Cashbond_model extends CI_Model{
         else{
             return "error";
         }
+    }
+    public function get_all_cashbond(){
+
     }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
