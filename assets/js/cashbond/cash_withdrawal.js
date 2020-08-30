@@ -229,6 +229,46 @@ $(document).ready(function(){
 		});
 	})
 
+	var loadingUpdateCashWithdrawal = false;
+	$('.update-cash-withdrawal-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingUpdateCashWithdrawal){
+			loadingUpdateCashWithdrawal = true;
+			$(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.update-cash-withdraw-warning').empty();
+            $.ajax({
+            	url:base_url+'cashbond_controller/updateCashbondWithdrawal',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		amount:$('.update-cash-withdraw-amount').val(),
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success("Your cashbond withdrawal was successfully updated.");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.update-cash-withdraw-warning',response.msg, "danger")
+                        loadingUpdateCashWithdrawal = false;
+                        change_button_to_default(btnName, 'Update');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingUpdateCashWithdrawal = false;
+                    change_button_to_default(btnName, 'Update');
+            	}
+            })
+		}
+	})
 
 
 	function change_button_to_default(btnName, btnText){

@@ -630,4 +630,39 @@ class Cashbond_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+
+    public function updateCashbondWithdrawal(){
+        $amount = $this->input->post('amount');
+        $emp_id = $this->session->userdata('user');
+        $this->form_validation->set_rules('amount','amount','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter the amount to withdraw.";
+        }
+        else{
+            $totalCashbond = $this->cashbond_model->get_cashbond($emp_id);
+            $totalCashbond = $totalCashbond['totalCashbond'];
+
+            $total_salary_loan = getAllSalaryLoan($emp_id);
+            $total_simkimban_loan = getAllRemainingBalanceSimkimban($emp_id);
+            $available_withdraw_cashbond = ($totalCashbond - 5000) - ($total_salary_loan + $total_simkimban_loan);
+
+            $dateCreated = getDateDate();
+
+            if(floatval($amount > floatval($available_withdraw_cashbond))){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "The amount you want to withdraw is higher than the withdrawable amount.";
+            }
+            else{
+                $latestCashbondWithdraw = getLastestFileCashbondWithdrawal($emp_id);
+                $file_cashbond_withdrawal_id = $latestCashbondWithdraw['file_cashbond_withdrawal_id'];
+                $updateData = array(
+                    'amount_withdraw'=>$amount,
+                );
+                $this->cashbond_model->update_cashbond_withdrawal_data($file_cashbond_withdrawal_id, $updateData);
+                $this->data['status'] = "success";
+            }
+        }
+        echo json_encode($this->data);
+    }
 }

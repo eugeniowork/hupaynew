@@ -578,6 +578,19 @@
 .cash-withdrawal #cashWithdrawalModal .modal-footer {
   padding: 0px 5px; }
 
+#editCashbonWithdrawalModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  #editCashbonWithdrawalModal .modal-header .modal-title {
+    font-size: 15px; }
+#editCashbonWithdrawalModal .modal-body i {
+  color: #158cba; }
+#editCashbonWithdrawalModal .modal-body textarea {
+  resize: none; }
+#editCashbonWithdrawalModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

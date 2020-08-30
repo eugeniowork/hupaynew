@@ -182,11 +182,20 @@
         </div>
     </div>
 </div>
+<?php
+    $row_cashbond = getInfoByEmpId();
+    $totalCashbond = $row_cashbond['totalCashbond'];
+    $total_salary_loan = getAllSalaryLoan($employeeInformation['emp_id']);
+    $total_simkimban_loan = getAllRemainingBalanceSimkimban($employeeInformation['emp_id']);
+    $amount_can_withdraw = ($totalCashbond - 5000) - ($total_salary_loan + $total_simkimban_loan);
 
+    if ($amount_can_withdraw < 0){
+        $amount_can_withdraw = 0;
+    }
+?>
 <!-- etong zero dapat one to -->
 <?php if(checkExistCashBondByEmpId() == 1):?>
-    <?php $row_cashbond = getInfoByEmpId();?>
-    <?php $totalCashbond = $row_cashbond['totalCashbond'];?>
+    
     <div class="div-main-body cash-withdrawal" >
         <div class="div-main-body-head">
             Cash Withdraw History
@@ -221,15 +230,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <?php
-                            $total_salary_loan = getAllSalaryLoan($employeeInformation['emp_id']);
-                            $total_simkimban_loan = getAllRemainingBalanceSimkimban($employeeInformation['emp_id']);
-                            $amount_can_withdraw = ($totalCashbond - 5000) - ($total_salary_loan + $total_simkimban_loan);
-
-                            if ($amount_can_withdraw < 0){
-                                $amount_can_withdraw = 0;
-                            }
-                        ?>
+                        
                         <span>
                             <strong>Total Cashbond: </strong>
                             Php&nbsp;<?php echo moneyConvertion($totalCashbond)?>
@@ -308,8 +309,37 @@
                     <br/>
                     <span><strong>Amount:</strong>&nbsp;Php.&nbsp;<?php echo moneyConvertion($row_file_cashbond_withdrawal['amount_withdraw']) ?></span>
                     <br/><br/>
-                    <button class="btn btn-sm btn-outline-success">Edit</button>
+                    <button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#editCashbonWithdrawalModal">Edit</button>
                     <button class="btn btn-sm btn-outline-danger cancel-cashbond-withdrawal-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editCashbonWithdrawalModal" tabindex="-1" role="dialog" aria-labelledby="editCashbonWithdrawalModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCashbonWithdrawalModalLongTitle">Update Cash Withdrawal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span><strong>Note</strong>: Available amount that can withdraw <strong>Php.&nbsp;<?php echo number_format($amount_can_withdraw,2);?></strong></span>
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span>Amount to Withdraw</span>
+                            <input type="text" class="float-only form-control update-cash-withdraw-amount" value="<?php echo $row_file_cashbond_withdrawal['amount_withdraw']?>" placeholder="Enter amount">
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="update-cash-withdraw-warning">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary update-cash-withdrawal-btn">Update</button>
                 </div>
             </div>
         </div>
