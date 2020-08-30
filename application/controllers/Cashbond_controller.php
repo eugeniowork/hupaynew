@@ -26,6 +26,8 @@ class Cashbond_controller extends CI_Controller{
         $this->load->helper('hupay_helper');
         $this->load->helper('allowance_helper');
         $this->load->helper('cashbond_helper');
+        $this->load->helper('salary_helper');
+        $this->load->helper('simkimban_helper');
         
     }
     public function index(){
@@ -378,6 +380,58 @@ class Cashbond_controller extends CI_Controller{
                 $this->data['status'] = "success";
             }
         }
+        echo json_encode($this->data);
+    }
+
+    public function insertCashWithdraw(){
+        $amount = $this->input->post('amount');
+        $emp_id = $this->session->userdata('user');
+        $this->form_validation->set_rules('amount','amount','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter the amount to withdraw.";
+        }
+        else{
+            $totalCashbond = $this->cashbond_model->get_cashbond($emp_id);
+            $totalCashbond = $totalCashbond['totalCashbond'];
+
+            $total_salary_loan = getAllSalaryLoan($emp_id);
+            $total_simkimban_loan = getAllRemainingBalanceSimkimban($emp_id);
+            $available_withdraw_cashbond = ($totalCashbond - 5000) - ($total_salary_loan + $total_simkimban_loan);
+
+            $dateCreated = getDateDate();
+
+            if(floatval($amount > floatval($available_withdraw_cashbond))){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "The amount you want to withdraw is higher than the withdrawable amount.";
+            }
+            else{
+                $pendingCashbondWithdrawal = $this->cashbond_model->get_pending_cashbond_withdrawal($emp_id);
+                if(!empty($pendingCashbondWithdrawal)){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "You still have a pending cashbond withdrawal.";
+                }
+                else{
+
+                    $insertCashbondWithdrawalData = array(
+                        'file_cashbond_withdrawal_id'=>'',
+                        'emp_id'=>$emp_id,
+                        'approver_id'=>'',
+                        'amount_withdraw'=>$amount,
+                        'approve_stats'=>0,
+                        'dateApprove'=>'',
+                        'dateCreated'=>$dateCreated
+                    );
+                    $insertCashbondWithdrawal = $this->cashbond_model->insert_cashbond_withdrawal_data($insertCashbondWithdrawalData);
+                    $this->data['msg'] = 'Cashbond withdrawal with amount of <strong>'.moneyConvertion($amount).'</strong> was successfully filed.';
+                    $this->data['status'] = "success";
+                }
+                
+            }
+
+            
+        }
+
         echo json_encode($this->data);
     }
 }

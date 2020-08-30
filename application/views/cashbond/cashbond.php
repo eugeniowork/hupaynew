@@ -1,4 +1,9 @@
 <?php $this->load->helper('cashbond_helper')?>
+<?php $this->load->helper('hupay_helper')?>
+<?php $this->load->helper('salary_helper')?>
+<?php $this->load->helper('simkimban_helper')?>
+<?php $this->load->helper('date_helper')?>
+<?php $employeeInformation = employeeInformation();?>
 <div class="div-main-body cashbond" >
     <div class="div-main-body-head">
         List of Cashbond Employee
@@ -177,8 +182,11 @@
         </div>
     </div>
 </div>
+
 <!-- etong zero dapat one to -->
-<?php if(checkExistCashBondByEmpId() == 0):?>
+<?php if(checkExistCashBondByEmpId() == 1):?>
+    <?php $row_cashbond = getInfoByEmpId();?>
+    <?php $totalCashbond = $row_cashbond['totalCashbond'];?>
     <div class="div-main-body cash-withdrawal" >
         <div class="div-main-body-head">
             Cash withdraw History
@@ -187,10 +195,80 @@
             <span>
                 <i class="fas fa-info-circle"></i>&nbsp;Note: Cashbond rate increase 2% from 3% become 5% per annum and upon 
                 reaching 30,000 and above rate also increase by 2% from 5% become 7%.
-            </span>
+            </span><br/>
+            <button class="btn-outline-success btn btn-sm pull-right" data-toggle="modal" data-target="#cashWithdrawalModal">File Cashbond Withdrawal</button>
+            <br/><br/>
+            <table class="table table-striped" id="cashbondWithdrawHistory">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-calendar-alt"></i>&nbsp;Date File</th>
+                        <th><i class="fas fa-clock"></i>&nbsp;Date Approve</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Amount Withdraw</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="cashWithdrawalModal" tabindex="-1" role="dialog" aria-labelledby="cashWithdrawalModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cashWithdrawalModalLongTitle">File Cash Withdrawal</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php
+                            $total_salary_loan = getAllSalaryLoan($employeeInformation['emp_id']);
+                            $total_simkimban_loan = getAllRemainingBalanceSimkimban($employeeInformation['emp_id']);
+                            $amount_can_withdraw = ($totalCashbond - 5000) - ($total_salary_loan + $total_simkimban_loan);
+
+                            if ($amount_can_withdraw < 0){
+                                $amount_can_withdraw = 0;
+                            }
+                        ?>
+                        <span>
+                            <strong>Total Cashbond: </strong>
+                            Php&nbsp;<?php echo moneyConvertion($totalCashbond)?>
+                        </span>
+                        <br/>
+                        <span>
+                            <strong>Pending Loans Total Amount: </strong>
+                            Php.&nbsp;<?php echo number_format($total_salary_loan + $total_simkimban_loan,2); ?>
+                        </span>
+                        <br/>
+                        <span>
+                            <strong>Withdrawable amount: </strong>
+                            Php.<?php echo number_format($amount_can_withdraw,2);?>
+                        </span><br/><hr>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <?php $current_date = dateFormat(getDateDate()); ?>
+                                <span>Date</span>
+                                <input type="text" class="form-control" readonly value="<?php echo $current_date?>">
+                            </div>
+                            <div class="col-lg-6">
+                                <span>Amount</span>
+                                <input type="text" class="float-only form-control amount-withdraw" placeholder="Enter amount">
+                            </div>
+                        </div><br/>
+                        <div class="file-withdraw-warning">
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary file-withdraw-btn">File Withdrawal</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
+
 <?php endif;?>
 <br/><br/>
 <script src="<?php echo base_url();?>assets/js/cashbond/cashbond.js"></script>
+<script src="<?php echo base_url();?>assets/js/cashbond/cash_withdrawal.js"></script>

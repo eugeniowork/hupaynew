@@ -2,92 +2,62 @@
   height: 100vh;
   width: 100%;
   background: #dadada;
-  position: relative;
-}
-
-.login .loginbg {
-  height: 100vh;
-  width: 100%;
-  position: absolute;
-}
-
-.login .loginForm {
-  z-index: 1;
-  padding: 20px 50px;
-  background: white;
-  min-height: 400px;
-  height: auto;
-  width: 400px;
-  border-radius: 5px;
-}
-
-.login .loginForm img {
-  height: 80px;
-  width: 80px;
-}
-
-.login .loginForm .loginTitle {
-  text-align: center;
-  font-size: 24px;
-}
-
-.login .loginForm .loginTitle span {
-  font-style: italic;
-}
-
-.login .loginForm input, .login .loginForm select {
-  padding-left: 45px;
-  background: #ececec;
-  margin-bottom: 10px;
-}
-
-.login .loginForm input:focus, .login .loginForm select:focus {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.login .loginForm .forgotPasswordBtn {
-  font-style: italic;
-  color: #333;
-  text-align: center;
-}
-
-.login .loginForm i {
-  position: absolute;
-  z-index: 2;
-  display: block;
-  width: 2.375rem;
-  height: 2.375rem;
-  padding: 10px 10px;
-  text-align: center;
-  color: #333;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-.login .copyright {
-  padding: 10px 10px;
-  position: relative;
-}
-
-.login .copyright img {
-  width: 20px;
-  height: 20px;
-}
-
-.login .copyright small {
-  font-weight: bold;
-}
+  position: relative; }
+  .login .loginbg {
+    height: 100vh;
+    width: 100%;
+    position: absolute; }
+  .login .loginForm {
+    z-index: 1;
+    padding: 20px 50px;
+    background: white;
+    min-height: 400px;
+    height: auto;
+    width: 400px;
+    border-radius: 5px; }
+    .login .loginForm img {
+      height: 80px;
+      width: 80px; }
+    .login .loginForm .loginTitle {
+      text-align: center;
+      font-size: 24px; }
+      .login .loginForm .loginTitle span {
+        font-style: italic; }
+    .login .loginForm input, .login .loginForm select {
+      padding-left: 45px;
+      background: #ececec;
+      margin-bottom: 10px; }
+      .login .loginForm input:focus, .login .loginForm select:focus {
+        box-shadow: none; }
+    .login .loginForm .forgotPasswordBtn {
+      font-style: italic;
+      color: #333;
+      text-align: center; }
+    .login .loginForm i {
+      position: absolute;
+      z-index: 2;
+      display: block;
+      width: 2.375rem;
+      height: 2.375rem;
+      padding: 10px 10px;
+      text-align: center;
+      color: #333;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px; }
+  .login .copyright {
+    padding: 10px 10px;
+    position: relative; }
+    .login .copyright img {
+      width: 20px;
+      height: 20px; }
+    .login .copyright small {
+      font-weight: bold; }
 
 #forgotPasswordModal input {
   background: #ececec;
-  margin-bottom: 10px;
-}
-
-#forgotPasswordModal input:focus {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
+  margin-bottom: 10px; }
+  #forgotPasswordModal input:focus {
+    box-shadow: none; }
 
 .top-navbar {
   background: #212529;
@@ -96,858 +66,520 @@
   color: white;
   padding: 15px 20px;
   position: fixed;
-  z-index: 3;
-}
-
-.top-navbar a {
-  font-weight: bold;
-  font-family: sans-serif;
-  color: white;
-  letter-spacing: 4px;
-}
-
-.top-navbar a:hover {
-  text-decoration: none;
-}
-
-.top-navbar a img {
-  width: 30px;
-  height: 30px;
-}
-
-.top-navbar .buttons {
-  line-height: 30px;
-}
-
-.top-navbar .buttons button {
-  color: white;
-  background: none;
-  border: none;
-}
-
-.top-navbar .buttons button:focus {
-  outline: 0 !important;
-}
-
-.top-navbar .buttons button span {
-  background: red;
-  padding: .2em .3em .3em;
-  font-size: 10px;
-  border-radius: 2px;
-  margin-top: -22px;
-  margin-left: 5px;
-  position: absolute;
-}
-
-.top-navbar .buttons button:hover {
-  text-decoration: none;
-}
-
-.top-navbar .buttons .dropdown-menu {
-  top: 23px !important;
-  left: -142px;
-  width: 350px;
-}
-
-.top-navbar .buttons .dropdown-toggle::after {
-  display: none;
-}
-
-.top-navbar .buttons .name {
-  font-size: 14px;
-}
+  z-index: 3; }
+  .top-navbar a {
+    font-weight: bold;
+    font-family: sans-serif;
+    color: white;
+    letter-spacing: 4px; }
+    .top-navbar a:hover {
+      text-decoration: none; }
+    .top-navbar a img {
+      width: 30px;
+      height: 30px; }
+  .top-navbar .buttons {
+    line-height: 30px; }
+    .top-navbar .buttons button {
+      color: white;
+      background: none;
+      border: none; }
+      .top-navbar .buttons button:focus {
+        outline: 0 !important; }
+      .top-navbar .buttons button span {
+        background: red;
+        padding: .2em .3em .3em;
+        font-size: 10px;
+        border-radius: 2px;
+        margin-top: -22px;
+        margin-left: 5px;
+        position: absolute; }
+      .top-navbar .buttons button:hover {
+        text-decoration: none; }
+    .top-navbar .buttons .dropdown-menu {
+      top: 23px !important;
+      left: -142px;
+      width: 350px; }
+    .top-navbar .buttons .dropdown-toggle::after {
+      display: none; }
+    .top-navbar .buttons .name {
+      font-size: 14px; }
 
 .side-navbar {
   height: 100vh;
   width: 230px;
   background: #212529;
   position: fixed;
-  -webkit-box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
-          box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
   overflow: auto;
-  margin-top: 62px;
-}
-
-.side-navbar::-webkit-scrollbar-thumb {
-  background-color: #bdbdbd;
-  /* color of the scroll thumb */
-  border-radius: 0px;
-  /* roundness of the scroll thumb */
-  border: 3px solid #bdbdbd;
-  /* creates padding around scroll thumb */
-}
-
-.side-navbar::-webkit-scrollbar-track {
-  background: white;
-  /* color of the tracking area */
-}
-
-.side-navbar::-webkit-scrollbar {
-  width: 9px;
-  /* width of the entire scrollbar */
-}
-
-.side-navbar .side-navbar-profile {
-  width: 100%;
-  height: auto;
-  background: white;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content {
-  padding: 10px 10px;
-  height: 100%;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content img {
-  height: 150px;
-  width: 150px;
-  padding: 0px 0px;
-  border-radius: 100%;
-  border: 1px solid gray;
-  margin-bottom: 5px;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content button:focus {
-  outline: 0 !important;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content .change-profile-btn {
-  display: none;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content .fullname {
-  font-weight: bold;
-  font-size: 13px;
-  text-align: center;
-  color: #555555;
-}
-
-.side-navbar .side-navbar-profile .side-navbar-profile-content .position {
-  color: #1b4f72;
-  text-align: center;
-  font-weight: bold;
-}
-
-.side-navbar .side-navbar-buttons {
-  padding: 10px 0px;
-  padding-bottom: 90px;
-}
-
-.side-navbar .side-navbar-buttons button, .side-navbar .side-navbar-buttons a {
-  color: #bdbdbd;
-  width: 100%;
-  text-align: justify;
-}
-
-.side-navbar .side-navbar-buttons button:focus, .side-navbar .side-navbar-buttons a:focus {
-  outline: 0 !important;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.side-navbar .side-navbar-buttons button:hover, .side-navbar .side-navbar-buttons a:hover {
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-}
-
-.side-navbar .side-navbar-buttons button i, .side-navbar .side-navbar-buttons a i {
-  line-height: 25px;
-}
-
-.side-navbar .side-navbar-buttons .side-navbar-sub-buttons {
-  padding: 0px 20px;
-}
-
-.side-navbar .side-navbar-buttons .messagingDropdown, .side-navbar .side-navbar-buttons .attendanceDropdown, .side-navbar .side-navbar-buttons .leavesDropdown, .side-navbar .side-navbar-buttons .loansDropdown, .side-navbar .side-navbar-buttons .employeeDropdown,
-.side-navbar .side-navbar-buttons .govTableDropdown, .side-navbar .side-navbar-buttons .adjustmentReportDropdown, .side-navbar .side-navbar-buttons .payrollReportsDropdown, .side-navbar .side-navbar-buttons .payrollDropdown {
-  display: none;
-}
-
-.side-navbar .side-navbar-buttons .loansDropdown img {
-  width: 25px;
-  height: 20px;
-}
-
-.side-navbar .side-navbar-buttons .fa-caret-down {
-  display: none;
-}
+  margin-top: 62px; }
+  .side-navbar::-webkit-scrollbar-thumb {
+    background-color: #bdbdbd;
+    /* color of the scroll thumb */
+    border-radius: 0px;
+    /* roundness of the scroll thumb */
+    border: 3px solid #bdbdbd;
+    /* creates padding around scroll thumb */ }
+  .side-navbar::-webkit-scrollbar-track {
+    background: white;
+    /* color of the tracking area */ }
+  .side-navbar::-webkit-scrollbar {
+    width: 9px;
+    /* width of the entire scrollbar */ }
+  .side-navbar .side-navbar-profile {
+    width: 100%;
+    height: auto;
+    background: white; }
+    .side-navbar .side-navbar-profile .side-navbar-profile-content {
+      padding: 10px 10px;
+      height: 100%; }
+      .side-navbar .side-navbar-profile .side-navbar-profile-content img {
+        height: 150px;
+        width: 150px;
+        padding: 0px 0px;
+        border-radius: 100%;
+        border: 1px solid gray;
+        margin-bottom: 5px; }
+      .side-navbar .side-navbar-profile .side-navbar-profile-content button:focus {
+        outline: 0 !important;
+        box-shadow: none; }
+      .side-navbar .side-navbar-profile .side-navbar-profile-content .change-profile-btn {
+        display: none; }
+      .side-navbar .side-navbar-profile .side-navbar-profile-content .fullname {
+        font-weight: bold;
+        font-size: 13px;
+        text-align: center;
+        color: #555555; }
+      .side-navbar .side-navbar-profile .side-navbar-profile-content .position {
+        color: #1b4f72;
+        text-align: center;
+        font-weight: bold; }
+  .side-navbar .side-navbar-buttons {
+    padding: 10px 0px;
+    padding-bottom: 90px; }
+    .side-navbar .side-navbar-buttons button, .side-navbar .side-navbar-buttons a {
+      color: #bdbdbd;
+      width: 100%;
+      text-align: justify; }
+      .side-navbar .side-navbar-buttons button:focus, .side-navbar .side-navbar-buttons a:focus {
+        outline: 0 !important;
+        box-shadow: none; }
+      .side-navbar .side-navbar-buttons button:hover, .side-navbar .side-navbar-buttons a:hover {
+        background: rgba(0, 0, 0, 0.5);
+        color: white; }
+      .side-navbar .side-navbar-buttons button i, .side-navbar .side-navbar-buttons a i {
+        line-height: 25px; }
+    .side-navbar .side-navbar-buttons .side-navbar-sub-buttons {
+      padding: 0px 20px; }
+    .side-navbar .side-navbar-buttons .messagingDropdown, .side-navbar .side-navbar-buttons .attendanceDropdown, .side-navbar .side-navbar-buttons .leavesDropdown, .side-navbar .side-navbar-buttons .loansDropdown, .side-navbar .side-navbar-buttons .employeeDropdown,
+    .side-navbar .side-navbar-buttons .govTableDropdown, .side-navbar .side-navbar-buttons .adjustmentReportDropdown, .side-navbar .side-navbar-buttons .payrollReportsDropdown, .side-navbar .side-navbar-buttons .payrollDropdown {
+      display: none; }
+    .side-navbar .side-navbar-buttons .loansDropdown img {
+      width: 25px;
+      height: 20px; }
+    .side-navbar .side-navbar-buttons .fa-caret-down {
+      display: none; }
 
 .div-main-body {
-  padding-bottom: 0px !important;
-}
+  padding-bottom: 0px !important; }
 
 .events .events-content {
   width: 100%;
-  background: blue;
-}
-
-.events .events-content .events-content-profile {
-  width: 100%;
-}
-
-.events .events-content .events-content-profile img {
-  height: 50px;
-  width: 50px;
-}
-
-.events .events-content .events-content-profile .events-content-names {
-  margin-left: 10px;
-}
-
-.events .events-content .events-content-profile .events-content-names .name {
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.events .events-content .events-content-profile .events-content-names .role {
-  font-size: 13px;
-}
-
-.events .events-content .events-content-title {
-  font-weight: bold;
-  font-style: italic;
-}
-
-.events .events-content .events-content-post {
-  width: 100% !important;
-}
-
-.events .events-content .events-content-post .events-post-image img {
-  width: 230px;
-  height: 130px;
-}
-
-.events .events-content .events-content-post .event-value {
-  font-size: 15px;
-}
-
-.events .events-content .events-content-names {
-  width: 100%;
-}
+  background: blue; }
+  .events .events-content .events-content-profile {
+    width: 100%; }
+    .events .events-content .events-content-profile img {
+      height: 50px;
+      width: 50px; }
+    .events .events-content .events-content-profile .events-content-names {
+      margin-left: 10px; }
+      .events .events-content .events-content-profile .events-content-names .name {
+        font-size: 15px;
+        font-weight: bold; }
+      .events .events-content .events-content-profile .events-content-names .role {
+        font-size: 13px; }
+  .events .events-content .events-content-title {
+    font-weight: bold;
+    font-style: italic; }
+  .events .events-content .events-content-post {
+    width: 100% !important; }
+    .events .events-content .events-content-post .events-post-image img {
+      width: 230px;
+      height: 130px; }
+    .events .events-content .events-content-post .event-value {
+      font-size: 15px; }
+  .events .events-content .events-content-names {
+    width: 100%; }
 
 .loans-balance .div-main-body-head {
-  background: #1d8348 !important;
-}
-
+  background: #1d8348 !important; }
 .loans-balance .div-main-body-content .show-sss-info-balance-btn {
   background: none;
   border: none;
-  color: #1d8348;
-}
-
-.loans-balance .div-main-body-content .show-sss-info-balance-btn:focus {
-  outline: 0 !important;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
+  color: #1d8348; }
+  .loans-balance .div-main-body-content .show-sss-info-balance-btn:focus {
+    outline: 0 !important;
+    box-shadow: none; }
 .loans-balance .div-main-body-content .div-sss-info-balance {
   background: white;
   display: none;
   position: absolute;
   top: 60px;
-  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
-  z-index: 2;
-}
-
-.loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-head {
-  padding: 10px 10px;
-  font-size: 13px;
-  background: #ffff99;
-  font-weight: bold;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-content {
-  padding: 10px 10px;
-}
+  z-index: 2; }
+  .loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-head {
+    padding: 10px 10px;
+    font-size: 13px;
+    background: #ffff99;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px; }
+  .loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-content {
+    padding: 10px 10px; }
 
 .view-attendance {
-  padding-bottom: 50px !important;
-}
-
-.view-attendance .div-main-body-content {
-  height: auto !important;
-}
-
-.view-attendance .div-main-body-content .search-by {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.view-attendance .div-main-body-content .attendance {
-  margin-top: 10px;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-loading {
-  height: 100px;
-  display: none;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-loading .spinner-border {
-  height: 50px;
-  width: 50px;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-body {
-  display: none;
-  border: 1px solid lightgray;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-head {
-  padding: 5px 5px;
-  background: #1abc9c;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-head span {
-  font-weight: bold;
-  color: white;
-}
-
-.view-attendance .div-main-body-content .attendance .attendance-content {
-  padding: 10px 10px;
-}
-
-.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body i {
-  color: #158cba;
-}
-
-.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body textarea {
-  resize: none;
-}
-
-.view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.view-attendance .div-main-body-content .table {
-  border: 1px solid lightgray;
-}
-
-.view-attendance .div-main-body-content .table tr {
-  text-align: center;
-}
-
-.view-attendance .div-main-body-content .table .editAttendanceBtn {
-  border: none;
-  background: none;
-}
-
-.view-attendance .div-main-body-content .table .editAttendanceBtn:focus {
-  outline: 0 !important;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.view-attendance .div-main-body-content .fa-long-arrow-alt-right {
-  line-height: 30px;
-  font-size: 20px;
-}
-
-.view-attendance .div-main-body-content input {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.view-attendance .attendance-menu-content #addOverTimeModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.view-attendance .attendance-menu-content #addOverTimeModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.view-attendance .attendance-menu-content #addOverTimeModal .modal-body i {
-  color: #158cba;
-}
-
-.view-attendance .attendance-menu-content #addOverTimeModal .modal-body textarea {
-  resize: none;
-}
-
-.view-attendance .attendance-menu-content #addOverTimeModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.view-attendance .attendance-menu-content #addAttendanceModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.view-attendance .attendance-menu-content #addAttendanceModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.view-attendance .attendance-menu-content #addAttendanceModal .modal-body i {
-  color: #158cba;
-}
-
-.view-attendance .attendance-menu-content #addAttendanceModal .modal-body textarea {
-  resize: none;
-}
-
-.view-attendance .attendance-menu-content #addAttendanceModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-body i {
-  color: #158cba;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-body textarea {
-  resize: none;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveModal .modal-body i {
-  color: #158cba;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveModal .modal-body textarea {
-  resize: none;
-}
-
-.view-attendance .attendance-menu-content #fileLeaveModal .modal-footer {
-  padding: 0px 5px;
-}
+  padding-bottom: 50px !important; }
+  .view-attendance .div-main-body-content {
+    height: auto !important; }
+    .view-attendance .div-main-body-content .search-by {
+      font-weight: bold;
+      margin-bottom: 5px; }
+    .view-attendance .div-main-body-content .attendance {
+      margin-top: 10px; }
+      .view-attendance .div-main-body-content .attendance .attendance-loading {
+        height: 100px;
+        display: none; }
+        .view-attendance .div-main-body-content .attendance .attendance-loading .spinner-border {
+          height: 50px;
+          width: 50px; }
+      .view-attendance .div-main-body-content .attendance .attendance-body {
+        display: none;
+        border: 1px solid lightgray; }
+      .view-attendance .div-main-body-content .attendance .attendance-head {
+        padding: 5px 5px;
+        background: #1abc9c; }
+        .view-attendance .div-main-body-content .attendance .attendance-head span {
+          font-weight: bold;
+          color: white; }
+      .view-attendance .div-main-body-content .attendance .attendance-content {
+        padding: 10px 10px; }
+      .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header {
+        background: #158cba;
+        color: white;
+        padding: 5px 10px; }
+        .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-header .modal-title {
+          font-size: 15px; }
+      .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body i {
+        color: #158cba; }
+      .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-body textarea {
+        resize: none; }
+      .view-attendance .div-main-body-content .attendance #editAttendanceModal .modal-footer {
+        padding: 0px 5px; }
+    .view-attendance .div-main-body-content .table {
+      border: 1px solid lightgray; }
+      .view-attendance .div-main-body-content .table tr {
+        text-align: center; }
+      .view-attendance .div-main-body-content .table .editAttendanceBtn {
+        border: none;
+        background: none; }
+        .view-attendance .div-main-body-content .table .editAttendanceBtn:focus {
+          outline: 0 !important;
+          box-shadow: none; }
+    .view-attendance .div-main-body-content .fa-long-arrow-alt-right {
+      line-height: 30px;
+      font-size: 20px; }
+    .view-attendance .div-main-body-content input {
+      box-shadow: none; }
+  .view-attendance .attendance-menu-content #addOverTimeModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .view-attendance .attendance-menu-content #addOverTimeModal .modal-header .modal-title {
+      font-size: 15px; }
+  .view-attendance .attendance-menu-content #addOverTimeModal .modal-body i {
+    color: #158cba; }
+  .view-attendance .attendance-menu-content #addOverTimeModal .modal-body textarea {
+    resize: none; }
+  .view-attendance .attendance-menu-content #addOverTimeModal .modal-footer {
+    padding: 0px 5px; }
+  .view-attendance .attendance-menu-content #addAttendanceModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .view-attendance .attendance-menu-content #addAttendanceModal .modal-header .modal-title {
+      font-size: 15px; }
+  .view-attendance .attendance-menu-content #addAttendanceModal .modal-body i {
+    color: #158cba; }
+  .view-attendance .attendance-menu-content #addAttendanceModal .modal-body textarea {
+    resize: none; }
+  .view-attendance .attendance-menu-content #addAttendanceModal .modal-footer {
+    padding: 0px 5px; }
+  .view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-header .modal-title {
+      font-size: 15px; }
+  .view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-body i {
+    color: #158cba; }
+  .view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-body textarea {
+    resize: none; }
+  .view-attendance .attendance-menu-content #fileLeaveOptionModal .modal-footer {
+    padding: 0px 5px; }
+  .view-attendance .attendance-menu-content #fileLeaveModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .view-attendance .attendance-menu-content #fileLeaveModal .modal-header .modal-title {
+      font-size: 15px; }
+  .view-attendance .attendance-menu-content #fileLeaveModal .modal-body i {
+    color: #158cba; }
+  .view-attendance .attendance-menu-content #fileLeaveModal .modal-body textarea {
+    resize: none; }
+  .view-attendance .attendance-menu-content #fileLeaveModal .modal-footer {
+    padding: 0px 5px; }
 
 .atm-account-no #editAtmNoModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.atm-account-no #editAtmNoModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .atm-account-no #editAtmNoModal .modal-header .modal-title {
+    font-size: 15px; }
 .atm-account-no #editAtmNoModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .atm-account-no #editAtmNoModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .atm-account-no #editAtmNoModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .atm-account-no #editAtmNoModal .atm-account-info {
-  display: none;
-}
-
+  display: none; }
 .atm-account-no #editAtmNoModal .update-atm-account-no-btn {
-  display: none;
-}
+  display: none; }
 
 .working-schedule .title {
   font-weight: bold;
-  font-size: 25px;
-}
-
+  font-size: 25px; }
 .working-schedule #addWorkingDaysModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.working-schedule #addWorkingDaysModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .working-schedule #addWorkingDaysModal .modal-header .modal-title {
+    font-size: 15px; }
 .working-schedule #addWorkingDaysModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .working-schedule #addWorkingDaysModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .working-schedule #addWorkingDaysModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .working-schedule #updateWorkingDaysModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.working-schedule #updateWorkingDaysModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .working-schedule #updateWorkingDaysModal .modal-header .modal-title {
+    font-size: 15px; }
 .working-schedule #updateWorkingDaysModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .working-schedule #updateWorkingDaysModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .working-schedule #updateWorkingDaysModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .working-schedule #updateWorkingDaysModal .update-working-days-info, .working-schedule #updateWorkingDaysModal .update-working-days-btn {
-  display: none;
-}
+  display: none; }
 
 .generate-payroll .generate-payroll-notes {
-  height: 100%;
-}
-
+  height: 100%; }
 .generate-payroll .loading-generating {
-  display: none;
-}
-
+  display: none; }
 .generate-payroll .generated-payroll-body .generated-payroll-content {
   height: auto;
   width: 100%;
   border: 1px solid gray;
   padding: 20px 20px;
-  margin-top: 10px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body i {
-  color: #158cba;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body textarea {
-  resize: none;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content img {
-  height: 30px;
-  width: 30px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .title-lloyds {
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .titles {
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.generate-payroll .generated-payroll-body .generated-payroll-content .earnings {
-  background: #ECECED;
-  border-radius: 5px;
-  padding: 10px 10px;
-  margin-top: 10px;
-}
+  margin-top: 10px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-header .modal-title {
+      font-size: 15px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body i {
+    color: #158cba; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-body textarea {
+    resize: none; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .payrollRemarksModal .modal-footer {
+    padding: 0px 5px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content img {
+    height: 30px;
+    width: 30px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .title-lloyds {
+    font-weight: bold;
+    font-size: 12px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .titles {
+    font-weight: bold;
+    font-size: 13px; }
+  .generate-payroll .generated-payroll-body .generated-payroll-content .earnings {
+    background: #ECECED;
+    border-radius: 5px;
+    padding: 10px 10px;
+    margin-top: 10px; }
 
 .payroll-info .loading-generating {
-  display: none;
-}
-
+  display: none; }
 .payroll-info .generated-payroll-info-body .generated-payroll-info-content {
   height: auto;
   width: 100%;
   border: 1px solid gray;
   padding: 20px 20px;
-  margin-top: 10px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header {
-  background: #158cba;
-  color: white;
-  padding: 5px 10px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body i {
-  color: #158cba;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body textarea {
-  resize: none;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-footer {
-  padding: 0px 5px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content img {
-  height: 30px;
-  width: 30px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .title-lloyds {
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .titles {
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content .earnings {
-  background: #ECECED;
-  border-radius: 5px;
-  padding: 10px 10px;
-  margin-top: 10px;
-}
-
-.payroll-info .generated-payroll-info-body .generated-payroll-info-content textarea {
-  resize: none;
-}
+  margin-top: 10px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header {
+    background: #158cba;
+    color: white;
+    padding: 5px 10px; }
+    .payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-header .modal-title {
+      font-size: 15px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body i {
+    color: #158cba; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-body textarea {
+    resize: none; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .payrollRemarksModal .modal-footer {
+    padding: 0px 5px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content img {
+    height: 30px;
+    width: 30px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .title-lloyds {
+    font-weight: bold;
+    font-size: 12px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .titles {
+    font-weight: bold;
+    font-size: 13px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content .earnings {
+    background: #ECECED;
+    border-radius: 5px;
+    padding: 10px 10px;
+    margin-top: 10px; }
+  .payroll-info .generated-payroll-info-body .generated-payroll-info-content textarea {
+    resize: none; }
 
 .minimum-wage #editMinWageModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.minimum-wage #editMinWageModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .minimum-wage #editMinWageModal .modal-header .modal-title {
+    font-size: 15px; }
 .minimum-wage #editMinWageModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .minimum-wage #editMinWageModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .minimum-wage #editMinWageModal .modal-footer {
-  padding: 0px 5px;
-}
+  padding: 0px 5px; }
 
 .payroll-reports #approvePayrollModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.payroll-reports #approvePayrollModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .payroll-reports #approvePayrollModal .modal-header .modal-title {
+    font-size: 15px; }
 .payroll-reports #approvePayrollModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .payroll-reports #approvePayrollModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .payroll-reports #approvePayrollModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .payroll-reports #preApprovePayrollModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.payroll-reports #preApprovePayrollModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .payroll-reports #preApprovePayrollModal .modal-header .modal-title {
+    font-size: 15px; }
 .payroll-reports #preApprovePayrollModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .payroll-reports #preApprovePayrollModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .payroll-reports #preApprovePayrollModal .modal-footer {
-  padding: 0px 5px;
-}
+  padding: 0px 5px; }
 
 .cashbond #editCashbondValueNoModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.cashbond #editCashbondValueNoModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .cashbond #editCashbondValueNoModal .modal-header .modal-title {
+    font-size: 15px; }
 .cashbond #editCashbondValueNoModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .cashbond #editCashbondValueNoModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .cashbond #editCashbondValueNoModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .cashbond #editCashbondValueNoModal .cashbond-info {
-  display: none;
-}
-
+  display: none; }
 .cashbond #editCashbondValueNoModal .update-cashbond-btn {
-  display: none;
-}
-
+  display: none; }
 .cashbond #viewCashbondHistoryModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.cashbond #viewCashbondHistoryModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .cashbond #viewCashbondHistoryModal .modal-header .modal-title {
+    font-size: 15px; }
 .cashbond #viewCashbondHistoryModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .cashbond #viewCashbondHistoryModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .cashbond #viewCashbondHistoryModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .cashbond #viewCashbondHistoryModal .cashbond-history-info {
-  display: none;
-}
-
-.cashbond #viewCashbondHistoryModal .cashbond-history-info .ref-no {
-  display: none;
-}
-
+  display: none; }
+  .cashbond #viewCashbondHistoryModal .cashbond-history-info .ref-no {
+    display: none; }
 .cashbond #viewCashbondHistoryModal .print-cashbond-history-btn {
-  display: none;
-}
-
+  display: none; }
 .cashbond #addCashbondDepositModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.cashbond #addCashbondDepositModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .cashbond #addCashbondDepositModal .modal-header .modal-title {
+    font-size: 15px; }
 .cashbond #addCashbondDepositModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .cashbond #addCashbondDepositModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .cashbond #addCashbondDepositModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .cashbond #addCashbondDepositModal .deposit-cashbond-info {
-  display: none;
-}
-
+  display: none; }
 .cashbond #addCashbondDepositModal .submit-deposit-cashbond-btn {
-  display: none;
-}
-
+  display: none; }
 .cashbond #adjustCashbondModal .modal-header {
   background: #158cba;
   color: white;
-  padding: 5px 10px;
-}
-
-.cashbond #adjustCashbondModal .modal-header .modal-title {
-  font-size: 15px;
-}
-
+  padding: 5px 10px; }
+  .cashbond #adjustCashbondModal .modal-header .modal-title {
+    font-size: 15px; }
 .cashbond #adjustCashbondModal .modal-body i {
-  color: #158cba;
-}
-
+  color: #158cba; }
 .cashbond #adjustCashbondModal .modal-body textarea {
-  resize: none;
-}
-
+  resize: none; }
 .cashbond #adjustCashbondModal .modal-footer {
-  padding: 0px 5px;
-}
-
+  padding: 0px 5px; }
 .cashbond #adjustCashbondModal .adjust-cashbond-info {
-  display: none;
-}
-
+  display: none; }
 .cashbond #adjustCashbondModal .submit-adjust-cashbond-btn {
-  display: none;
-}
+  display: none; }
+
+.cash-withdrawal #cashWithdrawalModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .cash-withdrawal #cashWithdrawalModal .modal-header .modal-title {
+    font-size: 15px; }
+.cash-withdrawal #cashWithdrawalModal .modal-body i {
+  color: #158cba; }
+.cash-withdrawal #cashWithdrawalModal .modal-body textarea {
+  resize: none; }
+.cash-withdrawal #cashWithdrawalModal .modal-footer {
+  padding: 0px 5px; }
 
 body {
-  background: #ececec;
-}
+  background: #ececec; }
 
 .div-main-body {
   width: 100%;
@@ -955,39 +587,31 @@ body {
   padding-right: 20px;
   padding-top: 100px;
   color: #686565;
-  padding-bottom: 50px;
-}
-
-.div-main-body .div-main-body-head {
-  background: #4e73df;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  -webkit-box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1);
-          box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1);
-  color: white;
-  height: 45px;
-  padding: 10px 20px;
-}
-
-.div-main-body .div-main-body-content {
-  background: white;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: 10px 30px;
-  min-height: 300px;
-}
+  padding-bottom: 50px; }
+  .div-main-body .div-main-body-head {
+    background: #4e73df;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1);
+    color: white;
+    height: 45px;
+    padding: 10px 20px; }
+  .div-main-body .div-main-body-content {
+    background: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 10px 30px;
+    min-height: 300px; }
 
 #toast-container > div {
   opacity: 1;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-  filter: alpha(opacity=100);
-}
+  filter: alpha(opacity=100); }
 
 .bs-example {
   font-family: sans-serif;
   position: relative;
-  margin: 100px;
-}
+  margin: 100px; }
 
 .typeahead, .tt-query, .tt-hint {
   border: 2px solid #CCCCCC;
@@ -997,50 +621,40 @@ body {
   line-height: 30px;
   outline: medium none;
   padding: 8px 12px;
-  /*width: 396px;*/
-}
+  /*width: 396px;*/ }
 
 .typeahead {
-  background-color: #FFFFFF;
-}
+  background-color: #FFFFFF; }
 
 .typeahead:focus {
-  border: 2px solid #0097CF;
-}
+  border: 2px solid #0097CF; }
 
 .tt-query {
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-}
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; }
 
 .tt-hint {
-  color: #999999;
-}
+  color: #999999; }
 
 .tt-menu {
   background-color: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   margin-top: 12px;
   padding: 8px 0;
-  width: 300px;
-}
+  width: 300px; }
 
 .tt-suggestion {
   font-size: 15px;
   /* Set suggestion dropdown font size */
-  padding: 3px 12px;
-}
+  padding: 3px 12px; }
 
 .tt-suggestion:hover {
   cursor: pointer;
   background-color: #0097CF;
-  color: #FFFFFF;
-}
+  color: #FFFFFF; }
 
 .tt-suggestion p {
-  margin: 0;
-}
+  margin: 0; }
+
 /*# sourceMappingURL=styles.css.map */

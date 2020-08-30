@@ -204,11 +204,15 @@
         $CI->load->model('cashbond_model');
         $CI->load->library('session');
         $emp_id = $CI->session->userdata('user');
+        $cashbond = $CI->cashbond_model->get_cashbond_num_rows($emp_id);
+        return $cashbond;
+    }
+    function getInfoByEmpId(){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
         $cashbond = $CI->cashbond_model->get_cashbond($emp_id);
-        $count = 0;
-        if(!empty($cashbond)){
-            $count = count($cashbond);
-        }
-        return $count;
+        return $cashbond;
     }
 ?>
