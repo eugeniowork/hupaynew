@@ -29,5 +29,14 @@
             display:none;
         }
     }
+    #adjustCashbondModal{
+        @include modal();
+        .adjust-cashbond-info{
+            display:none;
+        }
+        .submit-adjust-cashbond-btn{
+            display:none;
+        }
+    }
     
 }

@@ -294,4 +294,90 @@ class Cashbond_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+
+    public function getAdjustCashbond(){
+        $id = $this->input->post('id');
+        $checkCashbond = $this->cashbond_model->get_cashbond_by_id($id);
+        if(!empty($checkCashbond)){
+            $this->data['total_cashbond'] = $checkCashbond['totalCashbond'];
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem getting the adjust cashbond form data, please try again.";
+        }
+        
+        echo json_encode($this->data);
+    }
+
+    public function addAdjustCashbond(){
+        $cashbond_id = $this->input->post('id');
+		$adjust = $this->input->post('adjust');
+        $remarks = $this->input->post('remarks');
+
+        $this->form_validation->set_rules('adjust', 'adjust', 'required');
+        $this->form_validation->set_rules('remarks', 'remarks', 'required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required.";
+        }
+        else{
+            $row = $this->cashbond_model->get_cashbond_by_id($cashbond_id);
+            $current_cashbond = $row['totalCashbond'];
+            $new_cashbond = $current_cashbond + $adjust;
+            if($new_cashbond < 0){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "New current value must not be a negative numbers.";
+            }
+            else{
+                $emp_id = $row['emp_id'];
+                $cashbond_deposit = $adjust;
+                $row_ch = $this->cashbond_model->get_all_employee_cashbond_history_limit($emp_id, 'posting_date', 'DESC', '1');
+                $previous_ending_balance_amount = $row_ch['cashbond_balance'];
+
+                $date1 = $row_ch['posting_date'];
+                $date1= date_create($date1);
+
+                $date2 = date("Y-m-d");
+                $date2= date_create($date2);
+
+                $percentage = .05;
+                if ($previous_ending_balance_amount >= 30000){
+                    $percentage = .07;
+                }
+                $diff =date_diff($date1,$date2);
+                $wew =  $diff->format("%R%a");
+                $days = str_replace("+","",$wew);
+
+                $interest = round(($days) * $previous_ending_balance_amount * ($percentage/360),2);
+
+                $posting_date = getDateDate();
+                $amount_withdraw = 0;
+                $cashbond_balance = $new_cashbond;
+                $interest_rate = 3;
+                $dateCreated = getDateDate();
+
+                $insertCashbondHistoryData = array(
+                    'emp_cashbond_history'=>'',
+                    'emp_id'=>$emp_id,
+                    'cashbond_deposit'=>$cashbond_deposit,
+                    'remarks'=>$remarks,
+                    'interest'=>$interest,
+                    'posting_date'=>$posting_date,
+                    'amount_withdraw'=>0,
+                    'cashbond_balance'=>$cashbond_balance,
+                    'interest_rate'=>$interest_rate,
+                    'dateCreated'=>$dateCreated,
+    
+                );
+                $this->cashbond_model->insert_cashbond_history_data($insertCashbondHistoryData);
+                $updateCashbondData = array(
+                    'totalCashbond'=>$new_cashbond,
+                );
+                $this->cashbond_model->update_cashbond_data($emp_id, $updateCashbondData);
+                $this->data['status'] = "success";
+            }
+        }
+        echo json_encode($this->data);
+    }
 }

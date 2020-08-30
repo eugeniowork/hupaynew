@@ -20,7 +20,7 @@ $(document).ready(function(){
                             '<button id='+data.cashbond_id+' class="edit-cashbond-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#editCashbondValueNoModal"><i id='+data.cashbond_id+' class="fas fa-pencil-alt"></i></button>&nbsp;'+
                             '<button id='+data.cashbond_id+' class="view-cashbond-history btn btn-sm btn-outline-success" data-toggle="modal" data-target="#viewCashbondHistoryModal"><i id='+data.cashbond_id+' class="fas fa-eye"></i></button>&nbsp;'+
                             '<button id='+data.cashbond_id+' class="add-cashbond-deposit-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#addCashbondDepositModal" ><i class="fas fa-plus-circle" id='+data.cashbond_id+'></i></button>&nbsp;'+
-                            '<button id="edit_cashbond" class="btn btn-sm btn-outline-success"><i class="fas fa-adjust"></i></button>&nbsp;'+
+                            '<button id='+data.cashbond_id+' class="adjust-cashbond-btn btn btn-sm btn-outline-success" data-toggle="modal" data-target="#adjustCashbondModal"><i id='+data.cashbond_id+' class="fas fa-adjust"></i></button>&nbsp;'+
                             '</td>'+
                         '</tr>';
                         $('#cashbondList tbody').append(append);
@@ -398,7 +398,84 @@ $(document).ready(function(){
         }
     })
 
+    var adjustCashbondId = null
+    $(document).on('click','.adjust-cashbond-btn',function(e){
+        adjustCashbondId = e.target.id;
+        $('.adjust-cashbond-info').hide();
+        $('.submit-adjust-cashbond-btn').hide();
+        $('.loading-adjust-cashbond').show();
+        $.ajax({
+            url:base_url+'cashbond_controller/getAdjustCashbond',
+            type:'post',
+            dataType:'json',
+            data:{
+                id:adjustCashbondId,
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    $('.adjust-cashbond-info').show();
+                    $('.submit-adjust-cashbond-btn').show();
+                    $('.loading-adjust-cashbond').hide();
+                    $('.adjust-cashbond-value').val(response.total_cashbond);
+                }
+                else{
+                    $('.loading-adjust-cashbond').show();
+                    $('.loading-adjust-cashbond').empty();
+                    $('.loading-adjust-cashbond').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                    adjustCashbondId = null
+                }
+            },
+            error:function(response){
+                $('.loading-adjust-cashbond').show();
+                $('.loading-adjust-cashbond').empty();
+                $('.loading-adjust-cashbond').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                adjustCashbondId = null
+            }
+        })
+    })
 
+    var loadingAdjustCashbond = false;
+    $('.submit-adjust-cashbond-btn').on('click',function(){
+        var btnName = this;
+        if(!loadingAdjustCashbond){
+            loadingAdjustCashbond = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.update-adjust-cashbond-warning').empty();
+            $.ajax({
+                url:base_url+'cashbond_controller/addAdjustCashbond',
+                type:'post',
+                dataType:'json',
+                data:{
+                    id : adjustCashbondId,
+                    adjust:$('.adjust-value').val(),
+                    remarks:$('.adjust-remarks').val(),
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        toast_options(4000);
+                        toastr.success("Cashbond was successfully adjusted.");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+                    }
+                    else{
+                        render_response('.update-adjust-cashbond-warning',response.msg, "danger")
+                        loadingAdjustCashbond = false;
+                        change_button_to_default(btnName, 'Adjust');
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAdjustCashbond = false;
+                    change_button_to_default(btnName, 'Adjust');
+                }
+            })
+        }
+    })
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');
