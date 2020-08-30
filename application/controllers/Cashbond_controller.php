@@ -20,6 +20,7 @@ class Cashbond_controller extends CI_Controller{
         // $this->load->helper('date_helper');
         // $this->load->helper('leave_helper');
         //$this->load->library('../controllers/holiday_controller');
+        $this->load->helper('allowance_helper');
         $this->load->model("cashbond_model", 'cashbond_model');
     }
     public function index(){
@@ -56,6 +57,67 @@ class Cashbond_controller extends CI_Controller{
             $this->data['status'] = "error";
         }
         
+        echo json_encode($this->data);
+    }
+
+    public function getEditCashbondData(){
+        $id = $this->input->post('id');
+        $checkCashbond = $this->cashbond_model->get_cashbond_by_id($id);
+        if(!empty($checkCashbond)){
+            $this->data['cashbondValue'] = $checkCashbond['cashbondValue'];
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        
+        echo json_encode($this->data);
+    }
+    public function updateCashbond(){
+        $id = $this->input->post('id');
+        $cashbondValue = $this->input->post('cashbondValue');
+        $this->form_validation->set_rules('cashbondValue','cashbondValue','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter a cashbond value.";
+        }
+        else{
+            $checkCashbond = $this->cashbond_model->get_cashbond_by_id($id);
+            if(!empty($checkCashbond)){
+                $row_emp = $this->employee_model->employee_information($checkCashbond['emp_id']);
+                $salary = $row_emp['Salary'];
+                $allowance = getAllowanceInfoToPayslip($checkCashbond['emp_id']);
+                $tmpSalary = $salary + $allowance;
+                $tmpCashBond = ($tmpSalary * .02)/2;
+                $cashbond_limit = round($tmpCashBond,2);
+                $getCashbondIdValue = $this->cashbond_model->get_cashbond_id_value($id,$cashbondValue);
+                if(!empty($getCashbondIdValue)){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "There's no changes into the cashbond value.";
+                }
+                else if($cashbondValue < $cashbond_limit){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "Cashbond Updates must be greater than the cashbond from formula.";
+                }
+                else{
+                    $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+                    $updateCashbondData = array(
+                        'cashbondValue'=>$cashbondValue
+                    );
+                    $updateCashbond = $this->cashbond_model->update_cashbond_data($checkCashbond['emp_id'], $updateCashbondData);
+                    $this->data['status'] = "success";
+                    $this->data['msg'] = "The <strong>cashbond information</strong> of <strong>$fullName</strong> was successfully updated.";
+                }
+                
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "There was a problem updating the cashbond value, please try again.";
+            }
+            
+        }
+
         echo json_encode($this->data);
     }
 }

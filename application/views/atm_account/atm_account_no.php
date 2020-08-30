@@ -20,31 +20,31 @@
         <div class="modal fade" id="editAtmNoModal" tabindex="-1" role="dialog" aria-labelledby="editAtmNoModalTitle" aria-hidden="true">
             <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editAtmNoModalLongTitle">Update ATM No</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="atm-account-info">
-                        <span>Account No.</span>
-                        <input type="text" class="form-control account-no" placeholder="Enter account no">
-                    
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editAtmNoModalLongTitle">Update ATM No</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="loading-atm-account-no">
-                        <div class="d-flex flex-column justify-content-center align-items-center">
-                            <div class="spinner-border text-primary" role="status"></div>
-                            <p>Loading Information</p>
+                    <div class="modal-body">
+                        <div class="atm-account-info">
+                            <span>Account No.</span>
+                            <input type="text" class="form-control account-no" placeholder="Enter account no">
+                        
                         </div>
-                    </div><br/>
-                    <div class="atm-account-no-warning">
+                        <div class="loading-atm-account-no">
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p>Loading Information</p>
+                            </div>
+                        </div><br/>
+                        <div class="atm-account-no-warning">
 
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary update-atm-account-no-btn">Submit</button>
-                </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary update-atm-account-no-btn">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>

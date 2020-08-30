@@ -821,6 +821,36 @@
   padding: 0px 5px;
 }
 
+.cashbond #editCashbondValueNoModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px;
+}
+
+.cashbond #editCashbondValueNoModal .modal-header .modal-title {
+  font-size: 15px;
+}
+
+.cashbond #editCashbondValueNoModal .modal-body i {
+  color: #158cba;
+}
+
+.cashbond #editCashbondValueNoModal .modal-body textarea {
+  resize: none;
+}
+
+.cashbond #editCashbondValueNoModal .modal-footer {
+  padding: 0px 5px;
+}
+
+.cashbond #editCashbondValueNoModal .cashbond-info {
+  display: none;
+}
+
+.cashbond #editCashbondValueNoModal .update-cashbond-btn {
+  display: none;
+}
+
 body {
   background: #ececec;
 }

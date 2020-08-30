@@ -1,0 +1,12 @@
+.cashbond{
+    #editCashbondValueNoModal{
+        @include modal();
+        .cashbond-info{
+            display:none;
+        }
+        .update-cashbond-btn{
+            display: none;
+        }
+    }
+    
+}
