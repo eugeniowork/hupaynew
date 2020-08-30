@@ -190,4 +190,15 @@ class Cashbond_controller extends CI_Controller{
         
         echo json_encode($this->data);
     }
+    public function updateCashbondHistoryRefNo(){
+        $id = $this->input->post('id');
+        $newRefNo = $this->input->post('newRefNo');
+
+        $data = array(
+            'reference_no'=>$newRefNo
+        );
+        $update = $this->cashbond_model->update_cashbond_history_data($id,$data);
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
 }

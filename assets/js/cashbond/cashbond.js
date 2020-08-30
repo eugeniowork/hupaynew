@@ -218,7 +218,7 @@ $(document).ready(function(){
                         if(data.amount_withdraw !=0){
                             if(data.reference_no != ""){
                                 reference += '<br/>'+
-                                '<small style="background-color: #158cba;color:#fff">'+
+                                '<small class="ref-no-text-'+data.emp_cashbond_history+'" style="background-color: #158cba;color:#fff">'+
                                     data.reference_no+
                                 '</small>';
                                 reference +='<input type="text" value='+data.reference_no+' class="ref-no ref-no-'+data.emp_cashbond_history+' form-control" placeholder="Enter ref no">'
@@ -265,17 +265,58 @@ $(document).ready(function(){
     var cashbondHistoryUpdateId = null;
     $(document).on('click','.edit-ref-no-btn',function(e){
         var id = e.target.id;
+        var refNo = $('.ref-no-text-'+id).text();
         cashbondHistoryUpdateId = id;
         $('.ref-no-'+id).show();
         $('.ref-no-'+id).focus();
+        if($('.ref-no-text-'+id).text() == "No Ref No."){
+            refNo = "";
+        }
+
+        $('.ref-no-'+id).val(refNo);
         $('.ref-no-text-'+id).hide();
         $('.edit-ref-no-btn-'+id).hide();
     })
     $(document).on('focusout','.ref-no',function(e){
         $('.ref-no-'+cashbondHistoryUpdateId).hide();
+        $('.ref-no-'+cashbondHistoryUpdateId).val('');
         $('.ref-no-text-'+cashbondHistoryUpdateId).show();
         $('.edit-ref-no-btn-'+cashbondHistoryUpdateId).show();
         cashbondHistoryUpdateId = null;
+    })
+    $(document).on('keydown','.ref-no',function(e){
+        
+        if (e.keyCode == 13){
+            
+            var newRefNo = $('.ref-no-'+cashbondHistoryUpdateId).val();
+
+            $.ajax({
+                url:base_url+'cashbond_controller/updateCashbondHistoryRefNo',
+                type:'post',
+                dataType:'json',
+                data:{
+                    id:cashbondHistoryUpdateId,
+                    newRefNo:newRefNo,
+                },
+                success:function(response){
+                    if(response.status == "success"){
+                        $('.ref-no-text-'+cashbondHistoryUpdateId).text(newRefNo);
+                        $('.ref-no-'+cashbondHistoryUpdateId).focusout();
+                    }
+                    else{
+                        toast_options(4000);
+                        toastr.error("There was a problem, please try again!");
+                    }
+                },
+                error:function(response){
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                }
+            })
+            
+            //console.log(newRefNo)
+        }
+        
     })
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
