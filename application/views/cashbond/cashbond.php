@@ -62,7 +62,7 @@
         </div>
 
         <div class="modal fade" id="viewCashbondHistoryModal" tabindex="-1" role="dialog" aria-labelledby="viewCashbondHistoryModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1250px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="viewCashbondHistoryModalLongTitle">Employee Cashbond History</h5>
@@ -72,7 +72,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="cashbond-history-info">
-                            sdasd
+                            <div class="row cashbond-history-info-employee">
+
+                            </div>
+                            
                         </div>
                         <div class="loading-cashbond-history">
                             <div class="d-flex flex-column justify-content-center align-items-center">
@@ -85,7 +88,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-sm btn-primary update-cashbond-btn">Update</button>
+                        <button class="btn btn-sm btn-link print-cashbond-history-btn ">Print Cashbond History</button>
                     </div>
                 </div>
             </div>

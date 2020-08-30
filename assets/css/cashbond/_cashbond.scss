@@ -10,6 +10,12 @@
     }
     #viewCashbondHistoryModal{
         @include modal();
+        .cashbond-history-info{
+            display:none;
+        }
+        .print-cashbond-history-btn{
+            display: none;
+        }
     }
     
 }

@@ -161,7 +161,10 @@ $(document).ready(function(){
     var cashbondHistoryId = null;
     $(document).on('click','.view-cashbond-history',function(e){
         cashbondHistoryId = e.target.id;
-
+        $('.cashbond-history-info').hide();
+        $('.print-cashbond-history-btn').hide();
+        $('.loading-cashbond-history').show();
+        $('.cashbond-history-info-employee').empty()
         $.ajax({
             url:base_url+'cashbond_controller/getCashbondHistory',
             type:'post',
@@ -170,10 +173,56 @@ $(document).ready(function(){
                 id:cashbondHistoryId,
             },
             success:function(response){
+                if(response.status == "success"){
+                    $('.cashbond-history-info').show();
+                    $('.print-cashbond-history-btn').show();
+                    $('.loading-cashbond-history').hide();
+                    response.finalCashbondHistoryEmployeeData.forEach(function(data,key){
+                        var date = '<div class="col-lg-4">'+
+                            '<span>Date:</span>'+
+                            '<input readonly type="text" class="form-control" value='+data.date+'>'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(date)
+                        var name = '<div class="col-lg-4">'+
+                            '<span>Employee Name:</span>'+
+                            '<input readonly type="text" class="form-control" value="'+data.name+'">'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(name)
 
+                        var interest = '<div class="col-lg-4">'+
+                            '<span>Interest Rate:</span>'+
+                            '<input readonly type="text" class="form-control" value="'+data.percentage+'">'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(interest)
+                        var credits = '<div class="col-lg-4">'+
+                            '<span>Total Credits:</span>'+
+                            '<input readonly type="text" class="form-control" value="Php '+data.total_credit+'">'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(credits)
+                        var debits = '<div class="col-lg-4">'+
+                            '<span>Total Debits:</span>'+
+                            '<input readonly type="text" class="form-control" value="Php '+data.total_debits+'">'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(debits)
+                        var interestTotal = '<div class="col-lg-4">'+
+                            '<span>Total Interest Earned:</span>'+
+                            '<input readonly type="text" class="form-control" value="Php '+data.total_interest+'">'+
+                        '</div>';
+                        $('.cashbond-history-info-employee').append(interestTotal)
+                    })
+                }
+                else{
+                    $('.loading-cashbond-history').show();
+                    $('.loading-cashbond-history').empty();
+                    $('.loading-cashbond-history').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                    cashbondHistoryId = null;
+                }
             },
             error:function(response){
-
+                $('.loading-cashbond-history').show();
+                $('.loading-cashbond-history').empty();
+                $('.loading-cashbond-history').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                cashbondHistoryId = null
             }
         })
 

@@ -873,6 +873,14 @@
   padding: 0px 5px;
 }
 
+.cashbond #viewCashbondHistoryModal .cashbond-history-info {
+  display: none;
+}
+
+.cashbond #viewCashbondHistoryModal .print-cashbond-history-btn {
+  display: none;
+}
+
 body {
   background: #ececec;
 }
