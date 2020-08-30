@@ -1,3 +1,4 @@
+<?php $this->load->helper('cashbond_helper')?>
 <div class="div-main-body cashbond" >
     <div class="div-main-body-head">
         List of Cashbond Employee
@@ -176,4 +177,20 @@
         </div>
     </div>
 </div>
+<!-- etong zero dapat one to -->
+<?php if(checkExistCashBondByEmpId() == 0):?>
+    <div class="div-main-body cash-withdrawal" >
+        <div class="div-main-body-head">
+            Cash withdraw History
+        </div>
+        <div class="div-main-body-content">
+            <span>
+                <i class="fas fa-info-circle"></i>&nbsp;Note: Cashbond rate increase 2% from 3% become 5% per annum and upon 
+                reaching 30,000 and above rate also increase by 2% from 5% become 7%.
+            </span>
+        </div>
+    </div>
+    
+<?php endif;?>
+<br/><br/>
 <script src="<?php echo base_url();?>assets/js/cashbond/cashbond.js"></script>

@@ -187,4 +187,28 @@
         }
         return $totalInterestEarned;
     }
+    // function checkExistCashBondByEmpId(){
+    //     $CI =& get_instance();
+    //     $CI->load->model('cashbond_model');
+    //     $CI->load->library('session');
+    //     $emp_id = $CI->session->userdata('user');
+    //     $totalCashbond = 0;
+    //     $cashbond = $CI->cashbond_model->get_cashbond($emp_id);
+    //     if(!empty($cashbond)){
+    //         $totalCashbond = $cashbond['totalCashbond'];
+    //     }
+    //     return $totalCashbond;
+    // }
+    function checkExistCashBondByEmpId(){
+        $CI =& get_instance();
+        $CI->load->model('cashbond_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        $cashbond = $CI->cashbond_model->get_cashbond($emp_id);
+        $count = 0;
+        if(!empty($cashbond)){
+            $count = count($cashbond);
+        }
+        return $count;
+    }
 ?>
