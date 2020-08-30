@@ -284,7 +284,7 @@
             </button>
             <div class="side-navbar-sub-buttons adjustmentReportDropdown">
                 <a class="btn" href="<?php echo base_url();?>loanadjustment">Loan Adjustment</a>
-                <a class="btn" href="<?php echo base_url();?>simkimbanadjustment">SIMKIMBAN Adjustment</a>
+                <a class="btn" href="<?php echo base_url();?>simkimban_adjustment">SIMKIMBAN Adjustment</a>
             </div>
         <?php endif;?>
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 ||

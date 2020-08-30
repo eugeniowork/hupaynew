@@ -49,6 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['simkimban_adjustment'] = 'adjustment_reports_controller';
 $route['cashbond'] = 'cashbond_controller';
 $route['payrollreports'] = 'payroll_reports_controller/viewPayrollReports';
 $route['download/(:any)'] = 'payroll_reports_controller/printPayrollAdjustmentReport/$1';
