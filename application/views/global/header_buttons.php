@@ -270,7 +270,7 @@
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 || 
             $employeeInformation['emp_id'] == 47):?>
-            <a class="btn" href="<?php echo base_url();?>salaryinformation">Salary Information</a>
+            <a class="btn" href="<?php echo base_url();?>salary_information">Salary Information</a>
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 1):?>

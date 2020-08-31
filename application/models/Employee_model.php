@@ -115,4 +115,14 @@ class Employee_model extends CI_Model{
             return "error";
         }
     }
+
+    public function get_all_employee_order_by_lastname(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('ActiveStatus', 1);
+        $this->db->order_by('Lastname', 'asc');
+        //$this->db->join('tb_emp_allowance', 'tb_emp_allowance.emp_id=tb_employee_info.emp_id ','inner');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
