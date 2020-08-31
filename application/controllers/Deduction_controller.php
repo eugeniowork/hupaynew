@@ -22,6 +22,7 @@ class Deduction_controller extends CI_Controller{
         //$this->load->library('../controllers/holiday_controller');
         $this->load->model("deduction_model", 'deduction_model');
         $this->load->model("employee_model", "employee_model");
+        $this->load->helper('minimum_wage_helper');
 
     }
     public function index(){
@@ -53,13 +54,93 @@ class Deduction_controller extends CI_Controller{
                     $finalYearTotalDeductionData .= "<td>Php ".moneyConvertion($value->ytd_Allowance)."</td>";
                     $finalYearTotalDeductionData .= "<td>Php ".moneyConvertion($value->ytd_Tax)."</td>";
                     $finalYearTotalDeductionData .= "<td><center>";
-                        $finalYearTotalDeductionData .= "<span class='glyphicon glyphicon-pencil' style='color:#b7950b'></span> <a href='#' id='edit_ytd' class='action-a'>Edit</a>";
+                        $finalYearTotalDeductionData .= "<button  id=".$value->ytd_id." class='btn btn-outline-success btn-sm edit-emp-yearly-deduction-btn' data-toggle='modal' data-target='#updateYearTotalDeductionModal'><i id=".$value->ytd_id." class='fas fa-edit'></i>&nbsp;Edit</button>";
                     $finalYearTotalDeductionData .= "</center></td>";
                 $finalYearTotalDeductionData .= "</tr>";
             }
         }
         $this->data['finalYearTotalDeductionData'] = $finalYearTotalDeductionData;
         $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function getYearTotalDeductionInfo(){
+        $id = $this->input->post('id');
+
+        $min_wage = getMinimumWage();
+        $yearTotalDeduction = $this->deduction_model->get_yearly_deduction_by_id($id);
+        $finalData = array();
+        if(!empty($yearTotalDeduction)){
+            $row_emp = $this->employee_model->employee_information($yearTotalDeduction['emp_id']);
+            if ($row_emp['Middlename'] == ""){
+                $full_name = $row_emp['Lastname'] . ", " . $row_emp['Firstname'];
+            }
+            else {
+                $full_name = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            }
+
+            $ytdGross = $yearTotalDeduction['ytd_Gross'];
+            $ytdAllowance = $yearTotalDeduction['ytd_Allowance'];
+            $ytdTax = $yearTotalDeduction['ytd_Tax'];
+            $year = $yearTotalDeduction['Year'];
+            $ytdTaxStatus = 'readonly';
+            if($row_emp['Salary'] > $min_wage){
+                $ytdTaxStatus = 'editable';
+            }
+            array_push($finalData, array(
+                'name'=>$full_name,
+                'ytd_gross'=>$ytdGross,
+                'ytd_allowance'=>$ytdAllowance,
+                'ytd_tax'=>$ytdTax,
+                'ytd_tax_status'=>$ytdTaxStatus,
+                'year'=>$year
+
+            ));
+            $this->data['finalData'] = $finalData;
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['msg'] = "There was a problem getting the year total deduction information. Please try again";
+            $this->data['status'] = "error";
+        }
+        
+        echo json_encode($this->data);
+    }
+
+    public function updateYTD(){
+        $id = $this->input->post('id');
+        $ytdGross = $this->input->post('ytdGross');
+        $ytdAllowance = $this->input->post('ytdAllowance');
+        $ytdTax = $this->input->post('ytdTax');
+
+        $this->form_validation->set_rules('ytdGross', 'ytdGross', 'required');
+        $this->form_validation->set_rules('ytdAllowance', 'ytdAllowance', 'required');
+        $this->form_validation->set_rules('ytdTax', 'ytdTax', 'required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required";
+        }
+        else{
+            $checkYTDInfo = $this->deduction_model->if_no_changes_in_update_ytd($ytdGross, $ytdAllowance, $ytdTax, $id);
+            if(!empty($checkYTDInfo)){
+                $this->data['msg'] = "There's no changes in the data.";
+                $this->data['status'] = "error";
+            }
+            else{
+                $updateData = array(
+                    'ytd_Gross'=>$ytdGross,
+                    'ytd_Allowance'=>$ytdAllowance,
+                    'ytd_Tax'=>$ytdTax,
+                );
+
+
+                $this->deduction_model->update_ytd($id,$updateData);
+                $this->data['status'] = "success";
+            }
+            
+        }
+
+        
         echo json_encode($this->data);
     }
 }

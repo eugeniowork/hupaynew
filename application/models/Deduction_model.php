@@ -29,6 +29,26 @@ class Deduction_model extends CI_Model{
         $query = $this->db->get_where('tb_year_total_deduction', array('Year' => $year));
         return $query->result();
     }
+    public function get_yearly_deduction_by_id($id){
+        $query = $this->db->get_where('tb_year_total_deduction', array('ytd_id' => $id));
+        return $query->row_array();
+    }
+    public function if_no_changes_in_update_ytd($ytdGross, $ytdAllowance, $ytdTax, $ytdId){
+        $query = $this->db->get_where('tb_year_total_deduction', array('ytd_Gross' => $ytdGross, 'ytd_Allowance' =>$ytdAllowance, 'ytd_Tax'=>$ytdTax, 'ytd_id' => $ytdId));
+        return $query->row_array();
+    }
+    public function update_ytd($id,$data){
+        $this->db->trans_start();
+        $this->db->where('ytd_id',$id);
+        $this->db->update('tb_year_total_deduction',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();
