@@ -283,7 +283,7 @@
                 <i class="caret-down-adjustment-report fas fa-caret-down pull-right"></i>
             </button>
             <div class="side-navbar-sub-buttons adjustmentReportDropdown">
-                <a class="btn" href="<?php echo base_url();?>loanadjustment">Loan Adjustment</a>
+                <a class="btn" href="<?php echo base_url();?>loan_adjustment">Loan Adjustment</a>
                 <a class="btn" href="<?php echo base_url();?>simkimban_adjustment">SIMKIMBAN Adjustment</a>
             </div>
         <?php endif;?>

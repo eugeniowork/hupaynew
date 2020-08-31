@@ -23,7 +23,7 @@ class Adjustment_reports_controller extends CI_Controller{
 
     }
     public function index(){
-        $this->data['pageTitle'] = 'SIMKIMBAN Adjustment';
+        $this->data['pageTitle'] = 'SIMKIMBAN Adjustment Reports';
 
         $this->load->view('global/header', $this->data);
         $this->load->view('global/header_buttons');
@@ -32,6 +32,43 @@ class Adjustment_reports_controller extends CI_Controller{
     }
     public function getSimkimbanAdjustmentReport(){
         $select_qry = $this->adjustment_loan_model->get_all_adjustment_loan_with_type('Simkimban');
+        $finalAdjustmentReportsData = array();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+
+                $fullName = $select_emp_qry['Lastname'] . ", " . $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'];
+
+                $date_create = date_create($value->datePayment);
+                $datePayment = date_format($date_create, 'F d, Y');
+
+                array_push($finalAdjustmentReportsData, array(
+                    'adjustment_loan_id'=>$value->adjustment_loan_id,
+                    'name'=>$fullName,
+                    'date_payment'=>$datePayment,
+                    'loan_type'=>$value->loanType,
+                    'cash_payment'=>moneyConvertion($value->cashPayment),
+                    'outstanding_balance'=>moneyConvertion($value->remainingBalance),
+                ));
+            }
+        }
+        $this->data['status'] = "success";
+        $this->data['finalAdjustmentReportsData'] = $finalAdjustmentReportsData;
+
+        echo json_encode($this->data);
+    }
+    public function viewLoanAdjustment(){
+        $this->data['pageTitle'] = 'Loan Adjustment Reports';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('adjustment_reports/loan_adjustment');
+        $this->load->view('global/footer');
+    }
+    public function getLoanAdjustmentReport(){
+        
+        $select_qry = $this->adjustment_loan_model->get_all_adjustment_loan_with_type_but_not_simkimban();
         $finalAdjustmentReportsData = array();
         if(!empty($select_qry)){
             foreach ($select_qry as $value) {
