@@ -11,17 +11,18 @@ $(document).ready(function(){
 			dataType:'json',
 			success:function(response){
 				if(response.status == "success"){
-					if(response.finalAuditTrailData.length > 0){
-						response.finalAuditTrailData.forEach(function(data,key){
-							var append = '<tr>'+
-								'<td>'+data.module+'</td>'+
-								'<td>'+data.description+'</td>'+
-								'<td>'+data.date+'</td>'+
-							'</tr>';
-							$('#auditTrail tbody').append(append);
-						})
+					// if(response.finalAuditTrailData.length > 0){
+					// 	response.finalAuditTrailData.forEach(function(data,key){
+					// 		var append = '<tr>'+
+					// 			'<td>'+data.module+'</td>'+
+					// 			'<td>'+data.description+'</td>'+
+					// 			'<td>'+data.date+'</td>'+
+					// 		'</tr>';
+					// 		$('#auditTrail tbody').append(append);
+					// 	})
 						
-					}
+					// }
+					$('#auditTrail tbody').append(response.finalAuditTrailData);
 					$('#auditTrail').dataTable({
 						ordering:false
 					});

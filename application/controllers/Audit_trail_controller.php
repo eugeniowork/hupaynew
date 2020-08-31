@@ -33,7 +33,8 @@ class Audit_trail_controller extends CI_Controller{
 
     public function getAuditTrailLogs(){
         $select_qry = $this->audit_trial_model->get_audit_trail_order_by_date();
-        $finalAuditTrailData = array();
+        //$finalAuditTrailData = array();
+        $finalAuditTrailData = "";
         if(!empty($select_qry)){
             foreach ($select_qry as $value) {
                 $date = date_format(date_create($value->dateCreated), 'F d, Y');
@@ -63,16 +64,21 @@ class Audit_trail_controller extends CI_Controller{
                         $who = " of <b>" .  $select_who_qry['Firstname'] . " " . $select_who_qry['Lastname'] ." </b>";
                     }
                 }
-
-                array_push($finalAuditTrailData, array(
-                    'module'=>$value->module,
-                    'description'=>$to. $involve.  $value->task_description . $from. $who,
-                    'date'=>$date . " " . $time
-                ));
+                $finalAuditTrailData .= "<tr>".
+                    "<td>".$value->module."</td>".
+                    "<td>".$to. $involve.  $value->task_description . $from. $who . "</td>".
+                    "<td>" . $date . " " . $time . "</td>".
+                "</tr>";
+                // array_push($finalAuditTrailData, array(
+                //     'module'=>$value->module,
+                //     'description'=>$to. $involve.  $value->task_description . $from. $who,
+                //     'date'=>$date . " " . $time
+                // ));
             }
         }
         $this->data['status'] = "success";
         $this->data['finalAuditTrailData'] = $finalAuditTrailData;
+        //$this->data['finalAuditTrailData'] = $finalAuditTrailData;
         echo json_encode($this->data);
     }
 }
