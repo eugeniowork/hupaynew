@@ -1,0 +1,17 @@
+.audit-trail{
+	.loading-audit-trail-content{
+		height: 200px;
+		p{
+			font-size: 20px;
+			font-style: italic;
+		}
+		.spinner-border {
+			height: 70px;
+			width: 70px;
+		}
+
+	}
+	.audit-trail-content{
+		display: none;
+	}
+}

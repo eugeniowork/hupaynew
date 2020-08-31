@@ -12,4 +12,12 @@ class Audit_trial_model extends CI_Model{
         $insert = $this->db->insert('tb_audit_trail',$data);
         return $insert;
     }
+
+    public function get_audit_trail_order_by_date(){
+        $this->db->select('*');
+        $this->db->from('tb_audit_trail');
+        $this->db->order_by('dateCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

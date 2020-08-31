@@ -274,7 +274,7 @@
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 1):?>
-            <a class="btn" href="<?php echo base_url();?>audittrial">Audit Trial</a>
+            <a class="btn" href="<?php echo base_url();?>audit_trail">Audit Trail</a>
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>

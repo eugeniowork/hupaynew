@@ -591,6 +591,17 @@
 #editCashbonWithdrawalModal .modal-footer {
   padding: 0px 5px; }
 
+.audit-trail .loading-audit-trail-content {
+  height: 200px; }
+  .audit-trail .loading-audit-trail-content p {
+    font-size: 20px;
+    font-style: italic; }
+  .audit-trail .loading-audit-trail-content .spinner-border {
+    height: 70px;
+    width: 70px; }
+.audit-trail .audit-trail-content {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }
