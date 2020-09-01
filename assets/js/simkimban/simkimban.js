@@ -74,7 +74,14 @@ $(document).ready(function(){
 			        			$('#fifteen').prop("checked",false);
 			        			$('#thirty').prop("checked",true);
 			        		}
-			        		
+			        		if(data.deduction_type == "Semi-monthly"){
+								$('#fifteen').prop("disabled",true);
+								$('#thirty').prop("disabled",true);
+							}
+							else{
+								$('#fifteen').prop("disabled",false);
+								$('#thirty').prop("disabled",false);
+							}
 			        		$('.total-months option[value='+data.total_months+']').attr('selected','selected');
 			        		$('.date-from').val(data.date_from)
 			        		$('.date-to').val(data.date_to)
@@ -136,6 +143,9 @@ $(document).ready(function(){
             }
             else if($('#thirty').is(':checked')){
             	deductionDay = "30";
+            }
+            if($('.add-deduction-type').val() == "Semi-monthly"){
+            	deductionDay = "0";
             }
             $.ajax({
             	url:base_url+'simkimban_controller/updateSimkimbanData',

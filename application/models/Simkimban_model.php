@@ -91,4 +91,9 @@ class Simkimban_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function insert_simkimban_loan_data($data){
+        $insert = $this->db->insert('tb_simkimban',$data);
+        return $insert;
+    }
+
 }

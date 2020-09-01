@@ -17,4 +17,10 @@
 			display: none;
 		}
 	}
+	#addEmployeeToSimkimbanModal{
+		@include modal();
+	}
+	#selectEmployeeModal{
+		@include modal();
+	}
 }

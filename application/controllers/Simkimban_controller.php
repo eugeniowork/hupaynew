@@ -377,4 +377,78 @@ class Simkimban_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function addNewSimkimban(){
+        $empId = $this->input->post('empId');
+        $name = $this->input->post('name');
+        $deductionType= $this->input->post('deductionType');
+        
+        $totalMonths= $this->input->post('totalMonths');
+        $dateFrom= dateDefaultDb($this->input->post('dateFrom'));
+        $dateTo= dateDefaultDb($this->input->post('dateTo'));
+        $item= $this->input->post('item');
+        $amountLoan= $this->input->post('amountLoan');
+        $deduction= $this->input->post('deduction');
+        $remainingBalance= $this->input->post('remainingBalance');
+        $dateCreated = getDateDate();
+        $deductionDay = 0;
+        if ($deductionType == "Monthly"){
+            $deductionDay= $this->input->post('deductionDay');
+        }
+        $this->form_validation->set_rules('name', 'name','required');
+        $this->form_validation->set_rules('deductionType', 'deductionType','required');
+        $this->form_validation->set_rules('deductionDay', 'deductionDay','required');
+        $this->form_validation->set_rules('totalMonths', 'totalMonths','required');
+        $this->form_validation->set_rules('dateFrom', 'dateFrom','required');
+        $this->form_validation->set_rules('dateTo', 'dateTo','required');
+        $this->form_validation->set_rules('item', 'item','required');
+        $this->form_validation->set_rules('amountLoan', 'amountLoan','required');
+        $this->form_validation->set_rules('deduction', 'deduction','required');
+        $this->form_validation->set_rules('remainingBalance', 'remainingBalance','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required";
+        }
+        else{
+            $check = $this->employee_model->employee_information($empId);
+            if(empty($check)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "There was a problem a problem on the employee name, please try again.";
+            }
+            else{
+                if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+                    $this->data['status'] = 'error';
+                    $this->data['msg'] = "Invalid deduction day.";
+                }
+                else if($dateFrom > $dateTo){
+                    $this->data['status'] = 'error';
+                    $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <b>Date To</b>.";
+                }
+                else{
+                    $insertData = array(
+                        'simkimban_id'=>'',
+                        'emp_id'=>$empId,
+                        'deductionType'=>$deductionType,
+                        'deductionDay'=>$deductionDay,
+                        'totalMonths'=>$totalMonths,
+                        'dateFrom'=>$dateFrom,
+                        'dateTo'=>$dateTo,
+                        'Items'=>$item,
+                        'amountLoan'=>$amountLoan,
+                        'deduction'=>$deduction,
+                        'remainingBalance'=>$remainingBalance,
+                        'status'=>1,
+                        'DateCreated'=>$dateCreated
+                    );
+
+                    $insert = $this->simkimban_model->insert_simkimban_loan_data($insertData);
+
+                    $this->data['status'] = "success";
+                    $this->data['msg'] = "Simkimban loan was successfully filed.";
+                }
+            }
+        }
+
+        echo json_encode($this->data);
+    }
 }

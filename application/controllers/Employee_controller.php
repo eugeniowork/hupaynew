@@ -175,4 +175,24 @@ class Employee_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+
+
+    public function getAllEmployee(){
+        $select_qry = $this->employee_model->get_all_employee();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                if (($value->role_id != 1 || $value->dept_id != 1) && $value->ActiveStatus == 1) {
+                    // $finalData .="<option value=".$value->emp_id.">".$value->Lastname .", " . $value->Firstname . " " . $value->Middlename."</option>";
+                    $finalData .= "<tr id='".$value->emp_id."' style='text-align:center;'>";
+                        $finalData .= "<td><button class='btn btn-link employee-btn' id=".$value->emp_id." data-dismiss='modal'>" . $value->Lastname .", " . $value->Firstname . " " . $value->Middlename . "</button></td>";
+                    $finalData .= "</tr>";
+                }
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
 }
