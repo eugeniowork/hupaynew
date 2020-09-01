@@ -1,0 +1,11 @@
+.year-total-deduction{
+	#updateYearTotalDeductionModal{
+		@include modal();
+		.year-total-deduction-info{
+			display: none;
+		}
+		.update-year-total-deduction{
+			display: none;
+		}
+	}
+}

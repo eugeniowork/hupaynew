@@ -265,7 +265,7 @@
         <a class="btn" href="<?php echo base_url();?>cashbond">Cashbond</a>
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
-            <a class="btn" href="<?php echo base_url();?>yeartotaldeduction">Year Total Deduction</a>
+            <a class="btn" href="<?php echo base_url();?>year_total_deduction">Year Total Deduction</a>
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 || 

@@ -631,6 +631,23 @@
 .simkimban #adjustSimkimbanModal .modal-footer {
   padding: 0px 5px; }
 
+.year-total-deduction #updateYearTotalDeductionModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .year-total-deduction #updateYearTotalDeductionModal .modal-header .modal-title {
+    font-size: 15px; }
+.year-total-deduction #updateYearTotalDeductionModal .modal-body i {
+  color: #158cba; }
+.year-total-deduction #updateYearTotalDeductionModal .modal-body textarea {
+  resize: none; }
+.year-total-deduction #updateYearTotalDeductionModal .modal-footer {
+  padding: 0px 5px; }
+.year-total-deduction #updateYearTotalDeductionModal .year-total-deduction-info {
+  display: none; }
+.year-total-deduction #updateYearTotalDeductionModal .update-year-total-deduction {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }
