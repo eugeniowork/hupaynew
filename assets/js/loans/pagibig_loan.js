@@ -41,6 +41,9 @@ $(document).ready(function(){
 		})
 	}
 
+
+
+	//for update start
 	var editPagibigLoanId = null;
 	$(document).on('click', '.edit-pagibig-btn',function(e){
 		editPagibigLoanId = e.target.id;
@@ -136,4 +139,110 @@ $(document).ready(function(){
 		}
 
 	})
+	//for update end
+
+
+	//for adjust start
+	var adjustPagibigLoanId = null;
+	$(document).on('click','.adjust-pagibig-btn',function(e){
+		adjustPagibigLoanId = e.target.id;
+		$('.adjust-pagibig-info').hide();
+        $('.adjust-pagibig-btn').hide();
+        $('.adjust-loading-pagibig').show();
+        $.ajax({
+        	url:base_url+'loans_controller/getAdjustPagibigInfo',
+        	type:'post',
+        	dataType:'json',
+        	data:{
+        		id:adjustPagibigLoanId
+        	},
+        	success:function(response){
+        		if(response.status == "success"){
+        			$('.adjust-pagibig-info').show();
+			        $('.adjust-pagibig-btn').show();
+			        $('.adjust-loading-pagibig').hide();
+			        $('.adjust-employee-name').val(response.name);
+					$('.adjust-outstanding-balance').val(response.remainingBalance)
+
+					$('.adjust-date-payment').datepicker("option","defaultDate", new Date());
+        		}
+        		else{
+        			$('.adjust-loading-pagibig').show();
+	           	 	$('.adjust-loading-pagibig').empty();
+	            	$('.adjust-loading-pagibig').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+	            	adjustPagibigLoanId = null
+        		}
+        	},
+        	error:function(response){
+        		$('.adjust-loading-pagibig').show();
+           	 	$('.adjust-loading-pagibig').empty();
+            	$('.adjust-loading-pagibig').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+            	adjustPagibigLoanId = null
+        	}
+        })
+	})
+
+	$('.adjust-cash-payment').on('change',function(e){
+		var currentBalance = $('.adjust-outstanding-balance').val();
+		var cashPayment = $(this).val();
+		if(cashPayment != ""){
+			var newBalance = parseFloat(currentBalance) - parseFloat(cashPayment);
+            // for 2 decimal places
+            newBalance = newBalance.toString().split('e');
+            newBalance = Math.round(+(newBalance[0] + 'e' + (newBalance[1] ? (+newBalance[1] + 2) : 2)));
+
+            newBalance = newBalance.toString().split('e');
+            newBalance=  (+(newBalance[0] + 'e' + (newBalance[1] ? (+newBalance[1] - 2) : -2))).toFixed(2);
+            $(".adjust-new-outstanding-balance").val(newBalance);
+		}
+		else{
+			$(".adjust-new-outstanding-balance").val();
+		}
+	})
+	var loadingAdjustPagibig = false;
+	$('.adjust-pagibig-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingAdjustPagibig){
+			loadingAdjustPagibig = true;
+			$(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.adjust-pagibig-warning').empty();
+            $.ajax({
+            	url:base_url+'loans_controller/adjustPagibigData',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		id:adjustPagibigLoanId,
+            		adjustDatePayment:$('.adjust-date-payment').val(),
+            		adjustCashPayment:$('.adjust-cash-payment').val(),
+            		adjustOutstandingBalance:$('.adjust-outstanding-balance').val(),
+            		adjustNewOutstandingBalance:$('.adjust-new-outstanding-balance').val(),
+            		adjustRemarks:$('.adjust-remarks').val(),
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.adjust-pagibig-warning',response.msg, "danger")
+                        loadingAdjustPagibig = false;
+                        change_button_to_default(btnName, 'Adjust');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAdjustPagibig = false;
+                    change_button_to_default(btnName, 'Adjust');
+            	}
+            })
+		}
+	})
+	//for adjust end
 })

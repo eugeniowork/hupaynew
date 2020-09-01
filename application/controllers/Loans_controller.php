@@ -9,7 +9,7 @@ class Loans_controller extends CI_Controller{
         }
         $this->load->model("pagibig_model", 'pagibig_model');
         $this->load->model("employee_model", "employee_model");
-        // $this->load->model("payroll_model", "payroll_model");
+        $this->load->model("adjustment_loan_model", "adjustment_loan_model");
         // $this->load->model("attendance_model", "attendance_model");
         // $this->load->model('holiday_model','holiday_model');
         // $this->load->model('leave_model','leave_model');
@@ -58,7 +58,7 @@ class Loans_controller extends CI_Controller{
                          $finalData .= "<td><small>Php ".moneyConvertion($value->remainingBalance)."</small></td>";
                          $finalData .= "<td><small>";
                              $finalData .= "<button id=".$value->pagibig_loan_id." class='edit-pagibig-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#editPagibigModal'>Edit</button>&nbsp;";
-                             $finalData .= "<button class='btn btn-sm btn-outline-primary'>Adjustment</button>&nbsp;";
+                             $finalData .= "<button id=".$value->pagibig_loan_id." class='adjust-pagibig-btn btn btn-sm btn-outline-primary' data-toggle='modal' data-target='#adjustPagibigModal'>Adjustment</button>&nbsp;";
                              $finalData .= "<button class='btn btn-sm btn-outline-danger'>Delete</button>";
                          $finalData .= "</small></td>";
                      $finalData .= "</tr>";
@@ -146,6 +146,99 @@ class Loans_controller extends CI_Controller{
                 $this->data['msg'] = "The Pag-ibig Loan info of <strong>".$name."</strong>";
             }
         }
+        echo json_encode($this->data);
+    }
+    public function getAdjustPagibigInfo(){
+        $id = $this->input->post('id');
+        $pagibigInfo = $this->pagibig_model->get_pagibig_loan($id);
+        if(!empty($pagibigInfo)){
+            $row_emp = $this->employee_model->employee_information($pagibigInfo['emp_id']);
+            if ($row_emp['Middlename'] == ""){
+                $full_name = $row_emp['Lastname'] . ", " . $row_emp['Firstname'];
+            }
+            else {
+                $full_name = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            }
+            $remainingBalance = $pagibigInfo['remainingBalance'];
+
+            $this->data['remainingBalance'] = $remainingBalance;
+            $this->data['name'] = $full_name;
+            $this->data['status'] = "success";
+        }   
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function adjustPagibigData(){
+        $id = $this->input->post('id');
+        $adjustDatePayment= dateDefaultDb($this->input->post('adjustDatePayment'));
+        $adjustCashPayment= $this->input->post('adjustCashPayment');
+        $adjustOutstandingBalance= $this->input->post('adjustOutstandingBalance');
+        $adjustNewOutstandingBalance= $this->input->post('adjustNewOutstandingBalance');
+        $adjustRemarks= $this->input->post('adjustRemarks');
+
+
+        $this->form_validation->set_rules('adjustDatePayment', 'adjustDatePayment','required');
+        $this->form_validation->set_rules('adjustCashPayment', 'adjustCashPayment','required');
+        $this->form_validation->set_rules('adjustOutstandingBalance', 'adjustOutstandingBalance','required');
+        $this->form_validation->set_rules('adjustNewOutstandingBalance', 'adjustNewOutstandingBalance','required');
+        $this->form_validation->set_rules('adjustRemarks', 'adjustRemarks','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All field are required";
+        }
+        else{
+            if($adjustCashPayment > $adjustOutstandingBalance){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "The <strong>Cash Payment Php ".moneyConvertion($adjustCashPayment)."</strong> must be not greater than the <strong>Outstanding Balance Php ".moneyConvertion($adjustOutstandingBalance)."</strong>.";
+            }
+            else if($adjustCashPayment == 0){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Cash payment must not be a zero number.";
+            }
+            else{
+                $updateRemainingBalanceData = array(
+                    'remainingBalance'=>$adjustNewOutstandingBalance
+                );
+                $updateRemainingBalance = $this->pagibig_model->update_pagibig_loan_data($id, $updateRemainingBalanceData);
+                $pagibigInfo = $this->pagibig_model->get_pagibig_loan($id);
+                $emp_id = $pagibigInfo['emp_id'];
+                //$pagibig_loan_id = 0;
+                $sss_loan_id = 0;
+                //$sssLoanId = 0;
+                $simkimban_id =0;
+                $loanType = "Pagibig Loan";
+                $salary_loan_id = 0;
+                $current_date_time = getDateDate();
+
+                $insertAdjustmentLoanData = array(
+                    'adjustment_loan_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'datePayment'=>$adjustDatePayment,
+                    'pagibig_loan_id'=>$id,
+                    'sss_loan_id'=>$sss_loan_id,
+                    'salary_loan_id'=>$salary_loan_id,
+                    'simkimban_id'=>$simkimban_id,
+                    'loanType'=>$loanType,
+                    'cashPayment'=>$adjustCashPayment,
+                    'remainingBalance'=>$adjustOutstandingBalance,
+                    'remarks'=>$adjustRemarks,
+                    'DateCreated'=>$current_date_time,
+                );
+                $insertAdjustmentLoan = $this->adjustment_loan_model->insert_adjustment_loan_data($insertAdjustmentLoanData);
+
+                $row = $this->employee_model->employee_information($emp_id);
+                $fullName = $row['Lastname'] . ", " . $row['Firstname'] . " " . $row['Middlename'];
+
+                $this->data['status'] = "success";
+                $this->data['msg'] = "<strong>Pag-ibig Loan</strong> of employee <strong>".$fullName."</strong> was successfully adjusted";
+            }
+        }
+
+        
         echo json_encode($this->data);
     }
 }

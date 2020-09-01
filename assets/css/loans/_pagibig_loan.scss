@@ -8,4 +8,13 @@
 			display: none;
 		}
 	}
+	#adjustPagibigModal{
+		@include modal();
+		.adjust-pagibig-info{
+			display: none;
+		}
+		.adjust-pagibig-btn{
+			display: none;
+		}
+	}
 }

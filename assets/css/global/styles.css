@@ -702,6 +702,22 @@
   display: none; }
 .pagibig #editPagibigModal .update-pagibig-btn {
   display: none; }
+.pagibig #adjustPagibigModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .pagibig #adjustPagibigModal .modal-header .modal-title {
+    font-size: 15px; }
+.pagibig #adjustPagibigModal .modal-body i {
+  color: #158cba; }
+.pagibig #adjustPagibigModal .modal-body textarea {
+  resize: none; }
+.pagibig #adjustPagibigModal .modal-footer {
+  padding: 0px 5px; }
+.pagibig #adjustPagibigModal .adjust-pagibig-info {
+  display: none; }
+.pagibig #adjustPagibigModal .adjust-pagibig-btn {
+  display: none; }
 
 body {
   background: #ececec;

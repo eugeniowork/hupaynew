@@ -209,7 +209,7 @@ class Simkimban_controller extends CI_Controller{
             $this->data['status'] = "success";
         }   
         else{
-
+            $this->data['status'] = "error";
         }
 
         echo json_encode($this->data);
