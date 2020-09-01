@@ -686,6 +686,23 @@
 .year-total-deduction #updateYearTotalDeductionModal .update-year-total-deduction {
   display: none; }
 
+.pagibig #editPagibigModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .pagibig #editPagibigModal .modal-header .modal-title {
+    font-size: 15px; }
+.pagibig #editPagibigModal .modal-body i {
+  color: #158cba; }
+.pagibig #editPagibigModal .modal-body textarea {
+  resize: none; }
+.pagibig #editPagibigModal .modal-footer {
+  padding: 0px 5px; }
+.pagibig #editPagibigModal .pagibig-info {
+  display: none; }
+.pagibig #editPagibigModal .update-pagibig-btn {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

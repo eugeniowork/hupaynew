@@ -230,7 +230,7 @@
             <i class="caret-down-loans fas fa-caret-down pull-right"></i>
         </button>
         <div class="side-navbar-sub-buttons loansDropdown">
-            <a class="btn">
+            <a  href="<?php base_url();?>pagibig_loan" class="btn">
                 <img src="<?php base_url();?>assets/images/img/government images/pag-ibig-logo.jpg" class="government-logo" alt="Pag-big-Logo"/>
                 Pag-ibig Loan
             </a>

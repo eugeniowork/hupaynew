@@ -49,4 +49,12 @@ class Pagibig_model extends CI_Model{
             return "error";
         }
     }
+    public function get_all_pagibig_loan(){
+        $query = $this->db->get_where('tb_pagibig_loan');
+        return $query->result();
+    }
+    public function get_pagibig_loan($id){
+        $query = $this->db->get_where('tb_pagibig_loan',array('pagibig_loan_id'=>$id));
+        return $query->row_array();
+    }
 }

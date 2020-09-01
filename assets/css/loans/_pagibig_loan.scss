@@ -1,0 +1,11 @@
+.pagibig{
+	#editPagibigModal{
+		@include modal();
+		.pagibig-info{
+			display: none;
+		}
+		.update-pagibig-btn{
+			display: none;
+		}
+	}
+}
