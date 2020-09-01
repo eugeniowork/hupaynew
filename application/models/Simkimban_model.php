@@ -69,4 +69,12 @@ class Simkimban_model extends CI_Model{
         ));
         return $query->row_array();
     }
+    public function get_simkimban_data_order_date($id){
+        $this->db->select('*');
+        $this->db->from('tb_simkimban_loan_history');
+        $this->db->where('simkimban_id',$id);
+        $this->db->order_by('dateCreated', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

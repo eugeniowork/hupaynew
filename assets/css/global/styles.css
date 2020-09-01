@@ -630,6 +630,20 @@
   resize: none; }
 .simkimban #adjustSimkimbanModal .modal-footer {
   padding: 0px 5px; }
+.simkimban #simkimbanHistoryModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .simkimban #simkimbanHistoryModal .modal-header .modal-title {
+    font-size: 15px; }
+.simkimban #simkimbanHistoryModal .modal-body i {
+  color: #158cba; }
+.simkimban #simkimbanHistoryModal .modal-body textarea {
+  resize: none; }
+.simkimban #simkimbanHistoryModal .modal-footer {
+  padding: 0px 5px; }
+.simkimban #simkimbanHistoryModal .simkimban-history-info {
+  display: none; }
 
 .year-total-deduction #updateYearTotalDeductionModal .modal-header {
   background: #158cba;

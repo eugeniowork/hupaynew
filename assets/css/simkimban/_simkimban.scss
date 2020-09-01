@@ -11,4 +11,10 @@
 	#adjustSimkimbanModal{
 		@include modal();
 	}
+	#simkimbanHistoryModal{
+		@include modal();
+		.simkimban-history-info{
+			display: none;
+		}
+	}
 }

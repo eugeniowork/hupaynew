@@ -280,6 +280,46 @@ $(document).ready(function(){
 		}
 	})
 
+	var viewSimkimbanHistoryId = null;
+	$(document).on('click','.view-simkimban-history-btn',function(e){
+		viewSimkimbanHistoryId = e.target.id;
+		$('.simkimban-history-info').hide();
+        $('.loading-simkimban-history').show();
+        $.ajax({
+        	url:base_url+'simkimban_controller/getSimkimbanHistoryInfo',
+        	type:'post',
+        	dataType:'json',
+        	data:{
+        		id:viewSimkimbanHistoryId,
+        	},
+        	success:function(response){
+        		if(response.status == "success"){
+        			$('.simkimban-history-info').show();
+        			$('.loading-simkimban-history').hide();
+        			$('.simkimbanLoanHistory tbody').append(response.finalData);
+        			$('#simkimbanLoanHistory').dataTable({
+						ordering:false
+					});
+        			
+        		}
+        		else{
+        			$('.loading-simkimban-history').show();
+               	 	$('.loading-simkimban-history').empty();
+                	$('.loading-simkimban-history').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                	viewSimkimbanHistoryId = null
+        		}
+        	},
+        	error:function(response){
+        		$('.loading-simkimban-history').show();
+                $('.loading-simkimban-history').empty();
+                $('.loading-simkimban-history').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                viewSimkimbanHistoryId = null
+        	}
+        })
+	})
+
+
+
 	$(".input-only").keydown(function (e) {
 		//  return false;
 		if(e.keyCode != 116) {

@@ -60,7 +60,7 @@ class Simkimban_controller extends CI_Controller{
                             $finalData .= "<button id=".$value->simkimban_id." class='adjust-simkimban btn btn-sm btn-outline-primary' data-toggle='modal' data-target='#adjustSimkimbanModal'>Adjustment</button>";
                             //echo "<span class='glyphicon glyphicon-trash' style='color:#515a5a'></span> <a href='#' id='delete_simkimban' class='action-a'>Delete</a>";
                             //echo "<span> | </span>";
-                            $finalData .= "<button class='btn btn-sm btn-outline-success'>View</button>";
+                            $finalData .= "<button id=".$value->simkimban_id." class='btn btn-sm btn-outline-success view-simkimban-history-btn' data-toggle='modal' data-target='#simkimbanHistoryModal'>View</button>";
                             $finalData .= "<button class='btn btn-sm btn-outline-success'>Print</button>";
                         $finalData .= "</small></td>";
                     $finalData .= "</tr>";
@@ -282,5 +282,25 @@ class Simkimban_controller extends CI_Controller{
 
         
         echo json_encode($this->data);
+    }
+
+    public function getSimkimbanHistoryInfo(){
+        $id = $this->input->post('id');
+        $history = $this->simkimban_model->get_simkimban_data_order_date($id);
+        $finalData = "";
+        if(!empty($history)){
+            foreach ($history as $value) {
+                $finalData .="<tr>";
+                    $finalData .= "<td>".$value->date_payroll."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->deduction)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->remainingBalance)."</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = 'success';
+        echo json_encode($this->data);
+
     }
 }
