@@ -602,6 +602,35 @@
 .audit-trail .audit-trail-content {
   display: none; }
 
+.simkimban #editSimkimbanModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .simkimban #editSimkimbanModal .modal-header .modal-title {
+    font-size: 15px; }
+.simkimban #editSimkimbanModal .modal-body i {
+  color: #158cba; }
+.simkimban #editSimkimbanModal .modal-body textarea {
+  resize: none; }
+.simkimban #editSimkimbanModal .modal-footer {
+  padding: 0px 5px; }
+.simkimban .simkimban-info {
+  display: none; }
+.simkimban .update-simkimban-btn {
+  display: none; }
+.simkimban #adjustSimkimbanModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .simkimban #adjustSimkimbanModal .modal-header .modal-title {
+    font-size: 15px; }
+.simkimban #adjustSimkimbanModal .modal-body i {
+  color: #158cba; }
+.simkimban #adjustSimkimbanModal .modal-body textarea {
+  resize: none; }
+.simkimban #adjustSimkimbanModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

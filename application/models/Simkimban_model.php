@@ -28,6 +28,10 @@ class Simkimban_model extends CI_Model{
         $query = $this->db->get_where('tb_simkimban',array('remainingBalance !='=>0, 'status'=>1));
         return $query->result();
     }
+    public function get_employee_with_existing_simkimban(){
+        $query = $this->db->get_where('tb_simkimban',array('remainingBalance >'=>0, 'status'=>1));
+        return $query->result();
+    }
     public function update_simkimban_loan_data($id,$data){
         $this->db->trans_start();
         $this->db->where('simkimban_id',$id);
@@ -43,5 +47,26 @@ class Simkimban_model extends CI_Model{
     public function insert_simkimban_loan_history_data($id,$data){
         $insert = $this->db->insert('tb_salary_loan_history',$data);
         return $insert;
+    }
+    public function get_simkimban_data($id){
+        $query = $this->db->get_where('tb_simkimban',array('simkimban_id'=>$id));
+        return $query->row_array();
+    }
+    public function if_simkimband_has_no_changes($simkimban_id,$deductionType,$deductionDay,$totalMonths,$dateFrom,$dateTo,$item,$amountLoan,$deduction,$remainingBalance){
+        $query = $this->db->get_where('tb_simkimban',array(
+            'deductionType'=>$deductionType,
+            'deductionDay'=>$deductionDay,
+            'totalMonths'=>$totalMonths,
+            'dateFrom'=>$dateFrom,
+            'dateTo'=>$dateTo,
+            'Items'=>$item,
+            'amountLoan'=>$amountLoan,
+            'deduction'=>$deduction,
+            'remainingBalance'=>$remainingBalance,
+            'simkimban_id'=>$simkimban_id,
+            
+
+        ));
+        return $query->row_array();
     }
 }

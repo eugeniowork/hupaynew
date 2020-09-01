@@ -1,0 +1,14 @@
+.simkimban{
+	#editSimkimbanModal{
+		@include modal();
+	}
+	.simkimban-info{
+		display: none;
+	}
+	.update-simkimban-btn{
+		display: none;
+	}
+	#adjustSimkimbanModal{
+		@include modal();
+	}
+}

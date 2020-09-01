@@ -9,5 +9,10 @@ class Adjustment_loan_model extends CI_Model{
         $query = $this->db->get_where('tb_adjustment_loan',array('loanType !='=>'Simkimban'));
         return $query->result();
     }
+
+    public function insert_adjustment_loan_data($data){
+        $insert = $this->db->insert('tb_adjustment_loan',$data);
+        return $insert;
+    }
 }
 ?>
