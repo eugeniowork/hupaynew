@@ -77,4 +77,18 @@ class Simkimban_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_simkimban_zero_balance(){
+        $query = $this->db->get_where('tb_simkimban',array('remainingBalance'=>0, 'status'=>1));
+        return $query->result();
+    }
+
+    public function get_simkimban_history($id){
+        $this->db->select('*');
+        $this->db->from('tb_simkimban');
+        $this->db->where('emp_id',$id);
+        $this->db->where('status',1);
+        $this->db->order_by('dateCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

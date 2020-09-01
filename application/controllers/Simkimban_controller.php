@@ -303,4 +303,78 @@ class Simkimban_controller extends CI_Controller{
         echo json_encode($this->data);
 
     }
+
+    public function getEmployeeSimkimbanHistoryList(){
+        $select_qry = $this->simkimban_model->get_simkimban_zero_balance();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+                $day = "";
+                if ($value->deductionType == "Monthly"){
+                    $day = "("  .$value->deductionDay.")";
+                }
+                $finalData .="<tr>";
+                    $finalData .= "<td><small>".$emp_name."</small></td>";
+                    $finalData .= "<td><small>".$date_range."</small></td>";
+                    $finalData .= "<td><small>".$value->Items."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function getSimkimbanHistoryList(){
+        $id = $this->session->userdata('user');
+        $select_qry = $this->simkimban_model->get_simkimban_history($id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+                $status = "Finish";
+                if ($value->remainingBalance != 0) {
+                    $status = "Current";
+                }
+                $finalData .="<tr>";
+                    $finalData .= "<td>".$date_range."</td>";
+                    $finalData .= "<td>".$value->Items."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->amountLoan)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->deduction)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->remainingBalance)."</td>";
+                    $finalData .= "<td>".$status."</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
 }
