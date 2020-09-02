@@ -302,4 +302,65 @@ class Loans_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function addNewPagibig(){
+        $empId = $this->input->post('empId');
+        $name= $this->input->post('name');
+        $dateFrom= $this->input->post('dateFrom');
+        $dateTo= $this->input->post('dateTo');
+        $amountLoan= $this->input->post('amountLoan');
+        $deduction= $this->input->post('deduction');
+        $remainingBalance= $this->input->post('remainingBalance');
+        $this->data['asdsad'] = $dateFrom;
+        $dateCreated = getDateDate();
+        $this->form_validation->set_rules('name', 'name','required');
+        $this->form_validation->set_rules('dateFrom', 'dateFrom','required');
+        $this->form_validation->set_rules('dateTo', 'dateTo','required');
+        $this->form_validation->set_rules('amountLoan', 'amountLoan','required');
+        $this->form_validation->set_rules('deduction', 'deduction','required');
+        $this->form_validation->set_rules('remainingBalance', 'remainingBalance','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required";
+        }
+        else{
+            $check = $this->employee_model->employee_information($empId);
+            $checkPagibig = $this->pagibig_model->get_employee_pagibig_loan($empId);
+            if(empty($check)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "There was a problem a problem on the employee name, please try again.";
+            }
+            else if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateFrom ) || !preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateTo)) {
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Date From or Date To not match to the current format mm/dd/yyyy.";
+            }
+            else if($dateFrom >= $dateTo){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <b>Date To</b>.";
+            }
+            else if(!empty($checkPagibig)){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "Empleeoy <strong>".$name."</strong> has an existing pag-ibig loan.";
+            }
+            else{
+                $dateFrom = dateDefaultDb($dateFrom);
+                $dateTo = dateDefaultDb($dateTo);
+                $insertData = array(
+                    'pagibig_loan_id'=>'',
+                    'emp_id'=>$empId,
+                    'dateFrom'=>$dateFrom,
+                    'dateTo'=>$dateTo,
+                    'amountLoan'=>$amountLoan,
+                    'deduction'=>$deduction,
+                    'remainingBalance'=>$remainingBalance,
+                    'DateCreated'=>$dateCreated,
+                );
+                $insert = $this->pagibig_model->insert_pagibig_loan($empId, $insertData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "<strong>Pag-ibig Loan</strong> was successfully added to employee ".$name."";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
 }

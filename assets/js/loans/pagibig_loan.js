@@ -310,4 +310,87 @@ $(document).ready(function(){
 		})
 	}
 
+	// for adding pagibig loan start
+	$('.add-date-from').datepicker("option","defaultDate", new Date());
+	$('.add-date-to').datepicker("option","defaultDate", new Date());
+	get_list_of_employee()
+	function get_list_of_employee(){
+		$('.employeeList tbody').empty();
+		$.ajax({
+			url:base_url+'employee_controller/getAllEmployee',
+			type:'get',
+			dataType:'json',
+			success:function(response){
+				if(response.status == "success"){
+					$('#employeeList tbody').append(response.finalData)
+					$('#employeeList').dataTable({
+						ordering:false
+					});
+				}
+				else{
+					toast_options(4000);
+                	toastr.error("There was a problem, please try again!");
+				}
+			},
+			error:function(response){
+				toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+			}
+		})
+	}
+
+	var selectedEmpId = null;
+	$(document).on('click','.employee-btn',function(e){
+		selectedEmpId = e.target.id;
+		$('.add-employee-name').val($(this).text())
+	})
+
+	var loadingAddPagibig = null;
+	$('.add-pagibig-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingAddPagibig){
+			loaingAddSimkimban = true;
+			$(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.add-pagibig-warning').empty();
+            $.ajax({
+            	url:base_url+'loans_controller/addNewPagibig',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		empId:selectedEmpId,
+            		name:$('.add-employee-name').val(),
+            		dateFrom:$('.add-date-from').val(),
+            		dateTo:$('.add-date-to').val(),
+            		amountLoan:$('.add-amount-loan').val(),
+            		deduction:$('.add-deduction').val(),
+            		remainingBalance:$('.add-remaining-balance').val(),
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.add-pagibig-warning',response.msg, "danger")
+                        loadingAddPagibig = false;
+                        change_button_to_default(btnName, 'Submit');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAddPagibig = false;
+                    change_button_to_default(btnName, 'Submit');
+            	}
+            })
+		}
+	})
+	//for adding pagibig loan end
+
 })

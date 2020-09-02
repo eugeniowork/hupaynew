@@ -718,6 +718,18 @@
   display: none; }
 .pagibig #adjustPagibigModal .adjust-pagibig-btn {
   display: none; }
+.pagibig #addEmployeeToPagibigModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .pagibig #addEmployeeToPagibigModal .modal-header .modal-title {
+    font-size: 15px; }
+.pagibig #addEmployeeToPagibigModal .modal-body i {
+  color: #158cba; }
+.pagibig #addEmployeeToPagibigModal .modal-body textarea {
+  resize: none; }
+.pagibig #addEmployeeToPagibigModal .modal-footer {
+  padding: 0px 5px; }
 
 body {
   background: #ececec;

@@ -78,4 +78,9 @@ class Pagibig_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function insert_pagibig_loan($id,$data){
+        $insert = $this->db->insert('tb_pagibig_loan',$data);
+        return $insert;
+    }
 }
