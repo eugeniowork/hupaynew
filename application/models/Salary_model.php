@@ -76,4 +76,25 @@ class Salary_model extends CI_Model{
         ));
         return $query->row_array();
     }
+    public function delete_salary_loan($id){
+        $this->db->trans_start();
+        $this->db->where('salary_loan_id',$id);
+        $this->db->delete('tb_salary_loan');
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+
+    public function get_salary_loan_history_data($id){
+        $this->db->select('*');
+        $this->db->from('tb_salary_loan_history');
+        $this->db->where('salary_loan_id',$id);
+        $this->db->order_by('dateCreated', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

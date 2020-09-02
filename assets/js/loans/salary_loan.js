@@ -277,4 +277,98 @@ $(document).ready(function(){
 
 
 	//for adjust salary loan end
+
+
+	//for delete start
+	var deleteSalaryLoanId = null;
+	$(document).on('click','.delete-salary-loan-btn',function(e){
+		deleteSalaryLoanId = e.target.id;
+		Swal.fire({
+            html: 'Are you sure you want to delete the <strong>Salary Loan</strong> of <strong>'+$('.name-'+deleteSalaryLoanId).text()+'</strong>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+            	
+            	$.ajax({
+            		url:base_url+'loans_controller/deleteSalaryLoan',
+            		type:'post',
+            		dataType:'json',
+            		data:{
+            			id:deleteSalaryLoanId
+            		},
+            		success:function(response){
+            			if(response.status == "success"){
+            				toast_options(4000);
+	                        toastr.success(response.msg);
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+	                        $('.salary-loan-'+deleteSalaryLoanId).remove();
+            			}
+            			else{
+            				toast_options(4000);
+                    		toastr.error("There was a problem removing the salary loan, please try again!");
+            			}
+            		},
+            		error:function(response){
+            			toast_options(4000);
+                    	toastr.error("There was a problem, please try again!");
+            		}
+
+            	})
+            }
+            else{
+            	deleteSalaryLoanId = null;
+            }
+        });
+	})
+
+
+	//for delete end
+
+
+	//for getting existing salary loan history start
+	var viewSalaryLoanHistoryId = false;
+	$(document).on('click','.view-salary-loan-history-btn',function(e){
+
+		viewSalaryLoanHistoryId = e.target.id;
+
+		$('.existing-salary-loan-history-info').hide();
+        $('.loading-existing-salary-loan-history').show();
+        $.ajax({
+        	url:base_url+'loans_controller/getSalaryLoanHistory',
+        	type:'post',
+        	dataType:'json',
+        	data:{
+        		id:viewSalaryLoanHistoryId,
+        	},
+        	success:function(response){
+        		if(response.status == "success"){
+        			$('.existing-salary-loan-history-info').show();
+					$('.loading-existing-salary-loan-history').hide();
+					$('#salaryLoanHistory tbody').append(response.finalData);
+					$('#salaryLoanHistory').dataTable({
+						ordering:false
+					});
+        		}
+        		else{
+        			$('.loading-existing-salary-loan-history').show();
+               	 	$('.loading-existing-salary-loan-history').empty();
+                	$('.loading-existing-salary-loan-history').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                	viewSalaryLoanHistoryId = null
+        		}
+        	},
+        	error:function(response){
+        		$('.loading-existing-salary-loan-history').show();
+                $('.loading-existing-salary-loan-history').empty();
+                $('.loading-existing-salary-loan-history').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                viewSalaryLoanHistoryId = null
+        	}
+        })
+	})
+	//for getting existing salary loan history end
 })

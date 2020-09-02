@@ -759,8 +759,8 @@ class Loans_controller extends CI_Controller{
                         $day = "("  .$value->deductionDay.")";
                     }
 
-                    $finalData .="<tr id='".$value->salary_loan_id."'>";
-                        $finalData .= "<td><small>".$emp_name."</small></td>";
+                    $finalData .="<tr class='salary-loan-".$value->salary_loan_id."'>";
+                        $finalData .= "<td class='name-".$value->salary_loan_id."'><small>".$emp_name."</small></td>";
                         $finalData .= "<td><small>".$date_range."</small></td>";
                         $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
                         $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
@@ -770,8 +770,8 @@ class Loans_controller extends CI_Controller{
                         $finalData .= "<td><small>";
                             $finalData .= "<button id=".$value->salary_loan_id." class='edit-salary-loan-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#editSalaryLoanModal'><i class='fas fa-pencil-alt' id=".$value->salary_loan_id."></i></button>&nbsp;";
                             $finalData .= "<button id=".$value->salary_loan_id." class='adjust-salary-loan-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#adjustSssModal'><i id=".$value->salary_loan_id." class='fas fa-adjust'></i></button>&nbsp;";
-                            $finalData .= "<button class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>&nbsp;";
-                            $finalData .= "<button class='btn btn-sm btn-outline-primary'><i class='fas fa-eye'></i></button>&nbsp;";
+                            $finalData .= "<button id=".$value->salary_loan_id." class='delete-salary-loan-btn btn btn-sm btn-outline-danger'><i id=".$value->salary_loan_id." class='fas fa-trash'></i></button>&nbsp;";
+                            $finalData .= "<button id=".$value->salary_loan_id." class='view-salary-loan-history-btn btn btn-sm btn-outline-primary' data-toggle='modal' data-target='#existingSalaryLoanHistoryModal'><i class='fas fa-eye' id=".$value->salary_loan_id."></i></button>&nbsp;";
                             $finalData .= "<button class='btn btn-sm btn-outline-secondary'><i class='fas fa-print'></i></button>";
                         $finalData .= "</small></td>";
                     $finalData .= "</tr>";
@@ -991,6 +991,48 @@ class Loans_controller extends CI_Controller{
         }
 
         
+        echo json_encode($this->data);
+    }
+
+    public function deleteSalaryLoan(){
+        $id = $this->input->post('id');
+
+        $pagibigInfo = $this->salary_model->get_salary_loan_data($id);
+        if(!empty($pagibigInfo)){
+            $emp_id = $pagibigInfo['emp_id'];
+            $row_emp = $this->employee_model->employee_information($emp_id);
+
+            $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+
+            $deletePagibig = $this->salary_model->delete_salary_loan($id);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "<strong>Salary Loan</strong> of <strong>".$fullName."</strong> was successfully deleted.";
+        }
+        else{
+            $this->data['status'] = "error";
+
+        }
+        echo json_encode($this->data);
+    }
+
+    public function getSalaryLoanHistory(){
+        $id = $this->input->post('id');
+
+        $select_qry = $this->salary_model->get_salary_loan_history_data($id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $finalData .="<tr>";
+                    $finalData .= "<td>".$value->date_payroll."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->deduction)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->remainingBalance)."</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
         echo json_encode($this->data);
     }
 }

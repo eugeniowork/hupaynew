@@ -820,6 +820,18 @@
   display: none; }
 .salary #adjustSssModal .adjust-salary-loan-btn {
   display: none; }
+.salary #existingSalaryLoanHistoryModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .salary #existingSalaryLoanHistoryModal .modal-header .modal-title {
+    font-size: 15px; }
+.salary #existingSalaryLoanHistoryModal .modal-body i {
+  color: #158cba; }
+.salary #existingSalaryLoanHistoryModal .modal-body textarea {
+  resize: none; }
+.salary #existingSalaryLoanHistoryModal .modal-footer {
+  padding: 0px 5px; }
 
 body {
   background: #ececec;

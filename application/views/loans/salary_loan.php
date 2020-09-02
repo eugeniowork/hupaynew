@@ -186,6 +186,41 @@
 	                </div>
 	            </div>
 	        </div>
+
+	        <div class="modal fade" id="existingSalaryLoanHistoryModal" tabindex="-1" role="dialog" aria-labelledby="existingSalaryLoanHistoryModalTitle" aria-hidden="true">
+	            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+	                <div class="modal-content">
+	                    <div class="modal-header">
+	                        <h5 class="modal-title" id="existingSalaryLoanHistoryModalLongTitle">Salary Loan History</h5>
+	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-body">
+	                        <div class="existing-salary-loan-history-info">
+	                          	<table class="table table-striped" id="salaryLoanHistory">
+						            <thead>
+						                <tr>
+						                    <th><i class="fas fa-calendar-alt"></i>&nbsp;Payroll Date</th>
+						                    <th><i class="fas fa-clock"></i>&nbsp;Deduction</th>
+						                    <th><i class="fas fa-wrench"></i>&nbsp;Outstanding Balance</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						            
+						            </tbody>
+						        </table>
+	                        </div>
+	                        <div class="loading-existing-salary-loan-history">
+	                            <div class="d-flex flex-column justify-content-center align-items-center">
+	                                <div class="spinner-border text-primary" role="status"></div>
+	                                <p>Loading Information</p>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
 		</div>
 	</div>
 <?php endif ?>

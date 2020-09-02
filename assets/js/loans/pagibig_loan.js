@@ -233,7 +233,7 @@ $(document).ready(function(){
 	//for delete start
 	var deletePagibigId = null;
 	$(document).on('click','.delete-pagibig',function(e){
-		
+		deletePagibigId = e.target.id;
 		Swal.fire({
             html: 'Are you sure you want to delete the <strong>Pag-ibig Loan</strong> of <strong>'+$('.name-'+deletePagibigId).text()+'</strong>?',
             icon: 'warning',
@@ -243,7 +243,7 @@ $(document).ready(function(){
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.value) {
-            	deletePagibigId = e.target.id;
+            	
             	$.ajax({
             		url:base_url+'loans_controller/deletePagibigLoan',
             		type:'post',
