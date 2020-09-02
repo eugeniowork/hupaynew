@@ -1,0 +1,26 @@
+.sss{
+	#editSssModal{
+		@include modal();
+		.sss-info{
+			display: none;
+		}
+		.update-sss-btn{
+			display: none;
+		}
+	}
+	#adjustSssModal{
+		@include modal();
+		.adjust-sss-info{
+			display: none;
+		}
+		.adjust-sss-btn{
+			display: none;
+		}
+	}
+	#addEmployeeToSssModal{
+		@include modal();
+	}
+	#selectEmployeeModal{
+		@include modal();
+	}
+}

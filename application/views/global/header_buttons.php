@@ -234,7 +234,7 @@
                 <img src="<?php base_url();?>assets/images/img/government images/pag-ibig-logo.jpg" class="government-logo" alt="Pag-big-Logo"/>
                 Pag-ibig Loan
             </a>
-            <a class="btn">
+            <a href="<?php base_url();?>sss_loan" class="btn">
                 <img src="<?php base_url();?>assets/images/img/government images/SSS-Logo.jpg" class="government-logo" alt="SSS-Logo"/>
                 SSS Loan
             </a>

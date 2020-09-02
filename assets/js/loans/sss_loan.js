@@ -1,15 +1,15 @@
 $(document).ready(function(){
-	get_employee_with_existing_pagibig();
-	function get_employee_with_existing_pagibig(){
-		$('#employeeWithExistingPagibig tbody').empty();
+	get_employee_with_existing_sss();
+	function get_employee_with_existing_sss(){
+		$('#employeeWithExistingSss tbody').empty();
 		$.ajax({
-			url:base_url+'loans_controller/getEmployeeWithExistingPagibig',
+			url:base_url+'loans_controller/getEmployeeWithSssPagibig',
 			type:'get',
 			dataType:'json',
 			success:function(response){
 				if(response.status == "success"){
-					$('#employeeWithExistingPagibig tbody').append(response.finalData);
-					$('#employeeWithExistingPagibig').dataTable({
+					$('#employeeWithExistingSss tbody').append(response.finalData);
+					$('#employeeWithExistingSss').dataTable({
 						ordering:false
 					});
 				}
@@ -25,27 +25,25 @@ $(document).ready(function(){
 		})
 	}
 
-
-
 	//for update start
-	var editPagibigLoanId = null;
-	$(document).on('click', '.edit-pagibig-btn',function(e){
-		editPagibigLoanId = e.target.id;
-		$('.pagibig-info').hide();
-        $('.update-pagibig-btn').hide();
-        $('.loading-pagibig').show();
+	var editSssLoanId = null;
+	$(document).on('click', '.edit-sss-btn',function(e){
+		editSssLoanId = e.target.id;
+		$('.sss-info').hide();
+        $('.update-sss-btn').hide();
+        $('.loading-sss').show();
         $.ajax({
-        	url:base_url+'loans_controller/getPagibigInfo',
+        	url:base_url+'loans_controller/getSssInfo',
         	type:'post',
         	dataType:'json',
         	data:{
-        		id:editPagibigLoanId
+        		id:editSssLoanId
         	},
         	success:function(response){
         		if(response.status == "success"){
-        			$('.pagibig-info').show();
-			        $('.update-pagibig-btn').show();
-			        $('.loading-pagibig').hide();
+        			$('.sss-info').show();
+			        $('.update-sss-btn').show();
+			        $('.loading-sss').hide();
 			        if(response.finalData.length >0){
 			        	response.finalData.forEach(function(data,key){
 			        		$('.employee-name').val(data.name);
@@ -61,37 +59,37 @@ $(document).ready(function(){
 			        }
         		}
         		else{
-        			$('.loading-pagibig').show();
-	           	 	$('.loading-pagibig').empty();
-	            	$('.loading-pagibig').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
-	            	editPagibigLoanId = null
+        			$('.loading-sss').show();
+	           	 	$('.loading-sss').empty();
+	            	$('.loading-sss').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+	            	editSssLoanId = null
         		}
         	},
         	error:function(response){
         		$('.loading-pagibig').show();
            	 	$('.loading-pagibig').empty();
             	$('.loading-pagibig').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
-            	editPagibigLoanId = null
+            	editSssLoanId = null
         	}
         })
 	})
 
-	var loadingUpdatePagibig = false;
-	$('.update-pagibig-btn').on('click',function(){
+	var loadingUpdateSss = false;
+	$('.update-sss-btn').on('click',function(){
 		var btnName = this;
-		if(!loadingUpdatePagibig){
-			loadingUpdatePagibig = true;
+		if(!loadingUpdateSss){
+			loadingUpdateSss = true;
 			$(btnName).text('');
             $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
             $(btnName).prop('disabled', true);
             $(btnName).css('cursor','not-allowed');
-            $('.pagibig-warning').empty();
+            $('.sss-warning').empty();
             $.ajax({
-            	url:base_url+'loans_controller/updatePagibigInfo',
+            	url:base_url+'loans_controller/updateSssInfo',
             	type:'post',
             	dataType:'json',
             	data:{
-            		id:editPagibigLoanId,
+            		id:editSssLoanId,
             		dateFrom:$('.date-from').val(),
 					dateTo:$('.date-to').val(),
 					amountLoan:$('.amount-loan').val(),
@@ -108,60 +106,61 @@ $(document).ready(function(){
                         },1000)
             		}
             		else{
-            			render_response('.pagibig-warning',response.msg, "danger")
-                        loadingUpdatePagibig = false;
+            			render_response('.sss-warning',response.msg, "danger")
+                        loadingUpdateSss = false;
                         change_button_to_default(btnName, 'Update');
             		}
             	},
             	error:function(response){
             		toast_options(4000);
                     toastr.error("There was a problem, please try again!");
-                    loadingUpdatePagibig = false;
+                    loadingUpdateSss = false;
                     change_button_to_default(btnName, 'Update');
             	}
             })
 		}
 
 	})
+
 	//for update end
 
 
 	//for adjust start
-	var adjustPagibigLoanId = null;
-	$(document).on('click','.adjust-pagibig-btn',function(e){
-		adjustPagibigLoanId = e.target.id;
-		$('.adjust-pagibig-info').hide();
-        $('.adjust-pagibig-btn').hide();
-        $('.adjust-loading-pagibig').show();
+	var adjustSssLoanId = null;
+	$(document).on('click','.adjust-sss-btn',function(e){
+		adjustSssLoanId = e.target.id;
+		$('.adjust-sss-info').hide();
+        $('.adjust-sss-btn').hide();
+        $('.adjust-loading-sss').show();
         $.ajax({
-        	url:base_url+'loans_controller/getAdjustPagibigInfo',
+        	url:base_url+'loans_controller/getAdjustSssInfo',
         	type:'post',
         	dataType:'json',
         	data:{
-        		id:adjustPagibigLoanId
+        		id:adjustSssLoanId
         	},
         	success:function(response){
         		if(response.status == "success"){
-        			$('.adjust-pagibig-info').show();
-			        $('.adjust-pagibig-btn').show();
-			        $('.adjust-loading-pagibig').hide();
+        			$('.adjust-sss-info').show();
+			        $('.adjust-sss-btn').show();
+			        $('.adjust-loading-sss').hide();
 			        $('.adjust-employee-name').val(response.name);
 					$('.adjust-outstanding-balance').val(response.remainingBalance)
 
 					$('.adjust-date-payment').datepicker("option","defaultDate", new Date());
         		}
         		else{
-        			$('.adjust-loading-pagibig').show();
-	           	 	$('.adjust-loading-pagibig').empty();
-	            	$('.adjust-loading-pagibig').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
-	            	adjustPagibigLoanId = null
+        			$('.adjust-loading-sss').show();
+	           	 	$('.adjust-loading-sss').empty();
+	            	$('.adjust-loading-sss').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+	            	adjustSssLoanId = null
         		}
         	},
         	error:function(response){
-        		$('.adjust-loading-pagibig').show();
-           	 	$('.adjust-loading-pagibig').empty();
-            	$('.adjust-loading-pagibig').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
-            	adjustPagibigLoanId = null
+        		$('.adjust-loading-sss').show();
+           	 	$('.adjust-loading-sss').empty();
+            	$('.adjust-loading-sss').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+            	adjustSssLoanId = null
         	}
         })
 	})
@@ -183,22 +182,23 @@ $(document).ready(function(){
 			$(".adjust-new-outstanding-balance").val();
 		}
 	})
-	var loadingAdjustPagibig = false;
-	$('.adjust-pagibig-btn').on('click',function(){
+
+	var loadingAdjustSss = false;
+	$('.adjust-sss-btn').on('click',function(){
 		var btnName = this;
-		if(!loadingAdjustPagibig){
-			loadingAdjustPagibig = true;
+		if(!loadingAdjustSss){
+			loadingAdjustSss = true;
 			$(btnName).text('');
             $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
             $(btnName).prop('disabled', true);
             $(btnName).css('cursor','not-allowed');
-            $('.adjust-pagibig-warning').empty();
+            $('.adjust-sss-warning').empty();
             $.ajax({
-            	url:base_url+'loans_controller/adjustPagibigData',
+            	url:base_url+'loans_controller/adjustSssData',
             	type:'post',
             	dataType:'json',
             	data:{
-            		id:adjustPagibigLoanId,
+            		id:adjustSssLoanId,
             		adjustDatePayment:$('.adjust-date-payment').val(),
             		adjustCashPayment:$('.adjust-cash-payment').val(),
             		adjustOutstandingBalance:$('.adjust-outstanding-balance').val(),
@@ -214,28 +214,30 @@ $(document).ready(function(){
                         },1000)
             		}
             		else{
-            			render_response('.adjust-pagibig-warning',response.msg, "danger")
-                        loadingAdjustPagibig = false;
+            			render_response('.adjust-sss-warning',response.msg, "danger")
+                        loadingAdjustSss = false;
                         change_button_to_default(btnName, 'Adjust');
             		}
             	},
             	error:function(response){
             		toast_options(4000);
                     toastr.error("There was a problem, please try again!");
-                    loadingAdjustPagibig = false;
+                    loadingAdjustSss = false;
                     change_button_to_default(btnName, 'Adjust');
             	}
             })
 		}
 	})
+
 	//for adjust end
 
 	//for delete start
-	var deletePagibigId = null;
-	$(document).on('click','.delete-pagibig',function(e){
-		
+	var deleteSssId = null;
+	$(document).on('click','.delete-sss',function(e){
+		deleteSssId = e.target.id;
+		console.log(deleteSssId)
 		Swal.fire({
-            html: 'Are you sure you want to delete the <strong>Pag-ibig Loan</strong> of <strong>'+$('.name-'+deletePagibigId).text()+'</strong>?',
+            html: 'Are you sure you want to delete the <strong>SSS Loan</strong> of <strong>'+$('.name-'+deleteSssId).text()+'</strong>?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -243,13 +245,13 @@ $(document).ready(function(){
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.value) {
-            	deletePagibigId = e.target.id;
+            	
             	$.ajax({
-            		url:base_url+'loans_controller/deletePagibigLoan',
+            		url:base_url+'loans_controller/deleteSssLoan',
             		type:'post',
             		dataType:'json',
             		data:{
-            			id:deletePagibigId
+            			id:deleteSssId
             		},
             		success:function(response){
             			if(response.status == "success"){
@@ -258,7 +260,7 @@ $(document).ready(function(){
 	                        setTimeout(function(){
 	                            window.location.reload();
 	                        },1000)
-	                        $('.pagibig-tr-'+deletePagibigId).remove();
+	                        $('.sss-tr-'+deleteSssId).remove();
             			}
             			else{
             				toast_options(4000);
@@ -273,7 +275,7 @@ $(document).ready(function(){
             	})
             }
             else{
-            	deletePagibigId = null;
+            	deleteSssId = null;
             }
         });
 	})
@@ -281,20 +283,21 @@ $(document).ready(function(){
 
 	//for delete end
 
+
 	//for getting logged in pagibig history
 
 	get_pagibig_loan_history()
 
 	function get_pagibig_loan_history(){
-		$('#pagibigHistoryList tbody').empty();
+		$('#sssHistoryList tbody').empty();
 		$.ajax({
-			url:base_url+'loans_controller/getPagibigHistoryList',
+			url:base_url+'loans_controller/getSssHistoryList',
 			type:'get',
 			dataType:'json',
 			success:function(response){
 				if(response.status == "success"){
-					$('#pagibigHistoryList tbody').append(response.finalData);
-					$('#pagibigHistoryList').dataTable({
+					$('#sssHistoryList tbody').append(response.finalData);
+					$('#sssHistoryList').dataTable({
 						ordering:false
 					});
 				}
@@ -310,7 +313,7 @@ $(document).ready(function(){
 		})
 	}
 
-	// for adding pagibig loan start
+	// for adding sss loan start
 	$('.add-date-from').datepicker("option","defaultDate", new Date());
 	$('.add-date-to').datepicker("option","defaultDate", new Date());
 	get_list_of_employee()
@@ -338,30 +341,30 @@ $(document).ready(function(){
 			}
 		})
 	}
-
 	var selectedEmpId = null;
 	$(document).on('click','.employee-btn',function(e){
 		selectedEmpId = e.target.id;
 		$('.add-employee-name').val($(this).text())
 	})
 
-	var loadingAddPagibig = null;
-	$('.add-pagibig-btn').on('click',function(){
+	var loadingAddSss = null;
+	$('.add-sss-btn').on('click',function(){
 		var btnName = this;
-		if(!loadingAddPagibig){
-			loadingAddPagibig = true;
+		if(!loadingAddSss){
+			loadingAddSss = true;
 			$(btnName).text('');
             $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
             $(btnName).prop('disabled', true);
             $(btnName).css('cursor','not-allowed');
-            $('.add-pagibig-warning').empty();
+            $('.add-sss-warning').empty();
             $.ajax({
-            	url:base_url+'loans_controller/addNewPagibig',
+            	url:base_url+'loans_controller/addNewSss',
             	type:'post',
             	dataType:'json',
             	data:{
             		empId:selectedEmpId,
             		name:$('.add-employee-name').val(),
+            		loanType:$('.loan-type').val(),
             		dateFrom:$('.add-date-from').val(),
             		dateTo:$('.add-date-to').val(),
             		amountLoan:$('.add-amount-loan').val(),
@@ -377,20 +380,19 @@ $(document).ready(function(){
                         },1000)
             		}
             		else{
-            			render_response('.add-pagibig-warning',response.msg, "danger")
-                        loadingAddPagibig = false;
+            			render_response('.add-sss-warning',response.msg, "danger")
+                        loadingAddSss = false;
                         change_button_to_default(btnName, 'Submit');
             		}
             	},
             	error:function(response){
             		toast_options(4000);
                     toastr.error("There was a problem, please try again!");
-                    loadingAddPagibig = false;
+                    loadingAddSss = false;
                     change_button_to_default(btnName, 'Submit');
             	}
             })
 		}
 	})
-	//for adding pagibig loan end
-
+	//for adding sss loan end
 })

@@ -49,6 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['sss_loan'] = 'loans_controller/viewSssLoan';
 $route['pagibig_loan'] = 'loans_controller';
 $route['simkimban'] = 'simkimban_controller';
 

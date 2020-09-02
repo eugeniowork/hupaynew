@@ -731,6 +731,63 @@
 .pagibig #addEmployeeToPagibigModal .modal-footer {
   padding: 0px 5px; }
 
+.sss #editSssModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .sss #editSssModal .modal-header .modal-title {
+    font-size: 15px; }
+.sss #editSssModal .modal-body i {
+  color: #158cba; }
+.sss #editSssModal .modal-body textarea {
+  resize: none; }
+.sss #editSssModal .modal-footer {
+  padding: 0px 5px; }
+.sss #editSssModal .sss-info {
+  display: none; }
+.sss #editSssModal .update-sss-btn {
+  display: none; }
+.sss #adjustSssModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .sss #adjustSssModal .modal-header .modal-title {
+    font-size: 15px; }
+.sss #adjustSssModal .modal-body i {
+  color: #158cba; }
+.sss #adjustSssModal .modal-body textarea {
+  resize: none; }
+.sss #adjustSssModal .modal-footer {
+  padding: 0px 5px; }
+.sss #adjustSssModal .adjust-sss-info {
+  display: none; }
+.sss #adjustSssModal .adjust-sss-btn {
+  display: none; }
+.sss #addEmployeeToSssModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .sss #addEmployeeToSssModal .modal-header .modal-title {
+    font-size: 15px; }
+.sss #addEmployeeToSssModal .modal-body i {
+  color: #158cba; }
+.sss #addEmployeeToSssModal .modal-body textarea {
+  resize: none; }
+.sss #addEmployeeToSssModal .modal-footer {
+  padding: 0px 5px; }
+.sss #selectEmployeeModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .sss #selectEmployeeModal .modal-header .modal-title {
+    font-size: 15px; }
+.sss #selectEmployeeModal .modal-body i {
+  color: #158cba; }
+.sss #selectEmployeeModal .modal-body textarea {
+  resize: none; }
+.sss #selectEmployeeModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }
