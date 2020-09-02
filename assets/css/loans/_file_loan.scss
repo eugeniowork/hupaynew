@@ -1,0 +1,11 @@
+.file-loan{
+	#updateFileLoanModal{
+		@include modal();
+		.update-file-loan-info{
+			display: none;
+		}
+		.update-file-loan-btn{
+			display: none;
+		}
+	}
+}

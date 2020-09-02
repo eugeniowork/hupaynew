@@ -1195,4 +1195,162 @@ class Loans_controller extends CI_Controller{
 
         echo json_encode($this->data);
     }
+
+    public function viewFileLoan(){
+        $this->data['pageTitle'] = 'File Loan';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('loans/file_loan');
+        $this->load->view('global/footer');
+    }
+
+
+    // for file loans
+    public function getFileLoanList(){
+        $emp_id = $this->session->userdata('user');
+
+        $select_qry = $this->employee_model->get_employee_file_loan_data_order_by_date($emp_id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $loan_type = "Salary Loan";
+                if ($value->type == 2){
+                    $loan_type = "SIMKIMBAN";
+                }
+
+                else if ($value->type == 3){
+                    $loan_type = "Employee Benifit Program Loan";
+
+                    $program = "Service Rewards";
+                    if ($value->program == 2){
+                        $program = "Tulong Pangkabuhayan Program";
+                    }
+
+                    else if ($value->program == 3){
+                        $program = "Education Assistance Program";
+                    }
+
+                    else if ($value->program == 4){
+                        $program = "Housing Renovation Program";
+                    }
+
+                    else if ($value->program == 5){
+                        $program = "Emergency and Medical Assistance Program";
+                    }
+
+                    $loan_type .= "<br/>" ."<span style='color:#b4b5b6'>" .$program . "</span>";
+
+                }
+
+                $status = "Pending";
+                if ($value->status == 1){
+                    $status = "Approve";
+                }
+
+                else if ($value->status == 2){
+                    $status = "Disapprove";
+                }
+
+                else if ($value->status == 3){
+                    $status = "Cancel";
+                }
+
+                else if ($value->status == 4){
+                    $status = "On Process";
+                }
+                $finalData .= "<tr id='".$value->file_loan_id."'>";
+                    $finalData .= "<td>".$value->ref_no."</td>";
+                    $finalData .= "<td>".number_format($value->amount,2)."</td>";
+                    $finalData .= "<td>".$value->purpose."</td>";
+                    $finalData .= "<td>".$loan_type."</td>";
+                    $finalData .= "<td>".$status."</td>";
+                    $finalData .= "<td>";    
+                        if ($value->status == 0){
+                            $finalData .= "<button id=".$value->file_loan_id." class='update-file-loan-btn btn btn-sm btn-outline-success' data-target='#updateFileLoanModal' data-toggle='modal'>Update</button>";
+                            $finalData .= "&nbsp;";
+                            $finalData .= "<button class='btn btn-sm btn-outline-danger'>Cancel</button>";
+                        }
+
+                        else {
+                            $finalData .= "No Action";
+                        }
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+
+        echo json_encode($this->data);
+    }
+
+    public function getFileLoanInfo(){
+        $id = $this->input->post('id');
+
+        $fileLoan = $this->employee_model->get_employee_file_loan_data($id);
+        $finalData = array();
+        if(!empty($fileLoan)){
+            array_push($finalData, array(
+                'amount'=>$fileLoan['amount'],
+                'type'=>$fileLoan['type'],
+                'program'=>$fileLoan['program'],
+                'purpose'=>$fileLoan['purpose'],
+
+            ));
+            $this->data['finalData'] = $finalData;
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+        echo json_encode($this->data);
+    }
+
+    public function updateFileLoanInfo(){
+        $id = $this->input->post('id');
+        $amount= $this->input->post('amount');
+        $type= $this->input->post('type');
+        $program= $this->input->post('program');
+        $purpose= $this->input->post('purpose');
+
+        $fileLoan = $this->employee_model->get_employee_file_loan_data($id);
+        if(!empty($fileLoan)){
+            $ref_no = $fileLoan['ref_no'];
+            $this->form_validation->set_rules('amount','amount','required');
+            $this->form_validation->set_rules('type','type','required');
+            
+            $this->form_validation->set_rules('purpose','purpose','required');
+
+            if($type == 3){
+                $this->form_validation->set_rules('program','program','required');
+                
+            }
+
+            if($this->form_validation->run() == FALSE){
+                $this->data['status'] = "error";
+                $this->data['msg']= "All fields are required.";
+            }
+            else{
+                $updateData = array(
+                    'amount'=>$amount,
+                    'type'=>$type,
+                    'program'=>$program,
+                    'purpose'=>$purpose,
+                );
+
+                $update = $this->employee_model->update_employee_file_loan_data($id,$updateData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "You successfully updated your filed loan for reference number <strong>".$ref_no."</strong>";
+            }
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg']= "There was a problem updating the information, please try again.";
+        }
+        echo json_encode($this->data);
+    }
+
 }

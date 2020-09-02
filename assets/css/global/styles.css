@@ -845,6 +845,23 @@
 .salary #addEmployeeToSalaryLoanModal .modal-footer {
   padding: 0px 5px; }
 
+.file-loan #updateFileLoanModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .file-loan #updateFileLoanModal .modal-header .modal-title {
+    font-size: 15px; }
+.file-loan #updateFileLoanModal .modal-body i {
+  color: #158cba; }
+.file-loan #updateFileLoanModal .modal-body textarea {
+  resize: none; }
+.file-loan #updateFileLoanModal .modal-footer {
+  padding: 0px 5px; }
+.file-loan #updateFileLoanModal .update-file-loan-info {
+  display: none; }
+.file-loan #updateFileLoanModal .update-file-loan-btn {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

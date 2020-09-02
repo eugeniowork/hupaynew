@@ -241,7 +241,7 @@
             <a href="<?php base_url();?>salary_loan" class="btn">
                 Salary Loan
             </a>
-            <a class="btn">
+            <a href="<?php base_url();?>file_loan" class="btn">
                 File Loan
             </a>
         </div>

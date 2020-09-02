@@ -130,4 +130,32 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_emp_file_loan',array('ref_no'=>$refNo));
         return $query->row_array();
     }
+
+    public function get_employee_file_loan_data_order_by_date($id){
+        $this->db->select('*');
+        $this->db->from('tb_emp_file_loan');
+        $this->db->where('emp_id', $id);
+        $this->db->order_by('date_created', 'desc');
+        //$this->db->join('tb_emp_allowance', 'tb_emp_allowance.emp_id=tb_employee_info.emp_id ','inner');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_employee_file_loan_data($id){
+        $query = $this->db->get_where('tb_emp_file_loan',array('file_loan_id'=>$id));
+        return $query->row_array();
+    }
+
+    public function update_employee_file_loan_data($id,$data){
+        $this->db->trans_start();
+        $this->db->where('file_loan_id',$id);
+        $this->db->update('tb_emp_file_loan',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }
