@@ -57,4 +57,25 @@ class Pagibig_model extends CI_Model{
         $query = $this->db->get_where('tb_pagibig_loan',array('pagibig_loan_id'=>$id));
         return $query->row_array();
     }
+
+    public function delete_pagibig_loan($id){
+        $this->db->trans_start();
+        $this->db->where('pagibig_loan_id',$id);
+        $this->db->delete('tb_pagibig_loan');
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function get_pagibig_history($id){
+        $this->db->select('*');
+        $this->db->from('tb_pagibig_loan');
+        $this->db->where('emp_id',$id);
+        $this->db->order_by('DateCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

@@ -50,8 +50,8 @@ class Loans_controller extends CI_Controller{
                 $date_range = $dateFrom . "- " .$dateTo;
 
                 if ($value->remainingBalance != 0) {
-                    $finalData .= "<tr id='".$value->pagibig_loan_id."'>";
-                         $finalData .= "<td><small>".$emp_name."</small></td>";
+                    $finalData .= "<tr class='pagibig-tr-".$value->pagibig_loan_id."'>";
+                         $finalData .= "<td class='name-".$value->pagibig_loan_id."'><small>".$emp_name."</small></td>";
                          $finalData .= "<td><small>".$date_range."</small></td>";
                          $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
                          $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
@@ -59,7 +59,7 @@ class Loans_controller extends CI_Controller{
                          $finalData .= "<td><small>";
                              $finalData .= "<button id=".$value->pagibig_loan_id." class='edit-pagibig-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#editPagibigModal'>Edit</button>&nbsp;";
                              $finalData .= "<button id=".$value->pagibig_loan_id." class='adjust-pagibig-btn btn btn-sm btn-outline-primary' data-toggle='modal' data-target='#adjustPagibigModal'>Adjustment</button>&nbsp;";
-                             $finalData .= "<button class='btn btn-sm btn-outline-danger'>Delete</button>";
+                             $finalData .= "<button id=".$value->pagibig_loan_id." class='delete-pagibig btn btn-sm btn-outline-danger'>Delete</button>";
                          $finalData .= "</small></td>";
                      $finalData .= "</tr>";
                 }
@@ -239,6 +239,67 @@ class Loans_controller extends CI_Controller{
         }
 
         
+        echo json_encode($this->data);
+    }
+
+    public function deletePagibigLoan(){
+        $id = $this->input->post('id');
+
+        $pagibigInfo = $this->pagibig_model->get_pagibig_loan($id);
+        if(!empty($pagibigInfo)){
+            $emp_id = $pagibigInfo['emp_id'];
+            $row_emp = $this->employee_model->employee_information($emp_id);
+
+            $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+
+            $deletePagibig = $this->pagibig_model->delete_pagibig_loan($id);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "<strong>Pag-ibig Loan</strong> of <strong>".$fullName."</strong> was successfully deleted.";
+        }
+        else{
+            $this->data['status'] = "error";
+
+        }
+        echo json_encode($this->data);
+    }
+
+    public function getPagibigHistoryList(){
+        $emp_id = $this->session->userdata('user');
+
+        $select_qry = $this->pagibig_model->get_pagibig_history($emp_id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $row_emp = $this->employee_model->employee_information($emp_id);
+
+                $emp_name = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+                $status = "Current";
+                if ($value->remainingBalance == 0){
+                    $status = "Finish";
+                }
+                $finalData .= "<tr id='".$value->pagibig_loan_id."'>";
+                    $finalData .= "<td>".$date_range."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->amountLoan)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->deduction)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->remainingBalance)."</td>";    
+                    $finalData .= "<td>".$status."</td>";                        
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
         echo json_encode($this->data);
     }
 }

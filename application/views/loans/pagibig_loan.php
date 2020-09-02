@@ -137,6 +137,26 @@
         </div>
     </div>
 <?php endif ?>
-
+<div class="div-main-body pagibig" >
+    <div class="div-main-body-head">
+        Pag-ibig Loan List History
+    </div>
+    <div class="div-main-body-content">
+        <table class="table table-striped" id="pagibigHistoryList">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-clock"></i>&nbsp;Range Payment</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Amount Loan</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Deduction</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Outstanding Balance</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+            </table>
+    </div>
+</div>
 
 <script src="<?php echo base_url();?>assets/js/loans/pagibig_loan.js"></script>

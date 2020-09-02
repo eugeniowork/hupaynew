@@ -8,22 +8,6 @@ $(document).ready(function(){
 			dataType:'json',
 			success:function(response){
 				if(response.status == "success"){
-					// if(response.finalAdjustmentReportsData.length > 0){
-					// 	response.finalAdjustmentReportsData.forEach(function(data,key){
-					// 		var append = '<tr '+data.adjustment_loan_id+'>'+
-					// 			'<td>'+data.name+'</td>'+
-					// 			'<td>'+data.date_payment+'</td>'+
-					// 			'<td>'+data.loan_type+'</td>'+
-					// 			'<td>Php. '+data.cash_payment+'</td>'+
-					// 			'<td>Php. '+data.outstanding_balance+'</td>'+
-					// 			'<td><a href="#">Print Reports</a></td>'+
-					// 		'</tr>';
-					// 		$('#adjustmentSalaryLoanReportsList tbody').append(append);
-					// 	})
-					// 	$('#adjustmentSalaryLoanReportsList').dataTable({
-					// 		ordering:false
-					// 	});
-					// }
 					$('#employeeWithExistingPagibig tbody').append(response.finalData);
 					$('#employeeWithExistingPagibig').dataTable({
 						ordering:false
@@ -245,4 +229,85 @@ $(document).ready(function(){
 		}
 	})
 	//for adjust end
+
+	//for delete start
+	var deletePagibigId = null;
+	$(document).on('click','.delete-pagibig',function(e){
+		
+		Swal.fire({
+            html: 'Are you sure you want to delete the <strong>Pag-ibig Loan</strong> of <strong>'+$('.name-'+deletePagibigId).text()+'</strong>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+            	deletePagibigId = e.target.id;
+            	$.ajax({
+            		url:base_url+'loans_controller/deletePagibigLoan',
+            		type:'post',
+            		dataType:'json',
+            		data:{
+            			id:deletePagibigId
+            		},
+            		success:function(response){
+            			if(response.status == "success"){
+            				toast_options(4000);
+	                        toastr.success(response.msg);
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+	                        $('.pagibig-tr-'+deletePagibigId).remove();
+            			}
+            			else{
+            				toast_options(4000);
+                    		toastr.error("There was a problem removing the pagibig loan, please try again!");
+            			}
+            		},
+            		error:function(response){
+            			toast_options(4000);
+                    	toastr.error("There was a problem, please try again!");
+            		}
+
+            	})
+            }
+            else{
+            	deletePagibigId = null;
+            }
+        });
+	})
+
+
+	//for delete end
+
+	//for getting logged in pagibig history
+
+	get_pagibig_loan_history()
+
+	function get_pagibig_loan_history(){
+		$('#pagibigHistoryList tbody').empty();
+		$.ajax({
+			url:base_url+'loans_controller/getPagibigHistoryList',
+			type:'get',
+			dataType:'json',
+			success:function(response){
+				if(response.status == "success"){
+					$('#pagibigHistoryList tbody').append(response.finalData);
+					$('#pagibigHistoryList').dataTable({
+						ordering:false
+					});
+				}
+				else{
+					toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+				}
+			},
+			error:function(response){
+				toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+			}
+		})
+	}
+
 })
