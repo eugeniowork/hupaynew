@@ -137,38 +137,45 @@ class Simkimban_controller extends CI_Controller{
         $this->form_validation->set_rules('remainingBalance', 'remainingBalance', 'required');
         $this->form_validation->set_rules('deductionDay', 'deductionDay', 'required');   
 
-        if($deductionType == "Monthly"){
-            $deductionDay = $this->input->post('deductionDay');
-        }
-        $sameSimkimban = $this->simkimban_model->if_simkimband_has_no_changes($id, $deductionType, $deductionDay, $totalMonths, $dateFrom,$dateTo,$item,$amountLoan,$deduction, $remainingBalance);
-        if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+        if($this->form_validation->run() == FALSE){
             $this->data['status'] = 'error';
-            $this->data['msg'] = "Invalid deduction day.";
-        }
-        else if(!empty($sameSimkimban)){
-            $this->data['status'] = 'error';
-            $this->data['msg'] = "There's no changes in the data.";
-        }
-        else if($dateFrom >= $dateTo){
-            $this->data['status'] = 'error';
-            $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <b>Date To</b>.";
+            $this->data['msg'] = "All field are required.";
         }
         else{
+            if($deductionType == "Monthly"){
+                $deductionDay = $this->input->post('deductionDay');
+            }
+            $sameSimkimban = $this->simkimban_model->if_simkimband_has_no_changes($id, $deductionType, $deductionDay, $totalMonths, $dateFrom,$dateTo,$item,$amountLoan,$deduction, $remainingBalance);
+            if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "Invalid deduction day.";
+            }
+            else if(!empty($sameSimkimban)){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "There's no changes in the data.";
+            }
+            else if($dateFrom >= $dateTo){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <b>Date To</b>.";
+            }
+            else{
 
-            $updateData = array(
-                'deductionType'=>$deductionType,
-                'deductionDay'=>$deductionDay,
-                'totalMonths'=>$totalMonths,
-                'dateFrom'=>$dateFrom,
-                'dateTo'=>$dateTo,
-                'Items'=>$item,
-                'amountLoan'=>$amountLoan,
-                'deduction'=>$deduction,
-                'remainingBalance'=>$remainingBalance,
-            );
-            $update = $this->simkimban_model->update_simkimban_loan_data($id, $updateData);
-            $this->data['status'] = "success";
+                $updateData = array(
+                    'deductionType'=>$deductionType,
+                    'deductionDay'=>$deductionDay,
+                    'totalMonths'=>$totalMonths,
+                    'dateFrom'=>$dateFrom,
+                    'dateTo'=>$dateTo,
+                    'Items'=>$item,
+                    'amountLoan'=>$amountLoan,
+                    'deduction'=>$deduction,
+                    'remainingBalance'=>$remainingBalance,
+                );
+                $update = $this->simkimban_model->update_simkimban_loan_data($id, $updateData);
+                $this->data['status'] = "success";
+            }
         }
+        
 
         //$this->data['asd'] = $deductionDay;
         echo json_encode($this->data);

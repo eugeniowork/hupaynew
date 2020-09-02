@@ -1,0 +1,11 @@
+.salary{
+	#editSalaryLoanModal{
+		@include modal();
+		.salary-loan-info{
+			display: none;
+		}
+		.update-salary-loan-btn{
+			display: none;
+		}
+	}
+}

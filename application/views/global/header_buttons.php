@@ -238,7 +238,7 @@
                 <img src="<?php base_url();?>assets/images/img/government images/SSS-Logo.jpg" class="government-logo" alt="SSS-Logo"/>
                 SSS Loan
             </a>
-            <a class="btn">
+            <a href="<?php base_url();?>salary_loan" class="btn">
                 Salary Loan
             </a>
             <a class="btn">

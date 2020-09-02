@@ -51,4 +51,29 @@ class Salary_model extends CI_Model{
         return $insert;
     }
     
+    public function get_all_salary_loan(){
+        $query = $this->db->get_where('tb_salary_loan');
+        return $query->result();
+    }
+    public function get_salary_loan_data($id){
+        $query = $this->db->get_where('tb_salary_loan',array('salary_loan_id '=>$id));
+        return $query->row_array();
+    }
+    public function if_salary_loan_has_no_changes($salary_loan_id,$deductionType,$deductionDay,$totalMonths,$dateFrom,$dateTo,$remarks,$amountLoan,$deduction,$remainingBalance){
+        $query = $this->db->get_where('tb_salary_loan',array(
+            'deductionType'=>$deductionType,
+            'deductionDay'=>$deductionDay,
+            'totalMonths'=>$totalMonths,
+            'dateFrom'=>$dateFrom,
+            'dateTo'=>$dateTo,
+            'remarks'=>$remarks,
+            'amountLoan'=>$amountLoan,
+            'deduction'=>$deduction,
+            'remainingBalance'=>$remainingBalance,
+            'salary_loan_id'=>$salary_loan_id,
+            
+
+        ));
+        return $query->row_array();
+    }
 }

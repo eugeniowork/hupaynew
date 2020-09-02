@@ -125,4 +125,9 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_file_loan_data($refNo){
+        $query = $this->db->get_where('tb_emp_file_loan',array('ref_no'=>$refNo));
+        return $query->row_array();
+    }
 }

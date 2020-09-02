@@ -788,6 +788,23 @@
 .sss #selectEmployeeModal .modal-footer {
   padding: 0px 5px; }
 
+.salary #editSalaryLoanModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .salary #editSalaryLoanModal .modal-header .modal-title {
+    font-size: 15px; }
+.salary #editSalaryLoanModal .modal-body i {
+  color: #158cba; }
+.salary #editSalaryLoanModal .modal-body textarea {
+  resize: none; }
+.salary #editSalaryLoanModal .modal-footer {
+  padding: 0px 5px; }
+.salary #editSalaryLoanModal .salary-loan-info {
+  display: none; }
+.salary #editSalaryLoanModal .update-salary-loan-btn {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }
