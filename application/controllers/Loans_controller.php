@@ -1035,4 +1035,164 @@ class Loans_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function getEmployeeSalaryLoanHistory(){
+        $select_qry = $this->salary_model->get_all_employee_salary_loan_history_with_zero_balance();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+                $day = "";
+                if ($value->deductionType == "Monthly"){
+                    $day = "("  .$value->deductionDay.")";
+                }
+                $finalData .= "<tr>";
+                    $finalData .= "<td><small>".$emp_name."</small></td>";
+                    $finalData .= "<td><small>".$date_range."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
+                    $finalData .= "<td><small>".$value->deductionType."" .$day."</small></td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function getSalaryLoanHistoryCurrent(){
+
+        $id = $this->session->userdata('user');
+
+        $select_qry = $this->salary_model->get_employee_salary_loan_history_data_order_by_date($id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+                $status = "Finish";
+                if ($value->remainingBalance != 0) {
+                    $status = "Current";
+                }
+
+                $finalData .= "<tr>";
+                    $finalData .= "<td>".$date_range."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->amountLoan)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->deduction)."</td>";
+                    $finalData .= "<td>Php ".moneyConvertion($value->remainingBalance)."</td>";
+                    $finalData .= "<td>".$value->remarks."</td>";
+                    $finalData .= "<td>".$status."</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+
+
+    public function addNewSalaryLoan(){
+        $empId = $this->input->post('empId');
+        $name = $this->input->post('name');
+        $deductionType= $this->input->post('deductionType');
+        
+        $totalMonths= $this->input->post('totalMonths');
+        $dateFrom= $this->input->post('dateFrom');
+        $dateTo= $this->input->post('dateTo');
+        $remarks= $this->input->post('remarks');
+        $amountLoan= $this->input->post('amountLoan');
+        $deduction= $this->input->post('deduction');
+        $remainingBalance= $this->input->post('remainingBalance');
+        $totalPayment = $this->input->post('totalPayment');
+        $dateCreated = getDateDate();
+        $deductionDay = 0;
+        if ($deductionType == "Monthly"){
+            $deductionDay= $this->input->post('deductionDay');
+        }
+        $this->form_validation->set_rules('name', 'name','required');
+        $this->form_validation->set_rules('deductionType', 'deductionType','required');
+        $this->form_validation->set_rules('deductionDay', 'deductionDay','required');
+        $this->form_validation->set_rules('totalMonths', 'totalMonths','required');
+        $this->form_validation->set_rules('dateFrom', 'dateFrom','required');
+        $this->form_validation->set_rules('dateTo', 'dateTo','required');
+        $this->form_validation->set_rules('remarks', 'remarks','required');
+        $this->form_validation->set_rules('amountLoan', 'amountLoan','required');
+        $this->form_validation->set_rules('deduction', 'deduction','required');
+        $this->form_validation->set_rules('remainingBalance', 'remainingBalance','required');
+        $this->form_validation->set_rules('totalPayment', 'totalPayment','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All fields are required";
+        }
+        else{
+            $check = $this->employee_model->employee_information($empId);
+            if(empty($check)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "There was a problem a problem on the employee name, please try again.";
+            }
+            else{
+                if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+                    $this->data['status'] = 'error';
+                    $this->data['msg'] = "Invalid deduction day.";
+                }
+                else if (!preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateFrom ) || !preg_match("/^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$/",$dateTo)) {
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "Date From or Date To not match to the current format mm/dd/yyyy.";
+                }
+                else if($dateFrom > $dateTo){
+                    $this->data['status'] = 'error';
+                    $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <b>Date To</b>.";
+                }
+                else{
+
+                    $insertData = array(
+                        'emp_id'=>$empId,
+                        'deductionType'=>$deductionType,
+                        'deductionDay'=>$deductionDay,
+                        'totalMonths'=>$totalMonths,
+                        'dateFrom'=>dateDefaultDb($dateFrom),
+                        'dateTo'=>dateDefaultDb($dateTo),
+                        'amountLoan'=>$amountLoan,
+                        'deduction'=>$deduction,
+                        'totalPayment'=>$totalPayment,
+                        'remainingBalance'=>$remainingBalance,
+                        'remarks'=>$remarks,
+                        'DateCreated'=>$dateCreated
+                    );
+
+                    $insert = $this->salary_model->insert_salary_loan_data($insertData);
+
+                    $this->data['status'] = "success";
+                    $this->data['msg'] = "Salary loan was successfully filed.";
+                }
+            }
+        }
+
+        echo json_encode($this->data);
+    }
 }

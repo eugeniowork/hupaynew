@@ -97,4 +97,22 @@ class Salary_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_all_employee_salary_loan_history_with_zero_balance(){
+        $query = $this->db->get_where('tb_salary_loan',array('remainingBalance '=>0));
+        return $query->result();
+    }
+    public function get_employee_salary_loan_history_data_order_by_date($id){
+        $this->db->select('*');
+        $this->db->from('tb_salary_loan');
+        $this->db->where('emp_id',$id);
+        $this->db->order_by('DateCreated', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function insert_salary_loan_data($data){
+        $insert = $this->db->insert('tb_salary_loan',$data);
+        return $insert;
+    }
 }

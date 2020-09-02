@@ -223,6 +223,197 @@
 	        </div>
 		</div>
 	</div>
+
+	<div class="div-main-body salary" >
+        <div class="div-main-body-head">
+			Employee Salary Loan History
+		</div>
+		<div class="div-main-body-content">
+			<table class="table table-striped" id="allEmployeeSalaryLoanHistory">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-calendar-alt"></i>&nbsp;Employee Name</th>
+                        <th><i class="fas fa-clock"></i>&nbsp;Range Payment</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Amount Loan</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Deduction</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Deduction Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+            </table>
+		</div>
+	</div>
 <?php endif ?>
+<div class="div-main-body salary" >
+        <div class="div-main-body-head">
+			Salary Loan History
+		</div>
+		<div class="div-main-body-content">
+			<table class="table table-striped" id="salaryLoanHistoryCurrent">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-clock"></i>&nbsp;Range Payment</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Amount Loan</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Deduction</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Outstanding Balance</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Remarks</th>
+                        <th><i class="fas fa-wrench"></i>&nbsp;Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+            </table>
+		</div>
+</div>
+<?php if ($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3): ?>
+	<div class="div-main-body salary">
+        
+        <div class="row">
+            <div class="col-lg-3">
+                
+            </div>
+            <div class="col-lg-6">
+                <div class="d-flex flex-column justify-content-center">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#addEmployeeToSalaryLoanModal">Add Employee with Salary Loan</button>
+                </div>
+                
+            </div>
+            <div class="col-lg-3">
+                
+            </div>
+        </div>
+        <div class="modal fade" id="addEmployeeToSalaryLoanModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeToSalaryLoanModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addEmployeeToSalaryLoanModalLongTitle">Add Employee with Salary Loan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <span>Employee Name</span>
+                                <div class="d-flex flex-row">
+                                    <input type="text" class="input-only form-control add-employee-name" placeholder="Select name">&nbsp;
+                                    <button class="btn btn-outline-primary pull-right" data-toggle="modal" data-target="#selectEmployeeModal">Choose</button>
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <span>Deduction Type</span>
+                                <select class="add-deduction-type form-control">
+                                    <option selected disabled>Select Type</option>
+                                    <option value="Semi-monthly">Semi-monthly</option>
+                                    <option value="Monthly">Monthly</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Deduction Day (If monthly):</span><br/>
+                               
+                                <input type="checkbox" id="addFifteen">
+                                <label for="addFifteen">15</label>
+                                <input type="checkbox" id="addThirty">
+                                <label for="addThirty">30</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Total Months</span>
+                                <select class="form-control add-total-months">
+                                    <option selected disabled>Select months</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Date From</span>
+                                <input type="text" class="datepicker form-control add-date-from" placeholder="Select Date">
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Date To</span>
+                                <input type="text" class="datepicker form-control add-date-to" placeholder="Select Date">
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Amount Loan</span>
+                                <input type="text" class="float-only form-control add-amount-loan" placeholder="Enter amount">
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Total Payment</span>
+                                <input type="text" class="float-only form-control add-total-payment" placeholder="Enter payment">
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Deduction</span>
+                                <input type="text" class="float-only form-control add-deduction" placeholder="Enter deduction">
+                            </div>
+                            <div class="col-lg-4">
+                                <span>Remaining Balance</span>
+                                <input type="text" class="float-only form-control add-remaining-balance" placeholder="Enter remaining balance">
+                            </div>
+                            <div class="col-lg-8">
+                                <span>Remarks</span>
+                                <textarea type="text" class="form-control add-remarks" placeholder="Enter remarks"></textarea>
+                                
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="add-salary-loan-warning">
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary add-salary-loan-btn">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="selectEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="aselectEmployeeModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="selectEmployeeModalLongTitle">Employee List</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped" id="employeeList">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar-alt"></i>&nbsp;Employee Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button class="btn btn-primary ">Submit</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<br/></br>
+
+
 
 <script src="<?php echo base_url();?>assets/js/loans/salary_loan.js"></script>
