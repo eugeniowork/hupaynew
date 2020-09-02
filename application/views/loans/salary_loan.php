@@ -130,6 +130,62 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="adjustSssModal" tabindex="-1" role="dialog" aria-labelledby="adjustSssModalTitle" aria-hidden="true">
+	            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+	                <div class="modal-content">
+	                    <div class="modal-header">
+	                        <h5 class="modal-title" id="adjustSssModalLongTitle">Adjust Salary Loan</h5>
+	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-body">
+	                        <div class="adjust-salary-loan-info">
+	                            <div class="row">
+	                                <div class="col-lg-12">
+	                                    <span>Employee Name</span>
+	                                    <input type="text" class="input-only form-control adjust-employee-name">
+	                                </div>
+	                                
+	                                <div class="col-lg-6">
+	                                    <span>Date Payment</span>
+	                                    <input type="text" class="form-control adjust-date-payment" placeholder="Enter date">
+	                                </div>
+	                                <div class="col-lg-6">
+	                                    <span>Outstanding Balance</span>
+	                                    <input type="text" class="input-only form-control adjust-outstanding-balance">
+	                                </div>
+	                                <div class="col-lg-6">
+	                                    <span>Cash Payment</span>
+	                                    <input type="text" class="float-only form-control adjust-cash-payment" placeholder="Enter payment">
+	                                </div>
+	                                <div class="col-lg-6">
+	                                    <span>New Outstanding Balance</span>
+	                                    <input type="text" class="input-only form-control adjust-new-outstanding-balance" placeholder="New outstanding balance">
+	                                </div>
+	                                <div class="col-lg-6">
+	                                    <span>Remarks</span>
+	                                    <textarea type="text" class="form-control adjust-remarks" placeholder="Enter remarks"></textarea>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="adjust-loading-salary-loan">
+	                            <div class="d-flex flex-column justify-content-center align-items-center">
+	                                <div class="spinner-border text-primary" role="status"></div>
+	                                <p>Loading Information</p>
+	                            </div>
+	                        </div>
+	                        <br/>
+	                        <div class="adjust-salary-loan-warning">
+	                            
+	                        </div>
+	                    </div>
+	                    <div class="modal-footer">
+	                        <button class="btn btn-sm btn-primary adjust-salary-loan-btn">Adjust</button>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
 		</div>
 	</div>
 <?php endif ?>

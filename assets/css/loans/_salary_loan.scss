@@ -8,4 +8,13 @@
 			display: none;
 		}
 	}
+	#adjustSssModal{
+		@include modal();
+		.adjust-salary-loan-info{
+			display: none;
+		}
+		.adjust-salary-loan-btn{
+			display: none;
+		}
+	}
 }

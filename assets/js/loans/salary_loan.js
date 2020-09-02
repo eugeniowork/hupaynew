@@ -169,4 +169,112 @@ $(document).ready(function(){
 		}
 	})
 	//for update salary loan end
+
+	//for adjust salary loan start
+
+	var adjustSalaryLoanId = false;
+	$(document).on('click','.adjust-salary-loan-btn',function(e){
+		adjustSalaryLoanId = e.target.id;
+
+		$('.adjust-salary-loan-info').hide();
+        $('.adjust-salary-loan-btn').hide();
+        $('.adjust-loading-salary-loan').show();
+        $.ajax({
+        	url:base_url+'loans_controller/getAdjustSalaryLoanInfo',
+        	type:'post',
+        	dataType:'json',
+        	data:{
+        		id:adjustSalaryLoanId,
+        	},
+        	success:function(response){
+        		if(response.status == "success"){
+        			$('.adjust-salary-loan-info').show();
+					$('.adjust-salary-loan-btn').show();
+					$('.adjust-loading-salary-loan').hide();
+					$('.adjust-employee-name').val(response.name);
+					$('.adjust-outstanding-balance').val(response.remainingBalance)
+
+			        $('.adjust-date-payment').datepicker("option","defaultDate", new Date());
+        		}
+        		else{
+        			$('.adjust-loading-salary-loan').show();
+               	 	$('.adjust-loading-salary-loan').empty();
+                	$('.adjust-loading-salary-loan').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                	adjustSalaryLoanId = null
+        		}
+        	},
+        	error:function(response){
+        		$('.adjust-loading-salary-loan').show();
+                $('.adjust-loading-salary-loan').empty();
+                $('.adjust-loading-salary-loan').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                adjustSalaryLoanId = null
+        	}
+        })
+	})
+	$('.adjust-cash-payment').on('change',function(e){
+		var currentBalance = $('.adjust-outstanding-balance').val();
+		var cashPayment = $(this).val();
+		if(cashPayment != ""){
+			var newBalance = parseFloat(currentBalance) - parseFloat(cashPayment);
+            // for 2 decimal places
+            newBalance = newBalance.toString().split('e');
+            newBalance = Math.round(+(newBalance[0] + 'e' + (newBalance[1] ? (+newBalance[1] + 2) : 2)));
+
+            newBalance = newBalance.toString().split('e');
+            newBalance=  (+(newBalance[0] + 'e' + (newBalance[1] ? (+newBalance[1] - 2) : -2))).toFixed(2);
+            $(".adjust-new-outstanding-balance").val(newBalance);
+		}
+		else{
+			$(".adjust-new-outstanding-balance").val();
+		}
+	})
+
+	var loadingAdjustSalaryLoan = false;
+	$('.adjust-salary-loan-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingAdjustSalaryLoan){
+			loadingAdjustSalaryLoan = true;
+			$(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.adjust-salary-loan-warning').empty();
+            $.ajax({
+            	url:base_url+'loans_controller/adjustSalaryLoanData',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		id:adjustSalaryLoanId,
+            		adjustDatePayment:$('.adjust-date-payment').val(),
+            		adjustCashPayment:$('.adjust-cash-payment').val(),
+            		adjustOutstandingBalance:$('.adjust-outstanding-balance').val(),
+            		adjustNewOutstandingBalance:$('.adjust-new-outstanding-balance').val(),
+            		adjustRemarks:$('.adjust-remarks').val(),
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.adjust-salary-loan-warning',response.msg, "danger")
+                        loadingAdjustSalaryLoan = false;
+                        change_button_to_default(btnName, 'Adjust');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAdjustSalaryLoan = false;
+                    change_button_to_default(btnName, 'Adjust');
+            	}
+            })
+		}
+	})
+
+
+	//for adjust salary loan end
 })

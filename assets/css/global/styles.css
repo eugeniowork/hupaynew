@@ -804,6 +804,22 @@
   display: none; }
 .salary #editSalaryLoanModal .update-salary-loan-btn {
   display: none; }
+.salary #adjustSssModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .salary #adjustSssModal .modal-header .modal-title {
+    font-size: 15px; }
+.salary #adjustSssModal .modal-body i {
+  color: #158cba; }
+.salary #adjustSssModal .modal-body textarea {
+  resize: none; }
+.salary #adjustSssModal .modal-footer {
+  padding: 0px 5px; }
+.salary #adjustSssModal .adjust-salary-loan-info {
+  display: none; }
+.salary #adjustSssModal .adjust-salary-loan-btn {
+  display: none; }
 
 body {
   background: #ececec;
