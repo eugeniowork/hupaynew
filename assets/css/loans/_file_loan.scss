@@ -15,4 +15,16 @@
 			display: none;
 		}
 	}
+	#scheduleFileLoanModal{
+		@include modal();
+		.schedule-file-loan-info{
+			display: none;
+		}
+		.schedule-file-loan-data-btn{
+			display: none;
+		}
+		.for-simkimban{
+			display: none;
+		}
+	}
 }

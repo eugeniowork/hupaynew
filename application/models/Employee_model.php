@@ -158,7 +158,18 @@ class Employee_model extends CI_Model{
             return "error";
         }
     }
-
+    public function update_employee_file_loan_data_using_ref_no($refNo,$data){
+        $this->db->trans_start();
+        $this->db->where('ref_no',$refNo);
+        $this->db->update('tb_emp_file_loan',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
     public function get_all_employee_file_loan_data(){
         $query = $this->db->get_where('tb_emp_file_loan');
         return $query->result();
@@ -175,5 +186,15 @@ class Employee_model extends CI_Model{
     public function insert_file_loan($data){
         $insert = $this->db->insert('tb_emp_file_loan',$data);
         return $insert;
+    }
+
+    public function get_employee_file_loan_data_status_zero(){
+        $this->db->select('*');
+        $this->db->from('tb_emp_file_loan');
+        $this->db->where('status', 0);
+        $this->db->order_by('date_created', 'desc');
+        //$this->db->join('tb_emp_allowance', 'tb_emp_allowance.emp_id=tb_employee_info.emp_id ','inner');
+        $query = $this->db->get();
+        return $query->result();
     }
 }

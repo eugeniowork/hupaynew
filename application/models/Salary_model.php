@@ -115,4 +115,40 @@ class Salary_model extends CI_Model{
         $insert = $this->db->insert('tb_salary_loan',$data);
         return $insert;
     }
+
+    public function update_file_salary_loan($id,$data){
+        $this->db->trans_start();
+        $this->db->where('file_salary_loan_id',$id);
+        $this->db->update('tb_file_salary_loan',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function insert_file_salary_loan_data($data){
+        $insert = $this->db->insert('tb_file_salary_loan',$data);
+        return $insert;
+    }
+    public function get_file_salary_loan_data_order_by_date(){
+        $this->db->select('*');
+        $this->db->from('tb_file_salary_loan');
+        $this->db->order_by('file_salary_loan_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function get_filed_salary_loan_to_approve(){
+        $query = $this->db->get_where('tb_file_salary_loan',array('apporveStat '=>0));
+        return $query->result();
+    }
+    public function get_filed_salary_loan($id){
+        $query = $this->db->get_where('tb_file_salary_loan',array('file_salary_loan_id '=>$id));
+        return $query->row_array();
+    }
+    
+
 }

@@ -12,7 +12,9 @@ class Loans_controller extends CI_Controller{
         $this->load->model("adjustment_loan_model", "adjustment_loan_model");
         $this->load->model("sss_model", "sss_model");
         $this->load->model('salary_model','salary_model');
-        // $this->load->model('leave_model','leave_model');
+        $this->load->model('audit_trial_model', 'audit_trial_model');
+        $this->load->model('payroll_model','payroll_model');
+        $this->load->model('simkimban_model','simkimban_model');
         // $this->load->model('working_hours_model','working_hours_model');
         // $this->load->model('working_days_model','working_days_model');
         $this->load->helper('hupay_helper');
@@ -1430,6 +1432,609 @@ class Loans_controller extends CI_Controller{
             $this->data['status'] = "success";
             $this->data['msg'] = "You successfully file a loan for <strong>".$loanTypeText."</strong>.";
         }
+        echo json_encode($this->data);
+    }
+
+    public function getFileLoanListHistory(){
+        //$emp_id = $this->session->userdata('user');
+
+        $select_qry = $this->employee_model->get_employee_file_loan_data_status_zero();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $loan_type = "Salary Loan";
+                if ($value->type == 2){
+                    $loan_type = "SIMKIMBAN";
+                }
+
+                else if ($value->type == 3){
+                    $loan_type = "Employee Benifit Program Loan";
+
+                    $program = "Service Rewards";
+                    if ($value->program == 2){
+                        $program = "Tulong Pangkabuhayan Program";
+                    }
+
+                    else if ($value->program == 3){
+                        $program = "Education Assistance Program";
+                    }
+
+                    else if ($value->program == 4){
+                        $program = "Housing Renovation Program";
+                    }
+
+                    else if ($value->program == 5){
+                        $program = "Emergency and Medical Assistance Program";
+                    }
+
+                    $loan_type .= "<br/>" ."<span style='color:#b4b5b6'>" .$program . "</span>";
+
+                }
+
+                $status = "Pending";
+                if ($value->status == 1){
+                    $status = "Approve";
+                }
+
+                else if ($value->status == 2){
+                    $status = "Disapprove";
+                }
+
+                else if ($value->status == 3){
+                    $status = "Cancel";
+                }
+
+                else if ($value->status == 4){
+                    $status = "On Process";
+                }
+                    $row_emp = $this->employee_model->employee_information($value->emp_id);
+                    $finalData .= "<tr class='file-loan-list-history-".$value->file_loan_id."'>";
+                    
+                    $finalData .= "<td class='name-file-loan-".$value->file_loan_id."'>".$row_emp['Firstname']. " " . $row_emp['Lastname'] ."</td>";
+                    $finalData .= "<td class='ref-no-file-salary-".$value->file_loan_id."'>".$value->ref_no."</td>";
+                    $finalData .= "<td>".number_format($value->amount,2)."</td>";
+                    $finalData .= "<td>".$value->purpose."</td>";
+                    $finalData .= "<td>".$loan_type."</td>";
+                    $finalData .= "<td>";    
+                        if ($value->status == 0){
+                            $finalData .= "<button id=".$value->file_loan_id." class='create-schedule-file-loan-btn btn btn-sm btn-outline-success' data-target='#scheduleFileLoanModal' data-toggle='modal'>Create Schedule</button>";
+                            $finalData .= "&nbsp;";
+                            $finalData .= "<button id=".$value->file_loan_id." class='disapprove-file-loan-btn btn btn-sm btn-outline-danger'>Disapprove</button>";
+                        }
+
+                        else {
+                            $finalData .= "No Action";
+                        }
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+
+        echo json_encode($this->data);
+    }
+    public function getScheduleFileLoanInfo(){
+        $id = $this->input->post('id');
+        $fileLoan = $this->employee_model->get_employee_file_loan_data($id);
+        $finalData = array();
+        if(!empty($fileLoan)){
+            $emp_id = $fileLoan['emp_id'];
+
+            $program = $fileLoan['program'];
+            $row_emp = $this->employee_model->employee_information($fileLoan['emp_id']);
+
+            $date_hired = $row_emp['DateHired'];
+
+            $now = date("Y-m-d");
+
+            $date1 = $date_hired;
+            $date1= date_create($date1);
+
+            $date2= date_create($now);
+
+            $diff =date_diff($date1,$date2);
+            $wew =  $diff->format("%R%a");
+            $days = str_replace("+","",$wew);
+
+
+            $years = $days / 365;
+            $years = floor($years);
+            $loan_type = $fileLoan['type'];
+
+            $loanTypeText = "SALARY LOAN";
+            if($loan_type == 1 || $loan_type == 3){
+                $loanTypeText = "EMPLOYEE BENIFIT PROGRAM";
+            }
+            $min_amount = 0;
+            $max_amount = 0;
+            if ($years == 1){
+                $min_amount = 1000;
+                $max_amount = 5000;
+            }
+
+            else if ($years == 2){
+                $min_amount = 5000;
+                $max_amount = 10000;
+            }
+
+            else if ($years == 3){
+                $min_amount = 10000;
+                $max_amount = 15000;
+            }
+
+            else if ($years == 4){
+                $min_amount = 15000;
+                $max_amount = 20000;
+            }
+
+            else if ($years == 5){
+                $min_amount = 20000;
+                $max_amount = 30000;
+            }
+
+            else if ($years >= 6){
+                $min_amount = 20000;
+                $max_amount = 35000;
+            }
+            $year = date('Y');
+            $nextYear = $year + 1;
+            $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            array_push($finalData, array(
+                'loan_type_text'=>$loanTypeText,
+                'year'=>$year,
+                'next_year'=>$nextYear,
+                'loan_type'=>$loan_type,
+                'min_amount'=>$min_amount,
+                'max_amount'=>$max_amount,
+                'purpose' => $fileLoan['purpose'],
+                'name'=>$fullName,
+            ));
+            $this->data['status'] = "success";
+            $this->data['finalData'] = $finalData;
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function scheduleFileLoan(){
+        $id = $this->input->post('id');
+        $deductionType= $this->input->post('deductionType');
+        $totalMonths= $this->input->post('totalMonths');
+        $dateFromMonth= $this->input->post('dateFromMonth');
+        $datefromDay= $this->input->post('datefromDay');
+        $dateFromYear= $this->input->post('dateFromYear');
+        $dateTo= $this->input->post('dateTo');
+        $amountLoan= $this->input->post('amountLoan');
+        $deduction= $this->input->post('deduction');
+        $totalPayment= $this->input->post('totalPayment');
+        $remarks= $this->input->post('remarks');
+        $deductionDay = 0;
+        $pre_approver_id = $this->session->userdata('user');
+        $pre_approve_date = date("Y-m-d");
+        $dateFrom = $dateFromMonth. "/" .$datefromDay. "/".$dateFromYear;
+        //$dateFrom = $dateFromYear."/".$datefromDay."/".$dateFromMonth;
+        $fileLoan = $this->employee_model->get_employee_file_loan_data($id);
+        $emp_id = $fileLoan['emp_id'];
+
+        $ref_no = $fileLoan['ref_no'];
+        
+        $row_emp = $this->employee_model->employee_information($emp_id);
+        
+        $this->form_validation->set_rules('deductionType', 'deductionType', 'required');
+        $this->form_validation->set_rules('totalMonths', 'totalMonths', 'required');
+        $this->form_validation->set_rules('dateFromMonth', 'dateFromMonth', 'required');
+        $this->form_validation->set_rules('datefromDay', 'datefromDay', 'required');
+        $this->form_validation->set_rules('dateFromYear', 'dateFromYear', 'required');
+        $this->form_validation->set_rules('dateTo', 'dateTo', 'required');
+        $this->form_validation->set_rules('amountLoan', 'amountLoan', 'required');
+        $this->form_validation->set_rules('deduction', 'deduction', 'required');
+        $this->form_validation->set_rules('totalPayment', 'totalPayment', 'required');
+        $this->form_validation->set_rules('remarks', 'remarks', 'required');
+        if($deductionType == "Monthly"){
+            $deductionDay = $this->input->post('deductionDay');
+            $this->form_validation->set_rules('deductionDay', 'deductionDay', 'required');
+        }
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All field are required.";
+        }
+        else{
+
+        
+            
+            if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "Invalid deduction day.";
+            }
+
+            else if(dateDefaultDb($dateFrom) < getDateDate()){
+                $new_dateFrom = dateFormat($dateFrom);
+                $dateCreated = getDateDate();
+                $dateCreated = dateFormat($dateCreated);
+                $this->data['status'] = "error";
+                $this->data['msg'] = "<strong>Date From ".$new_dateFrom."</strong> must be not below the current date <strong>".$dateCreated."</strong>";
+
+            }
+            else{
+
+                $dateCreated = getDateDate();
+
+                $final_dateFrom = dateDefaultDb($dateFrom);
+                $final_dateTo = dateDefaultDb($dateTo);
+
+
+                $new_dateFrom = dateDefaultDb($dateFrom);
+                $new_dateTo = dateFormat($dateTo);
+
+                $new_amountLoan = moneyConvertion($amountLoan);
+
+                $insertData = array(
+                    'emp_id'=>$emp_id,
+                    'pre_approver_id'=>$pre_approver_id,
+                    'pre_approval_date'=>$pre_approve_date,
+                    'deductionType'=>$deductionType,
+                    'deductionDay'=>$deductionDay,
+                    'totalMonths'=>$totalMonths,
+                    'dateFrom'=>$final_dateFrom,
+                    'dateTo'=>$final_dateTo,
+                    'amountLoan'=>$amountLoan,
+                    'totalPayment'=>$totalPayment,
+                    'deduction'=>$deduction,
+                    'remarks'=>$remarks,
+                    'apporveStat'=>0,
+                    'dateCreated'=>$dateCreated,
+                );
+                $insert = $this->salary_model->insert_file_salary_loan_data($insertData);
+
+                $idFileLoan = $this->salary_model->get_file_salary_loan_data_order_by_date();
+
+
+                $updateFileLoanData = array(
+                    'ref_no'=>$ref_no,
+                );
+                $this->salary_model->update_file_salary_loan($idFileLoan['file_salary_loan_id'], $updateFileLoanData);
+                $last_file_salary_loan_id = $idFileLoan['file_salary_loan_id'];
+
+                $updateEmpFileLoanData = array(
+                    'status'=>4
+                );
+                $this->employee_model->update_employee_file_loan_data($id,$updateEmpFileLoanData);
+
+                $notif_type = "File Salary Loan";
+                $readStatus = '0';
+
+                $this->data['status'] = "success";
+                $this->data['msg'] = "You successfully filed a salary loan for <strong>".$row_emp['Firstname']." ".$row_emp['Lastname']. "</strong> of <strong>".$totalMonths." months</strong> starting from <strong>".$new_dateFrom." - ".$new_dateTo."</strong> amounting of <strong>".$new_amountLoan."</strong>";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function disapproveFileLoan(){
+        $id = $this->input->post('id');
+        $fileLoan = $this->employee_model->get_employee_file_loan_data($id);
+        if(!empty($fileLoan)){
+            $row_emp = $this->employee_model->employee_information($fileLoan['emp_id']);
+            $ref_no = $fileLoan['ref_no'];
+            $updateFileLoanData = array(
+                'status'=>2,
+            );
+            $this->employee_model->update_employee_file_loan_data($id, $updateFileLoanData);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "You successfully disapprove the file loan of <strong>".$row_emp['Firstname'] . " " . $row_emp['Lastname']."</strong> for reference number <strong>".$ref_no."</strong>.";
+        }
+        else{
+            $this->data['error'];
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function fileLoanSalaryAndEmployment(){
+        $select_qry = $this->salary_model->get_filed_salary_loan_to_approve();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+
+                $interest_amount = $value->totalPayment - $value->amountLoan;
+
+
+                $ref_no = $value->ref_no;
+                $row_fl = $this->employee_model->get_file_loan_data($ref_no);
+                $loan_type = "Salary Loan";
+                if ($row_fl['type'] == 3){
+                    $loan_type = "Employee Benifit Program";
+                }
+
+                $info = "";
+                $info .=  "<b>".$ref_no ."</b>" . "<br/>";
+                $info .= $loan_type;
+                $finalData .="<tr id='salary-and-employment-".$value->file_salary_loan_id."'>";
+                    $finalData .= "<td class='approval-name-loan-".$value->file_salary_loan_id."'><small>".$emp_name."</small></td>";
+                    $finalData .= "<td><small>".$date_range."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
+                    $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
+                    $finalData .= "<td>".$info."</td>";
+                    $finalData .= "<td><small>".$value->remarks."</small></td>";
+                    $finalData .= "<td><small>";
+                        $finalData .= "<button id=".$value->file_salary_loan_id." class='approve-file-loan-salary-employment-btn btn btn-sm btn-outline-success'>Approve</button>";
+                        $finalData .= "<button id=".$value->file_salary_loan_id." class='disapprove-file-loan-salary-employment-btn btn btn-sm btn-outline-danger'>Disapprove</button>";
+                        $finalData .= "</small>";
+
+
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+    public function disapproveFileSalaryAndEmploymentLoan(){
+        $id = $this->input->post('id');
+        $fileSalaryLoan = $this->salary_model->get_filed_salary_loan($id);
+        if(!empty($fileSalaryLoan)){
+            $emp_id = $fileSalaryLoan['emp_id'];
+            $ref_no = $fileSalaryLoan['ref_no'];
+            $row_emp = $this->employee_model->employee_information($emp_id);
+
+            $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            if ($row_emp['Middlename'] == ""){
+                $fullName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'];
+            }
+            $approveStat = 2;
+
+            $approver_id = $this->session->userdata('user');
+
+            $updateEmpFileLoanData = array(
+                'status'=>2
+            );
+            $this->employee_model->update_employee_file_loan_data_using_ref_no($ref_no, $updateEmpFileLoanData);
+
+            $updateFileSalaryLoanData = array(
+                'approver_id'=>$approver_id,
+                'apporveStat'=>$approveStat,
+                'dateApprove'=>getDateDate(),
+            );
+            $this->salary_model->update_file_salary_loan($id,$updateFileSalaryLoanData);
+
+            $module = "Disapprove File Salary Loan";
+            $task_description = "Disapprove File Salary Loan, " . $fileSalaryLoan['deductionType'];
+            $dateTime = getDateTime();
+            $insertAuditTrialData = array(
+                'audit_trail_id'=>'',
+                'file_emp_id'=>$emp_id,
+                'approve_emp_id'=>$approver_id,
+                'involve_emp_id'=>0,
+                'module'=>$module,
+                'task_description'=>$task_description,
+            );
+            $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+            $notif_type = "Disapprove Your File Salary Loan";
+            $readStatus = '0';
+            $insertNotificationsData = array(
+                'payroll_notif_id'=>'',
+                'payroll_admin_id'=>0,
+                'emp_id'=>$emp_id,
+                'payroll_id'=>$approver_id,
+                'approve_payroll_id'=>0,
+                'file_salary_loan_id'=>$id,
+                'notifType'=>$notif_type,
+                'cutOffPeriod'=>'',
+                'readStatus'=>$readStatus,
+
+            );
+            $insertNotifications = $this->payroll_model->insert_payroll_notifications($insertNotificationsData);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "You successfully disapprove the file salary loan of <strong>".$fullName."</strong>.";
+        }
+        else{
+            $this->data['status'] = "error";
+
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function fileLoanSimkimban(){
+        $select_qry = $this->simkimban_model->get_employee_simkimban_loan_status_zero();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_query_emp = $this->employee_model->employee_information($value->emp_id);
+
+                $emp_name = $select_query_emp['Lastname'] . ", " . $select_query_emp['Firstname'] . " " . $select_query_emp['Middlename'];
+
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $date_range = $dateFrom . "- " .$dateTo;
+
+
+                //$interest_amount = $value->totalPayment - $value->amountLoan;
+
+
+                $ref_no = $value->ref_no;
+                if ($value->remainingBalance != 0) {
+                    $finalData .= "<tr class='file-loan-simkimban-".$value->simkimban_id."'>";
+                        $finalData .= "<td class='approval-name-loan-simkimban-".$value->simkimban_id."'><small>".$emp_name."</small></td>";
+                        $finalData .= "<td><small>".$date_range."</small></td>";
+                        $finalData .= "<td><small>".$value->Items."</small></td>";
+                        $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
+                        $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
+                        $finalData .= "<td>".$ref_no."</td>";
+                        //echo "<td><small>".$row->remarks."</td>";
+                        $finalData .= "<td><small>";
+                            $finalData .= "<button id=".$value->simkimban_id." class='approve-file-loan-simkimban-btn btn btn-sm btn-outline-success'>Approve</button>";
+                            $finalData .= "<button id=".$value->simkimban_id." class='disapprove-file-loan-simkimban-btn btn btn-sm btn-outline-danger'>Disapprove</button>";
+                            $finalData .= "</small>";
+                        $finalData .= "</small></td>";
+                    $finalData .= "</tr>";
+                }
+                
+            }
+        }
+        $this->data['finalData'] =$finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function disapproveFileSimkimban(){
+        $id = $this->input->post('id');
+
+        $row = $this->simkimban_model->get_simkimban_data($id);
+        $emp_id = $row['emp_id'];
+        $ref_no = $row['ref_no'];
+        $deductionType  = $row['deductionType'];
+        $totalMonths = $row['totalMonths'];
+        $new_amountLoan = moneyConvertion($row['amountLoan']);
+        $new_dateFrom = dateFormat($row['dateFrom']);
+        $new_dateTo = dateFormat($row['dateTo']);
+        $row_emp = $this->employee_model->employee_information($emp_id);
+        $empName = $row_emp['Firstname'] . " " . $row_emp['Lastname'];
+
+        $updateSimkimbanData = array(
+            'status'=>2
+        );
+        $this->simkimban_model->update_simkimban_loan_data($id, $updateSimkimbanData);
+
+        $updateEmpFileLoanData = array(
+            'status'=>2
+        );
+        $this->employee_model->update_employee_file_loan_data_using_ref_no($ref_no, $updateEmpFileLoanData);
+
+        $module = "Disapprove File SIMKIMBAN Loan";
+        $task_description = "Disapprove File SIMKIMBAN Loan, " . $deductionType;
+        $approver_id =$this->session->userdata('user');
+        $dateTime = getDateTime();
+        $insertAuditTrialData = array(
+            'audit_trail_id'=>'',
+            'file_emp_id'=>$emp_id,
+            'approve_emp_id'=>$approver_id,
+            'involve_emp_id'=>0,
+            'module'=>$module,
+            'task_description'=>$task_description,
+        );
+        $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+        $this->data['status'] = "success";
+        $this->data['msg'] = "You successfully disapprove the file simkimban loan of <strong>".$empName."</strong>.";
+
+        echo json_encode($this->data);
+    }
+
+    public function scheduleFileLoanSimkimban(){
+        $id = $this->input->post('id');
+        $deductionType= $this->input->post('deductionType');
+        $totalMonths= $this->input->post('totalMonths');
+        $dateFromMonth= $this->input->post('dateFromMonth');
+        $datefromDay= $this->input->post('datefromDay');
+        $dateFromYear= $this->input->post('dateFromYear');
+        $dateTo= $this->input->post('dateTo');
+        $amountLoan= $this->input->post('amountLoan');
+        $deduction= $this->input->post('deduction');
+        $totalPayment= $this->input->post('totalPayment');
+        $item= $this->input->post('item');
+        $name = $this->input->post('name');
+
+        $row_fl = $this->employee_model->get_employee_file_loan_data($id);
+        $dateFrom = $dateFromMonth. "/" .$datefromDay. "/".$dateFromYear;
+        $empId = $row_fl['emp_id'];
+        $deductionDay = 0;
+
+        $dateCreated = getDateDate();
+
+        if($deductionType == "Monthly"){
+            $deductionDay = $this->input->post('deductionDay');
+            $this->form_validation->set_rules('deductionDay', 'deductionDay', 'required');
+        }
+        $this->form_validation->set_rules('deductionType', 'deductionType', 'required');
+        $this->form_validation->set_rules('totalMonths', 'totalMonths', 'required');
+        $this->form_validation->set_rules('dateFromMonth', 'dateFromMonth', 'required');
+        $this->form_validation->set_rules('datefromDay', 'datefromDay', 'required');
+        $this->form_validation->set_rules('dateFromYear', 'dateFromYear', 'required');
+        $this->form_validation->set_rules('dateTo', 'dateTo', 'required');
+        $this->form_validation->set_rules('amountLoan', 'amountLoan', 'required');
+        $this->form_validation->set_rules('deduction', 'deduction', 'required');
+        $this->form_validation->set_rules('totalPayment', 'totalPayment', 'required');
+        $this->form_validation->set_rules('item', 'item', 'required');
+        if($deductionType == "Monthly"){
+            $deductionDay = $this->input->post('deductionDay');
+            $this->form_validation->set_rules('deductionDay', 'deductionDay', 'required');
+        }
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "All field are required.";
+        }
+        else{
+
+            $dateTo = dateDefaultDb($dateTo);
+            if ($deductionDay != 0 && $deductionDay != 15 && $deductionDay != 30){
+                $this->data['status'] = 'error';
+                $this->data['msg'] = "Invalid deduction day.";
+            }
+            else if($dateFrom > $dateTo){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "The <strong>Date From</strong> must be below the date of the declared <strong>Date To</strong>";
+            }
+            else{
+                $insertData = array(
+                    'simkimban_id'=>'',
+                    'emp_id'=>$empId,
+                    'deductionType'=>$deductionType,
+                    'deductionDay'=>$deductionDay,
+                    'totalMonths'=>$totalMonths,
+                    'dateFrom'=>$dateFrom,
+                    'dateTo'=>$dateTo,
+                    'Items'=>$item,
+                    'amountLoan'=>$amountLoan,
+                    'deduction'=>$deduction,
+                    'remainingBalance'=>$totalPayment,
+                    'DateCreated'=>$dateCreated,
+                );
+                $this->simkimban_model->insert_simkimban_loan_data($insertData);
+                $ref_no = $row_fl['ref_no'];
+                $updateEmpFileLoanData = array(
+                    'status'=>4
+                );
+                $this->employee_model->update_employee_file_loan_data($id,$updateEmpFileLoanData);
+
+                $simkimbanId = $this->simkimban_model->simkimban_last_loan_id();
+                $simkimbanId = $simkimbanId['simkimban_id'];
+                $updateSimkimbanLoan = array(
+                    'ref_no'=>$ref_no,
+                );
+                $this->simkimban_model->update_simkimban_loan_data($simkimbanId,$updateSimkimbanLoan);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "Employee <strong>".$name."</strong> was successfully filed a <strong>Simkimban Loan</strong>.";
+            }
+        }
+
         echo json_encode($this->data);
     }
 }

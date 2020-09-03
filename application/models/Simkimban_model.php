@@ -96,4 +96,28 @@ class Simkimban_model extends CI_Model{
         return $insert;
     }
 
+    public function get_employee_simkimban_loan_status_zero(){
+        $query = $this->db->get_where('tb_simkimban',array('status'=>0));
+        return $query->result();
+    }
+    public function simkimban_last_loan_id(){
+        $this->db->select('*');
+        $this->db->from('tb_simkimban');
+        $this->db->order_by('simkimban_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    // public function update_simkimban_loan_data_ref_no($id,){
+    //     $this->db->trans_start();
+    //     $this->db->where('ref_no',$id);
+    //     $this->db->update('tb_simkimban',$data);
+    //     $this->db->trans_complete();
+    //     if($this->db->trans_status() === TRUE){
+    //         return "success";
+    //     }
+    //     else{
+    //         return "error";
+    //     }
+    // }
 }
