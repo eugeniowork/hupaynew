@@ -158,4 +158,22 @@ class Employee_model extends CI_Model{
             return "error";
         }
     }
+
+    public function get_all_employee_file_loan_data(){
+        $query = $this->db->get_where('tb_emp_file_loan');
+        return $query->result();
+    }
+    public function get_all_employee_file_loan_data_order_by(){
+        $this->db->select('*');
+        $this->db->from('tb_emp_file_loan');
+        $this->db->order_by('file_loan_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function insert_file_loan($data){
+        $insert = $this->db->insert('tb_emp_file_loan',$data);
+        return $insert;
+    }
 }

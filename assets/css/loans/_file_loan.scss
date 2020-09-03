@@ -8,4 +8,11 @@
 			display: none;
 		}
 	}
+	#addFileLoanModal{
+		@include modal();
+
+		.add-program-section{
+			display: none;
+		}
+	}
 }

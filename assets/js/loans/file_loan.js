@@ -137,4 +137,105 @@ $(document).ready(function(){
 		}
 	})
 	//for update end
+
+	// for cancel start
+
+	$(document).on('click','.cancel-file-loan-btn',function(e){
+		var id = e.target.id;
+		Swal.fire({
+            html: 'Are you sure you want to cancel your file salary loan with Reference No. <strong>'+$('.ref-no-'+id).text()+'</strong>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+        	if (result.value) {
+        		$.ajax({
+        			url:base_url+'loans_controller/cancelFileLoan',
+        			type:'post',
+        			dataType:'json',
+        			data:{
+        				id:id,
+        			},
+        			success:function(response){
+        				if(response.status == "success"){
+        					toast_options(4000);
+	                        toastr.success(response.msg);
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+	                        $('.file-loan-'+id).remove();
+        				}
+        				else{
+        					toast_options(4000);
+                    		toastr.error("There was a problem, please try again!");
+        				}
+        			},
+        			error:function(response){
+        				toast_options(4000);
+                    	toastr.error("There was a problem, please try again!");
+        			}
+
+        		})
+        	}
+		});
+	})
+	//for cancel end
+
+	//for add file loan data start
+	$('.add-file-loan-type').on('change',function(){
+		if($(this).val() == 3){
+			$('.add-program-section').show();
+		}
+		else{
+			$('.add-program-section').hide();
+		}
+	})
+
+	var loadingAddFileLoan = false;
+	$('.add-file-loan-data-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingAddFileLoan){
+			loadingAddFileLoan = true;
+			$(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.add-file-loan-warning').empty();
+            $.ajax({
+            	url:base_url+'loans_controller/addNewFileLoan',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		amount:$('.add-file-loan-amount').val(),
+            		type:$('.add-file-loan-type').val(),
+            		program:$('.add-file-loan-program').val(),
+            		purpose:$('.add-file-loan-purpose').val(),
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.add-file-loan-warning',response.msg, "danger")
+                        loadingAddFileLoan = false;
+                        change_button_to_default(btnName, 'Update');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingAddFileLoan = false;
+                    change_button_to_default(btnName, 'Submit');
+            	}
+            })
+        }
+	})
+
+	//for add file loan data end
 })

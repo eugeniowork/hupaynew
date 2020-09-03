@@ -5,6 +5,7 @@
         Loan List History
     </div>
     <div class="div-main-body-content">
+    	<button class="btn btn-outline-success pull-right" data-toggle="modal" data-target="#addFileLoanModal">File Loan</button><br/><br/>
     	<table class="table table-striped" id="loanListHistory">
             <thead>
                 <tr>
@@ -20,7 +21,7 @@
             
             </tbody>
         </table>
-        <div class="modal fade" id="updateFileLoanModal" tabindex="-1" role="dialog" aria-labelledby="updateFileLoanModalTitle" aria-hidden="true">
+        <div class="modal fade" id="updateFileLoanModal" tabindex="-1" role="dialog" aria-labelledby="addFileLoanModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -74,7 +75,59 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-sm btn-primary update-file-loan-data-btn">Adjust</button>
+                        <button class="btn btn-primary update-file-loan-data-btn">Adjust</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addFileLoanModal" tabindex="-1" role="dialog" aria-labelledby="addFileLoanModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addFileLoanModalTitle">Loan Form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        	<div class="col-lg-4">
+                        		<span>Amount</span>
+								<input type="text" class="float-only form-control add-file-loan-amount" placeholder="Enter amount" />
+                        	</div>
+                        	<div class="col-lg-4">
+                        		<span>Type</span>
+								<select class="form-control add-file-loan-type">
+									<option disabled selected>Select a Loan Type</option>
+									<option value="1">Salary Loan</option>
+									<option value="2">SIMKIMBAN</option>
+									<option value="3">Employee Benifit Program Loan</option>
+								</select>
+                        	</div>
+                        	<div class="col-lg-4 add-program-section">
+                        		<span>Program</span>
+								<select class="form-control add-file-loan-program">
+									<option disabled selected>Select a Program</option>
+									<option value="1">Service Rewards</option>
+									<option value="2">Tulong Pangkabuhayan Program</option>
+									<option value="3">Education Assistance Program</option>
+									<option value="4">Housing Renovation Program</option>
+									<option value="5">Emergency and Medical Assistance Program</option>
+								</select>
+                        	</div>
+                        	<div class="col-lg-12">
+                        		<span>Purpose</span>
+								<textarea class="form-control add-file-loan-purpose" placeholder="Enter purpose"></textarea>
+                        	</div>
+                        </div>
+                        <br/>
+                        <div class="add-file-loan-warning">
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary add-file-loan-data-btn">Submit</button>
                     </div>
                 </div>
             </div>

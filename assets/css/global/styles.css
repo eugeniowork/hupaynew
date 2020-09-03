@@ -861,6 +861,20 @@
   display: none; }
 .file-loan #updateFileLoanModal .update-file-loan-btn {
   display: none; }
+.file-loan #addFileLoanModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .file-loan #addFileLoanModal .modal-header .modal-title {
+    font-size: 15px; }
+.file-loan #addFileLoanModal .modal-body i {
+  color: #158cba; }
+.file-loan #addFileLoanModal .modal-body textarea {
+  resize: none; }
+.file-loan #addFileLoanModal .modal-footer {
+  padding: 0px 5px; }
+.file-loan #addFileLoanModal .add-program-section {
+  display: none; }
 
 body {
   background: #ececec;
