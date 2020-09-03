@@ -150,5 +150,12 @@ class Salary_model extends CI_Model{
         return $query->row_array();
     }
     
-
+     public function salary_last_loan_id(){
+        $this->db->select('*');
+        $this->db->from('tb_salary_loan');
+        $this->db->order_by('salary_loan_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
 }

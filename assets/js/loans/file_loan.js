@@ -778,6 +778,96 @@ $(document).ready(function(){
 
 	//for file simkimban loan end
 
+	//for approval of simkimban loan start
+	$(document).on('click','.approve-file-loan-simkimban-btn',function(e){
+		var id = e.target.id;
+		Swal.fire({
+            html: 'Are you sure you want to approve the simkimban loan of <Strong>'+$('.approval-name-loan-simkimban-'+id).text()+'</strong> with Reference No. <strong>'+$('.file-loan-ref-no-'+id).text()+'</strong> ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+			if (result.value) {
+				$.ajax({
+        			url:base_url+'loans_controller/approveFileSimkimban',
+        			type:'post',
+        			dataType:'json',
+        			data:{
+        				id:id,
+        			},
+        			success:function(response){
+        				if(response.status == "success"){
+        					toast_options(4000);
+	                        toastr.success(response.msg);
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+	                        $('.file-loan-simkimban-'+id).remove();
+        				}
+        				else{
+        					toast_options(4000);
+                    		toastr.error("There was a problem, please try again!");
+        				}
+        			},
+        			error:function(response){
+        				toast_options(4000);
+                    	toastr.error("There was a problem, please try again!");
+        			}
+
+        		})
+			}
+			
+		});
+	})
+	//for approval of simkimban loan end
+
+
+	//for approval of salary employment start
+	$(document).on('click','.approve-file-loan-salary-employment-btn',function(e){
+		var id = e.target.id;
+		Swal.fire({
+            html: 'Are you sure you want to approve the file salary loan of <Strong>'+$('.approval-name-loan-'+id).text()+'</strong>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+			if (result.value) {
+				$.ajax({
+        			url:base_url+'loans_controller/approveFileLoan',
+        			type:'post',
+        			dataType:'json',
+        			data:{
+        				id:id,
+        			},
+        			success:function(response){
+        				if(response.status == "success"){
+        					toast_options(4000);
+	                        toastr.success(response.msg);
+	                        setTimeout(function(){
+	                            window.location.reload();
+	                        },1000)
+	                        $('.salary-and-employment-'+id).remove();
+        				}
+        				else{
+        					toast_options(4000);
+                    		toastr.error("There was a problem, please try again!");
+        				}
+        			},
+        			error:function(response){
+        				toast_options(4000);
+                    	toastr.error("There was a problem, please try again!");
+        			}
+
+        		})
+			}
+			
+		});
+	})
+	//for approval of salary employment end
 
 
 

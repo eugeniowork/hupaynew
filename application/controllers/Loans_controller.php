@@ -1769,7 +1769,7 @@ class Loans_controller extends CI_Controller{
                 $info = "";
                 $info .=  "<b>".$ref_no ."</b>" . "<br/>";
                 $info .= $loan_type;
-                $finalData .="<tr id='salary-and-employment-".$value->file_salary_loan_id."'>";
+                $finalData .="<tr class='salary-and-employment-".$value->file_salary_loan_id."'>";
                     $finalData .= "<td class='approval-name-loan-".$value->file_salary_loan_id."'><small>".$emp_name."</small></td>";
                     $finalData .= "<td><small>".$date_range."</small></td>";
                     $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
@@ -1888,7 +1888,7 @@ class Loans_controller extends CI_Controller{
                         $finalData .= "<td><small>".$value->Items."</small></td>";
                         $finalData .= "<td><small>Php ".moneyConvertion($value->amountLoan)."</small></td>";
                         $finalData .= "<td><small>Php ".moneyConvertion($value->deduction)."</small></td>";
-                        $finalData .= "<td>".$ref_no."</td>";
+                        $finalData .= "<td class='file-loan-ref-no-".$value->simkimban_id."'>".$ref_no."</td>";
                         //echo "<td><small>".$row->remarks."</td>";
                         $finalData .= "<td><small>";
                             $finalData .= "<button id=".$value->simkimban_id." class='approve-file-loan-simkimban-btn btn btn-sm btn-outline-success'>Approve</button>";
@@ -2033,6 +2033,161 @@ class Loans_controller extends CI_Controller{
                 $this->data['status'] = "success";
                 $this->data['msg'] = "Employee <strong>".$name."</strong> was successfully filed a <strong>Simkimban Loan</strong>.";
             }
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function approveFileSimkimban(){
+        $id = $this->input->post('id');
+        $row = $this->simkimban_model->get_simkimban_data($id);
+        if(!empty($row)){
+            $emp_id = $row['emp_id'];
+            $ref_no = $row['ref_no'];
+            $deductionType  = $row['deductionType'];
+            $totalMonths = $row['totalMonths'];
+            $new_amountLoan = moneyConvertion($row['amountLoan']);
+            $new_dateFrom = dateFormat($row['dateFrom']);
+            $new_dateTo = dateFormat($row['dateTo']);
+
+            $row_emp = $this->employee_model->employee_information($emp_id);
+            $empName = $row_emp['Firstname'] . " " . $row_emp['Lastname'];
+
+            $updateSimkimbanData = array(
+                'status'=>1,
+                'date_approved'=>date("Y-m-d"),
+                'approver_id' => $this->session->userdata('user'),
+            );
+            $this->simkimban_model->update_simkimban_loan_data($id,$updateSimkimbanData);
+
+            $updateEmpFileLoanData = array(
+                'status'=>2
+            );
+            $this->employee_model->update_employee_file_loan_data_using_ref_no($ref_no, $updateEmpFileLoanData);
+            $module = "Approve File SIMKIMBAN Loan";
+            $task_description = "Approve File SIMKIMBAN Loan, " . $deductionType;
+            $approver_id =$this->session->userdata('user');
+            $dateTime = getDateTime();
+            $insertAuditTrialData = array(
+                'audit_trail_id'=>'',
+                'file_emp_id'=>$emp_id,
+                'approve_emp_id'=>$approver_id,
+                'involve_emp_id'=>0,
+                'module'=>$module,
+                'task_description'=>$task_description,
+            );
+            $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+            $this->data['status'] = "success";
+            $this->data['msg'] = "You successfully approved the file simkimban loan of <strong>".$empName."</strong>.";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    public function approveFileLoan(){
+        $id = $this->input->post('id');
+        $fileSalaryLoan = $this->salary_model->get_filed_salary_loan($id);
+        if(!empty($fileSalaryLoan)){
+            $emp_id = $fileSalaryLoan['emp_id'];
+            $ref_no = $fileSalaryLoan['ref_no'];
+            $pre_approver_id = $fileSalaryLoan['pre_approver_id'];
+            $pre_approval_date = $fileSalaryLoan['pre_approval_date'];
+            $row_emp = $this->employee_model->employee_information($emp_id);
+            $empName = $row_emp['Lastname'] . ", " . $row_emp['Firstname'] . " " . $row_emp['Middlename'];
+            //$final_dateFrom = dateDefaultDb($dateFrom);
+            //$final_dateTo = dateDefaultDb($dateTo);
+            $this->data['asd'] = $id;
+            $approver_id = $this->session->userdata('user');
+
+            $insertSalaryData = array(
+                'emp_id'=>$emp_id,
+                'approver_id'=>$approver_id,
+                'pre_approver_id'=>$pre_approver_id,
+                'pre_approval_date'=>$pre_approval_date,
+                'deductionType'=>$fileSalaryLoan['deductionType'],
+                'deductionDay'=>$fileSalaryLoan['deductionDay'],
+                'totalMonths'=>$fileSalaryLoan['totalMonths'],
+                'dateFrom'=>$fileSalaryLoan['dateFrom'],
+                'dateTo'=>$fileSalaryLoan['dateTo'],
+                'amountLoan'=>$fileSalaryLoan['amountLoan'],
+                'totalPayment'=>$fileSalaryLoan['totalPayment'],
+                'deduction'=>$fileSalaryLoan['deduction'],
+                'remainingBalance'=>$fileSalaryLoan['totalPayment'],
+                'remarks'=>$fileSalaryLoan['remarks'],
+                'DateCreated'=>getDateDate(),
+            );
+            $insertSalary = $this->salary_model->insert_salary_loan_data($insertSalaryData);
+            $last_id = $this->salary_model->salary_last_loan_id();
+            $last_id = $last_id['salary_loan_id'];
+
+            $updateSalaryLoanData = array(
+                'ref_no'=>$ref_no
+            );
+            $this->salary_model->update_salary_loan_data($id,$updateSalaryLoanData);
+
+            $updateEmpFileLoanData = array(
+                'status'=>1
+            );
+            $this->employee_model->update_employee_file_loan_data_using_ref_no($ref_no,$updateEmpFileLoanData);
+
+            $apporveStat = 3;
+            $dateApprove = getDateDate();
+
+            $insertSalaryLoanData = array(
+                'approver_id'=>$approver_id,
+                'deductionType'=>$fileSalaryLoan['deductionType'],
+                'deductionDay'=>$fileSalaryLoan['deductionDay'],
+                'totalMonths'=>$fileSalaryLoan['totalMonths'],
+                'dateFrom'=>$fileSalaryLoan['dateFrom'],
+                'dateTo'=>$fileSalaryLoan['dateTo'],
+                'amountLoan'=>$fileSalaryLoan['amountLoan'],
+                'totalPayment'=>$fileSalaryLoan['totalPayment'],
+                'deduction'=>$fileSalaryLoan['deduction'],
+                'apporveStat'=>$apporveStat,
+                'dateApprove'=>$dateApprove,
+            );
+            $this->salary_model->update_file_salary_loan($id,$insertSalaryLoanData);
+
+            $module = "Approve File Salary Loan";
+            $task_description = "Approve File Salary Loan, " . $fileSalaryLoan['deductionType'];
+            $approver_id =$this->session->userdata('user');
+            $dateTime = getDateTime();
+            $insertAuditTrialData = array(
+                'audit_trail_id'=>'',
+                'file_emp_id'=>$emp_id,
+                'approve_emp_id'=>$approver_id,
+                'involve_emp_id'=>0,
+                'module'=>$module,
+                'task_description'=>$task_description,
+            );
+            $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+            
+
+            //$new_amountLoan = moneyConvertion($amountLoan);
+            //$new_dateFrom = dateFormat();
+            //$new_dateTo = dateFormat($dateTo);
+            $notif_type = "Approve Your File Salary Loan";
+            $readStatus = '0';
+            $insertNotificationsData = array(
+                'payroll_notif_id'=>'',
+                'payroll_admin_id'=>0,
+                'emp_id'=>$emp_id,
+                'payroll_id'=>$approver_id,
+                'approve_payroll_id'=>0,
+                'file_salary_loan_id'=>$id,
+                'notifType'=>$notif_type,
+                'cutOffPeriod'=>'',
+                'readStatus'=>$readStatus,
+
+            );
+            $insertNotifications = $this->payroll_model->insert_payroll_notifications($insertNotificationsData);
+            $this->data['status'] = "success";
+            $this->data['msg'] = "You successfully approved the file salary loan of <strong>".$empName."</strong>.";
+        }
+        else{
+            $this->data['status'] = "error";
         }
 
         echo json_encode($this->data);
