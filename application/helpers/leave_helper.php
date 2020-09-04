@@ -306,4 +306,72 @@
             return 'success';
         }
     }
+
+    function getEmpLeaveCount($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('leave_model');
+        $remaining_leave = 0;
+        $finalData = "";
+        $select_qry = $CI->leave_model->get_employee_leave($emp_id);
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $leave_array_explode =explode("," ,$value->leave_array);
+                $leave_count_array_explode =explode("," ,$value->leave_count_array);
+
+                $counter = 0;
+                $count = count($leave_array_explode);
+                do{
+                    $lt_id = $leave_array_explode[$counter];
+                    $row = $CI->leave_model->get_type_of_leave_by_id($lt_id);
+                    $finalData .= "<tr>";
+                        $finalData .= "<td><small>".$row['name']."</small></td>";
+                        $finalData .= "<td><small>".$leave_count_array_explode[$counter]."</small></td>";
+                    $finalData .= "</tr>";
+                    $counter++;
+                }
+                while($count > $counter);
+            }
+        }
+        return $finalData;
+       
+    }
+
+    function checkExistEmpLeaveInfo($lt_id){
+        $CI =& get_instance();
+        $CI->load->model('leave_model');
+        $exist = false;
+        $select_qry = $CI->leave_model->get_all_leave();
+
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $leave_array = $value->leave_array;
+
+                $leave_array_explode = explode(",", $leave_array);
+
+                $count = count($leave_array_explode);
+
+                $counter = 0;
+
+                
+
+                if ($exist == false){
+
+                    do {
+
+                        if ($leave_array_explode[$counter] == $lt_id){
+                            $exist = true;
+                        }
+
+                        $counter++;
+                    }while($count > $counter);
+                }
+            }
+        }
+        $exist_count = 0;
+        if ($exist == true){
+            $exist_count = 1;
+        }
+
+        return $exist_count;
+    }
 ?>

@@ -56,7 +56,7 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$emp_id, 'approveStat' => 1,'dateFrom <=' => $date, 'dateTo >='=>$date));
         return $query->result();
     }
-    public function get_type_of_leave_status_one(){
+    public function get_type_of_leave_status_oene(){
         $query = $this->db->get_where('tb_leave_type', array('status' =>1));
         return $query->result();
     }
@@ -136,6 +136,33 @@ class Leave_model extends CI_Model{
         $this->db->where('FileLeaveType =','Leave with pay');
         $this->db->where('LeaveType =','Birthday Leave');
         $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_leave_info_by_head($id){
+        $query = $this->db->get_where('tb_leave', array('head_emp_id' =>$id, 'approveStat !='=>3,'approveStat'=>4));
+        return $query->result();
+    }
+    public function get_leave_info_by_employee($id){
+        $query = $this->db->get_where('tb_leave', array('emp_id !=' =>$id,'approveStat'=>0));
+        return $query->result();
+    }
+    public function get_leave_list_history(){
+        $query = $this->db->get_where('tb_leave', array('approveStat ' =>1));
+        return $query->result();
+    }
+
+    public function get_all_type_of_leave(){
+        $query = $this->db->get('tb_leave_type');
+        return $query->result();
+    }
+
+    public function get_leave_lidation_data($id){
+        $query = $this->db->get_where('tb_leave_validation', array('lv_id ' =>$id));
+        return $query->row_array();
+    }
+    public function get_all_leave(){
+        $query = $this->db->get('tb_emp_leave');
         return $query->result();
     }
 }

@@ -153,4 +153,91 @@ class Attendance_model extends CI_Model{
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();
     // }
+
+    public function get_attendance_notif_head($emp_id){
+        $query = $this->db->get_where('tb_attendance_notif', array('head_emp_id'=>$emp_id,'notif_status !='=>3, 'notif_status'=>4));
+        return $query->result();
+    }
+
+    public function get_attendance_notif_for_head($emp_id){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_notif');
+        $where = '(emp_id !='.$emp_id.' and notif_status ="0") or (head_emp_id ='.$emp_id.' and notif_status !="3" and notif_status ="4")';        
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_attendance_notif_for_employee($emp_id){
+        $query = $this->db->get_where('tb_attendance_notif', array('emp_id !='=>$emp_id, 'notif_status'=>0));
+        return $query->result();
+    }
+
+    public function get_attendance_overtime_for_head($emp_id,$finalDateFrom, $finalDateTo){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_overtime');
+        
+        //$this->db->where('date BETWEEN "'. $dateFrom. '" and "'. $dateTo.'"');
+        $this->db->where('head_emp_id',$emp_id);
+        $this->db->where('approve_stat', 1);
+        $this->db->where('date >=',$finalDateFrom);
+        $this->db->where('date <=', $finalDateTo);
+        
+        $this->db->order_by('date', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_attendance_overtime_for_employee($finalDateFrom, $finalDateTo){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_overtime');
+        
+        //$this->db->where('date BETWEEN "'. $dateFrom. '" and "'. $dateTo.'"');
+        $this->db->where('head_emp_id',0);
+        $this->db->where('approve_stat', 1);
+        $this->db->where('date >=',$finalDateFrom);
+        $this->db->where('date <=', $finalDateTo);
+        
+        $this->db->order_by('date', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_all_attendance_overtime($finalDateFrom,  $finalDateTo){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_overtime');
+        $this->db->where('approve_stat', 1);
+        $this->db->where('date >=',$finalDateFrom);
+        $this->db->where('date <=', $finalDateTo);
+        
+        $this->db->order_by('date', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_attendance_overtime_for_head_approve_condition($id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('head_emp_id '=>$id, 'approve_stat !='=>3, 'approve_stat'=>4));
+        return $query->result();
+    }
+    public function get_attendance_overtime_emp_or_head($emp_id){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_overtime');
+        $where = '(emp_id !='.$emp_id.' and approve_stat ="0") or (head_emp_id '.$emp_id.' and approve_stat !="3" and approve_stat ="4")';        
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_all_attendance_overtime_zero_stat($emp_id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id !='=>$emp_id, 'approve_stat '=>0));
+        return $query->result();
+    }
+
+    public function get_all_attendance($dateFrom, $dateTo){
+        $this->db->select('*');
+        $this->db->from('tb_attendance');
+        $this->db->where('date >=',$dateFrom);
+        $this->db->where('date <=', $dateTo);
+        
+        $this->db->order_by('date', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

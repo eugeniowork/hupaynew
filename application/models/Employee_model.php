@@ -197,4 +197,15 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_active_employee_with_no_bio(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('no_bio', 1);
+        $this->db->where('ActiveStatus', 1);
+        $where = '(role_id !="1" or dept_id !="1")';
+        $this->db->where($where);
+        $this->db->order_by('Lastname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

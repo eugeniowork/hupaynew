@@ -49,6 +49,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['sss_contribution'] = 'sss_controller';
+$route['holiday'] = 'holiday_controller';
+$route['events'] = 'events_controller';
+$route['attendance_list'] = 'attendance_controller/viewAttendanceList';
+$route['file_overtime'] = 'attendance_controller/viewOtList';
+$route['ot_list_approved'] = 'attendance_controller/viewOtListApproved';
+$route['attendance_updates'] = 'attendance_controller/viewAttendanceUpdates';
+$route['add_attendance'] = 'attendance_controller/viewAddAttendance';
+$route['leave_maintenance'] = 'leave_controller/viewLeaveMaintenance';
+$route['leave'] = 'leave_controller';
 $route['file_loan'] = 'loans_controller/viewFileLoan';
 $route['salary_loan'] = 'loans_controller/viewSalaryLoan';
 $route['sss_loan'] = 'loans_controller/viewSssLoan';

@@ -894,6 +894,11 @@
 .file-loan #scheduleFileLoanModal .for-simkimban {
   display: none; }
 
+.attendance-list .search-attendance {
+  display: none; }
+.attendance-list .loading-search-attendance {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

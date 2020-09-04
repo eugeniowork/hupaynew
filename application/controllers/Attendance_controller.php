@@ -1262,5 +1262,433 @@ class Attendance_controller extends CI_Controller{
             
         }
         echo json_encode($this->data);
-    }   
+    }
+
+
+    //for add attendance start
+    public function viewAddAttendance(){
+        $this->data['pageTitle'] = 'Add Attendance';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/add_attendance');
+        $this->load->view('global/footer');
+    }
+
+    //for add attendance end
+
+    //for attendance updates start
+    public function viewAttendanceUpdates(){
+        $this->data['pageTitle'] = 'Attendance Updates Request';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/attendance_updates');
+        $this->load->view('global/footer');
+    }
+    //for attendance updates end
+
+    //for attendance request list start
+    public function getAttendanceRequestList(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $role = $employeeInfo['role_id'];
+        $finalData = "";
+        $counter = 1;
+        if($role == 3 || $role == 4){
+            $select_qry = $this->attendance_model->get_attendance_notif_head($emp_id);
+            $this->data['pasok'] = '1';
+        }
+        else{
+            if($emp_id == 167 || $emp_id == 168 || $emp_id == 174){
+                $select_qry = $this->attendance_model->get_attendance_notif_for_head($emp_id);
+                
+            }
+            else{
+                $select_qry = $this->attendance_model->get_attendance_notif_for_employee($emp_id);
+                
+            }
+        }
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $date_create = date_create($value->date);
+                $date_format = date_format($date_create, 'F d, Y');
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+
+                $year = date("Y");
+                $select_cutoff_qry = $this->attendance_model->get_cut_off();
+                if(!empty($select_cutoff_qry)){
+                    foreach($select_cutoff_qry as $valueCutOff){
+
+                        $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                        if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                            $prev_year = $year - 1;
+                            $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+                            
+                        }
+                        $date_from = date_format(date_create($date_from),"Y-m-d");
+                        $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+
+                        $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                        
+                        if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                            $final_date_from = $date_from;
+                            $final_date_to = $date_to;
+                            $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                        }
+                    }
+                }
+                $attendance_date = date_format(date_create($value->date),"Y-m-d");
+
+                $timeFrom = date_format(date_create($value->time_in), 'g:i A');
+                $timeTo = date_format(date_create($value->time_out), 'g:i A');
+
+                $attendance_status = "Add Attendance";
+                if ($value->attendance_id != 0){
+                    $select_attendance_qry = $this->attendance_model->get_attendance_by_id($value->attendance_id);
+                    $orig_timeFrom = date_format(date_create($select_attendance_qry['time_in']), 'g:i A');
+                    $orig_timeTo = date_format(date_create($select_attendance_qry['time_out']), 'g:i A');
+                    if ($value->time_out == "00:00:00") {
+                        $orig_timeTo = "No Time Out";
+                    }
+
+                    $attendance_status = $orig_timeFrom . " - " . $orig_timeTo;
+                }
+                if ($value->notif_status != 1 && $value->notif_status != 2) {
+                    $finalData .= "<tr id='".$value->attendance_notif_id."''>";
+                        $finalData .= "<td><input type='checkbox' value='".$value->attendance_notif_id."' name='attendance_request".$counter."' /></td>";
+                        $finalData .= "<td>". $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'] . " " . $select_emp_qry['Lastname'] . "</td>";
+                        $finalData .= "<td>" . $date_format . "</td>";
+                        $finalData .= "<td>" . $attendance_status . "</td>";
+                        $finalData .= "<td>" . $timeFrom . " - ". $timeTo . "</td>";
+                        $finalData .= "<td id='readmoreValue'>" . nl2br(htmlspecialchars($value->remarks)) . "</td>";
+                        $finalData .= "<td>";
+                            
+                            if ($emp_id != 21 && ((($emp_id == 167 || $emp_id == 168 || $emp_id == 174) && $value->notif_status == 4) || $emp_id == 71 || ($value->head_emp_id == $emp_id && $value->notif_status == 4)) || $role == 1){
+                                $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
+                                $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button";
+                            }
+                            else {
+                                if ($row->emp_id == 71){
+                                   $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
+                                    $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button";
+                                }
+                                else {
+                                    $finalData .= "No action";
+                                }
+                            }
+                        $finalData .= "</td>";
+                    $finalData .= "</tr>";
+                    $counter++;
+                }
+            }
+        }
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+    //for attendance request list end
+
+    //for ot list approved start
+    public function viewOtListApproved(){
+        $this->data['pageTitle'] = 'Overtime List Approved';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/ot_list_approved');
+        $this->load->view('global/footer');
+    }
+    public function getOtRequestList(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $role = $employeeInfo['role_id'];
+
+        date_default_timezone_set("Asia/Manila");
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $select_cutoff_qry = $this->attendance_model->get_cut_off();
+
+        $finalData = "";
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $valueCutOff){
+
+                $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+                    
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                }
+            }
+        }
+        if($role == 4 || $role ==  3){
+            $select_qry = $this->attendance_model->get_attendance_overtime_for_head($emp_id, $final_date_from, $final_date_to);
+            
+        }
+        else{
+            $select_qry = $this->attendance_model->get_attendance_overtime_for_employee($final_date_from, $final_date_to);
+
+        }
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+
+                $fullName = $select_emp_qry['Lastname'] . ", " . $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'];
+
+
+                $date_create = date_create($value->date);
+                $date = date_format($date_create, 'F d, Y');
+
+                $timeFrom = date_format(date_create($value->time_from), 'g:i A');
+                $timeTo = date_format(date_create($value->time_out), 'g:i A');
+
+                $finalData .= "<tr>";
+                    $finalData .= "<td>" .$fullName. "</td>";
+                    $finalData .= "<td>" .$date. "</td>";
+                    $finalData .= "<td>" .$timeFrom. "</td>";
+                    $finalData .= "<td>" .$timeTo. "</td>";
+                    $finalData .= "<td>" .$value->type_ot. "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+
+    public function getAllOtApproveList(){
+        date_default_timezone_set("Asia/Manila");
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $select_cutoff_qry = $this->attendance_model->get_cut_off();
+
+        $finalData = "";
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $valueCutOff){
+
+                $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+                    
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                }
+            }
+        }
+        $select_qry = $this->attendance_model->get_all_attendance_overtime($final_date_from,$final_date_to);
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+
+                $fullName = $select_emp_qry['Lastname'] . ", " . $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'];
+                $date_create = date_create($value->date);
+                $date = date_format($date_create, 'F d, Y');
+
+                $timeFrom = date_format(date_create($value->time_from), 'g:i A');
+                $timeTo = date_format(date_create($value->time_out), 'g:i A');
+
+                $finalData .= "<tr>";
+                    $finalData .= "<td>" .$fullName. "</td>";
+                    $finalData .= "<td>" .$date. "</td>";
+                    $finalData .= "<td>" .$timeFrom. "</td>";
+                    $finalData .= "<td>" .$timeTo. "</td>";
+                    $finalData .= "<td>" .$value->type_ot. "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+
+
+
+    //for ot list approved end
+
+
+    //for over time list start
+    public function viewOtList(){
+        $this->data['pageTitle'] = 'Overtime List';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/file_overtime');
+        $this->load->view('global/footer');
+    }
+
+    public function getOvertimeList(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $role = $employeeInfo['role_id'];
+        $finalData = "";
+        if($role == 4 || $role == 3){
+            $select_qry = $this->attendance_model->get_attendance_overtime_for_head_approve_condition($emp_id);
+        }
+        else{
+            if ($emp_id == 167 || $emp_id == 168){
+                $select_qry = $this->attendance_model->get_attendance_overtime_emp_or_head($emp_id);
+            }
+            else{
+                $select_qry = $this->attendance_model->get_all_attendance_overtime_zero_stat($emp_id);
+            }
+        }
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $select_emp_qry = $this->employee_model->employee_information($value->emp_id);
+
+                $date_create = date_create($value->date);
+                $date_format = date_format($date_create, 'F d, Y');
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+                $year = date("Y");
+                $select_cutoff_qry = $this->attendance_model->get_cut_off();
+
+                
+                if(!empty($select_cutoff_qry)){
+                    foreach($select_cutoff_qry as $valueCutOff){
+
+                        $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                        if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                            $prev_year = $year - 1;
+                            $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+                            
+                        }
+                        $date_from = date_format(date_create($date_from),"Y-m-d");
+                        $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+
+                        $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                        
+                        if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                            $final_date_from = $date_from;
+                            $final_date_to = $date_to;
+                            $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                        }
+                    }
+                }
+                $date_create = date_create($value->date);
+                $date_format = date_format($date_create, 'F d, Y');
+
+                $date_create_file = date_create($value->DateCreated);
+                $date_format_file = date_format($date_create_file, 'F d, Y');
+
+                $attendance_date = date_format(date_create($value->date),"Y-m-d");
+
+                $timeFrom = date_format(date_create($value->time_from), 'g:i A');
+                $timeTo = date_format(date_create($value->time_out), 'g:i A');
+
+                if ($value->approve_stat != 2 && $value->approve_stat != 1) {
+                    $finalData .= "<tr id=".$value->attendance_ot_id.">";
+                    $finalData .= "<td>" .$select_emp_qry['Lastname'] . ", " .$select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename']."</td>";
+                    $finalData .= "<td>".$date_format_file."</td>";
+                    $finalData .= "<td>".$date_format."</td>";
+                    $finalData .= "<td>".$timeFrom."</td>";
+                    $finalData .= "<td>".$timeTo."</td>";
+                    $finalData .= "<td>".nl2br(htmlspecialchars($value->remarks))."</td>";
+                    $finalData .= "<td>";
+
+                        if ($emp_id != 21 && ((($emp_id == 167 || $emp_id == 168) && $value->approve_stat == 4)) || $emp_id == 71 || ($value->head_emp_id == $emp_id && $value->approve_stat == 4) || $role == 1 || $role == 2){
+
+                            $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
+                            $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button>";
+                        }
+                        else {
+                            $finalData .= "No action";
+                        }
+                    $finalData .= "</td>";
+                    $finalData .= "</tr>";
+                }
+            }
+        }
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+    //for over time list end
+
+    //for attendance list start
+    public function viewAttendanceList(){
+        $this->data['pageTitle'] = 'Attendance List';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/attendance_list');
+        $this->load->view('global/footer');
+    }
+
+    public function searchAllAttendance(){
+        $dateFrom = dateDefaultDb($this->input->post('dateFrom'));
+        $dateTo = dateDefaultDb($this->input->post('dateTo'));
+        $finalData = "";
+        $this->form_validation->set_rules('dateFrom','dateFrom','required');
+        $this->form_validation->set_rules('dateTo','dateTo','required');
+        if($this->form_validation->run() == FALSE){
+            $this->status = "error";
+
+        }
+        else{
+            $select_qry = $this->attendance_model->get_all_attendance($dateFrom, $dateTo);
+            if(!empty($select_qry)){
+                foreach ($select_qry as $value) {
+                    $date_create = date_create($value->date);
+                    $date = date_format($date_create, 'F d, Y');
+
+                    $empInformation = $this->employee_model->get_employee_by_bio_id_data($value->bio_id);
+                    if(!empty($empInformation)){
+                        $fullName = $empInformation['Lastname'] . ", " . $empInformation['Firstname'] . " " . $empInformation['Middlename'];
+                        $timeFrom = "-";
+                        if ($value->time_in != "00:00:00"){
+                            $timeFrom = date_format(date_create($value->time_in), 'g:i:s A');
+                        }
+                        $timeTo = "-";
+                        if ($value->time_out != "00:00:00") {
+                            $timeTo = date_format(date_create($value->time_out), 'g:i:s A');
+                        }
+                        $finalData .= "<tr>";
+                            $finalData .= "<td>".$fullName."</td>";
+                            $finalData .= "<td>".$date."</td>";
+                            $finalData .= "<td>".$timeFrom."</td>";
+                            $finalData .= "<td>".$timeTo."</td>";
+                        $finalData .= "</tr>";
+                    }
+                }
+            }
+
+            $this->data['status'] = "success";
+            $this->data['finalData'] = $finalData;
+        }
+        
+        echo json_encode($this->data);
+    }
+    //fora attnendace list end
 }

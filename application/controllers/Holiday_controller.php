@@ -538,4 +538,34 @@ class Holiday_controller extends CI_Controller{
         return $holiday;
     }
 
+    public function index(){
+        $this->data['pageTitle'] = 'Holiday';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('holiday/holiday');
+        $this->load->view('global/footer');
+    }
+
+    public function getHolidayList(){
+        $select_qry = $this->holiday_model->get_holiday();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $finalData .= "<tr id=".$value->holiday_id.">";
+                    $finalData .= "<td>".$value->holiday_date."</td>";
+                    $finalData .= "<td id='readmoreValue'>".$value->holiday_value."</td>";
+                    $finalData .= "<td>".$value->holiday_type."</td>";
+                    $finalData .= "<td>";
+                            $finalData .= "<button class='btn btn-sm btn-outline-success'>Edit</button>&nbsp;";
+                            $finalData .= "<button class='btn btn-sm btn-outline-danger'>Delete</button>";
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
 }

@@ -44,6 +44,7 @@ UNFINISHED TASK
     - prints in all
  - ADJUSTMENT REPORTS
     - prints in all
+
 FINISHED TASK
  - ATM ACCOUNT NO
  - MINIMUM WAGE
@@ -53,8 +54,22 @@ FINISHED TASK
  - LOANS
     - pagibig
     - sss
+ - ATTENDANCE 
+    - attendance list
+
 VIEW ATTENDANCE
  - FINISHED VIEWING
+
+NO FUNCTIONS 
+LEAVES
+    -LEAVE 
+        - NO PRINTS AND APPROVE DISAPPROVE
+    -LEAVE MAINTENANCE
+        - add new 
+        - edit
+        - inactive
+        - activate
+
 
 
  for generating salary reference ajax/append_generating_payroll

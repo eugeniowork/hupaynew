@@ -38,4 +38,11 @@ class Events_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_events_list(){
+        $this->db->select('*');
+        $this->db->from('tb_events');
+        $this->db->order_by('dateTimeCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

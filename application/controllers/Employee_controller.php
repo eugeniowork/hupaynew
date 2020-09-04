@@ -195,4 +195,29 @@ class Employee_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function getEmployeeWithoutBioId(){
+        $select_qry = $this->employee_model->get_active_employee_with_no_bio();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $fullName = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+                if ($value->Middlename == ""){
+                    $fullName = $value->Lastname . ", " . $value->Firstname;
+                }
+
+                $finalData .= "<tr id='".$value->emp_id."'>";
+                    $finalData .= "<td>".$fullName."</td>";
+                    $finalData .= "<td>";
+                        $finalData .= "<button class='btn btn-sm btn-outline-success'>Add Attendance</button>";
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] ="success";
+        echo json_encode($this->data);
+
+    }
 }

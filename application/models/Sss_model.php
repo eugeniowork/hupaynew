@@ -91,4 +91,12 @@ class Sss_model extends CI_Model{
         $insert = $this->db->insert('tb_sss_loan',$data);
         return $insert;
     }
+
+    public function get_all_sss_contribution(){
+        $this->db->select('*');
+        $this->db->from('tb_sss_contrib_table');
+        $this->db->order_by('Contribution', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

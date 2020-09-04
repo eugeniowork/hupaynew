@@ -132,14 +132,14 @@
                 <i class="caret-down-gov-table fas fa-caret-down pull-right"></i>
             </button>
             <div class="side-navbar-sub-buttons govTableDropdown">
-                <a class="btn" href="<?php base_url();?>ssscontribution">SSS</a>     
+                <a class="btn" href="<?php base_url();?>sss_contribution">SSS</a>     
                 <a class="btn" href="<?php base_url();?>bircontribution">BIR</a>
                 <a class="btn" href="<?php base_url();?>pagibigcontribution">Pag-ibig</a>
                 <a class="btn" href="<?php base_url();?>philhealthcontribution">PhilHealth</a>
             </div>
         <?php endif;?>
 
-        <?php if($employeeInformation['role_id'] != 1):?>
+        <?php if($employeeInformation['role_id'] == 1):?>
             <a class="btn" href="<?php echo base_url();?>holiday">Holiday</a>
         <?php endif;?>
         
@@ -170,7 +170,7 @@
                 <?php endif;?>
 
                 <?php if($employeeInformation['role_id'] != 4):?>
-                    <a class="btn" href="<?php base_url();?>attendancelist">Attendance List</a>
+                    <a class="btn" href="<?php base_url();?>attendance_list">Attendance List</a>
                 <?php endif;?>
                 
                 <?php if(!empty(checkIfHead())):?>
@@ -180,26 +180,26 @@
                 <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2
                     || !empty(checkIfHead())):?>
                     <?php if($employeeInformation['emp_id'] != 153):?>
-                        <a class="btn" href="<?php base_url();?>fileovertime">File Overtime</a>
+                        <a class="btn" href="<?php base_url();?>file_overtime">File Overtime</a>
                     <?php endif;?>
                     
                 <?php endif;?>
 
                 <?php if($employeeInformation['role_id'] !=4 || !empty(checkIfHead())):?>
                     <?php if($employeeInformation['emp_id'] != 153):?>
-                        <a class="btn" href="<?php base_url();?>otlistapproved">OT List Approved</a>
+                        <a class="btn" href="<?php base_url();?>ot_list_approved">OT List Approved</a>
                     <?php endif;?>
                 <?php endif;?>
 
                 <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 2 
                     || !empty(checkIfHead())):?>
                     <?php if($employeeInformation['emp_id'] != 153):?>
-                        <a class="btn" href="<?php base_url();?>attendanceupdates">Attendance Updates</a>
+                        <a class="btn" href="<?php base_url();?>attendance_updates">Attendance Updates</a>
                     <?php endif;?>
                 <?php endif;?>
 
                 <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3 ):?>
-                    <a class="btn" href="<?php base_url();?>addattendance">Add Attendance</a>
+                    <a class="btn" href="<?php base_url();?>add_attendance">Add Attendance</a>
                 <?php endif;?>
             </div>
 
@@ -215,10 +215,10 @@
                     <i class="caret-down-leaves fas fa-caret-down pull-right"></i>
                 </button>
                 <div class="side-navbar-sub-buttons leavesDropdown">
-                    <a class="btn" >Leave</a>     
+                    <a class="btn" href="<?php base_url();?>leave">Leave</a>     
                     
                     <?php if($employeeInformation['role_id'] == 1):?>
-                        <a class="btn" >Leave Maintenance</a>
+                        <a class="btn" href="<?php base_url();?>leave_maintenance">Leave Maintenance</a>
                     <?php endif;?>
                 </div>
             <?php endif;?>
