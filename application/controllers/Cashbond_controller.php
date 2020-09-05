@@ -454,7 +454,7 @@ class Cashbond_controller extends CI_Controller{
             $this->data['finalCashbondWithdrawData'] = $finalCashbondWithdrawData;
         }
         else{
-            $this->data['status'] = "error";
+            $this->data['status'] = "success";
         }
 
         echo json_encode($this->data);

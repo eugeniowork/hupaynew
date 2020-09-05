@@ -131,4 +131,14 @@ class Payroll_model extends CI_Model{
         $query = $this->db->get_where('tb_payroll_notif',array('approve_payroll_id'=>$id));
         return $query->row_array();
     }
+
+    public function get_payroll_list($id){
+        $this->db->select('*');
+        $this->db->from('tb_payroll_info');
+        $this->db->where('emp_id',$id);
+        $this->db->where('payrollStatus',1);
+        $this->db->order_by('DateCreated', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

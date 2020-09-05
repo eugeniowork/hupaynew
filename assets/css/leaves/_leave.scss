@@ -1,0 +1,8 @@
+.leaves{
+	#approveLeaveModal{
+		@include modal();
+	}
+	#disapproveLeaveModal{
+		@include modal();
+	}
+}

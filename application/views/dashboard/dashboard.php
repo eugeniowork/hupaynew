@@ -96,6 +96,8 @@
                 <?php endif;?>
             </div>
             <div class="col-lg-4">
+                
+                <strong>Running Balance: </strong>
                 <?php 
                     // $dayFrom = $workingDays['day_from'];
                     // $dayTo = $workingDays['day_to'];
@@ -104,12 +106,37 @@
                     // $allowance = $allowanceValue;
                     echo $present;
                 ?>
-                <strong>Running Balance: </strong>
-                
             </div>
         </div>
     </div>
 </div>
+<br/><br/>
+<div class="div-main-body holidays">
+    <div class="div-main-body-head">
+        List of Holidays
+    </div>
+    <div class="div-main-body-content">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="holiday-head-regular">
+                    Regular Holiday
+                </div>
+                <div class="holiday-content-regular">
+                    
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="holiday-head-special">
+                    Special non-working Holiday
+                </div>
+                <div class="holiday-content-special">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
 <div class="eventsList">
     
 </div>

@@ -47,6 +47,7 @@
     }
 }
 .loans-balance{
+
     .div-main-body-head{
         background: #1d8348 !important;
     }
@@ -81,5 +82,36 @@
                 padding:10px 10px;
             }
         }
+    }
+}
+
+.holidays{
+    .holiday-head-regular{
+        width: 100%;
+        height: 35px;
+        background:orange;
+        padding: 7px 10px;
+        color:white;
+        font-size: 13px;
+    }
+    .holiday-content-regular{
+        border:1px solid lightgray;
+        min-height: 100px;
+        height: auto;
+        padding:20px 20px;
+    }
+    .holiday-head-special{
+        width: 100%;
+        height: 35px;
+        background:red;
+        padding: 7px 10px;
+        color:white;
+        font-size: 13px;
+    }
+    .holiday-content-special{
+        border:1px solid lightgray;
+        min-height: 100px;
+        height: auto;
+        padding:20px 20px;
     }
 }

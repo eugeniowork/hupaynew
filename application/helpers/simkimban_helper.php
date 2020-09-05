@@ -117,6 +117,7 @@
         $CI =& get_instance();
         $CI->load->model('simkimban_model');
         $select_qry = $CI->simkimban_model->get_info_simkimban($emp_id);
+        $simkimban_amount = "";
         if(!empty($select_qry)){
             foreach($select_qry as $value){
                 if ($simkimban_amount == ""){

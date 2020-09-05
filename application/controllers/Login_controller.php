@@ -87,6 +87,7 @@ class Login_controller extends CI_Controller{
     public function validateLogin(){
         $username = $this->input->post('username');
         $password = $this->input->post('password');
+        $this->data['asd'] = $password;
         $companyId = $this->input->post('companyId');
         $errorMsg = "Please enter ";
         $this->form_validation->set_rules('username','username','required', array('required'=>$errorMsg.'your username.'));

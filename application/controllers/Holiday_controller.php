@@ -568,4 +568,39 @@ class Holiday_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    public function getRegularHoliday(){
+        $holiday = $this->input->post('holiday');
+        $year = date("Y");
+        $select_qry = $this->holiday_model->get_holiday_types($holiday);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $date_create = date_create($value->holiday_date .", ".$year);
+                $date_format = date_format($date_create, 'l');
+                $finalData .= "<strong>".$value->holiday_date . "</strong> - " . $value->holiday_value . " (<i>".$date_format."</i>)<br/>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    public function getSpecialHoliday(){
+        $holiday = $this->input->post('holiday');
+        $year = date("Y");
+        $select_qry = $this->holiday_model->get_holiday_types($holiday);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $date_create = date_create($value->holiday_date .", ".$year);
+                $date_format = date_format($date_create, 'l');
+                $finalData .= "<strong>".$value->holiday_date . "</strong> - " . $value->holiday_value . " (<i>".$date_format."</i>)<br/>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
 }

@@ -9,7 +9,7 @@
     a{
         font-weight: bold;
         font-family: sans-serif;
-        color:white;
+        //color:white;
         &:hover{
             text-decoration:none;
         }
@@ -50,10 +50,18 @@
         //     top: 23px !important;
         //     left: -142px;
         // }
+        .dropdown-toggle{
+            color:white;
+        }
         .dropdown-menu{
             top: 23px !important;
             left: -142px;
-            width: 350px;
+            //width: 350px;
+            #accountDropdown{
+                a{
+                    color:black !important;
+                }
+            }
         }
         .dropdown-toggle{
             &::after{

@@ -42,7 +42,7 @@ class Login_model extends CI_Model{
                 return $row;
             }
             else{
-                return $row;
+                return false;
             }
         }
         else{

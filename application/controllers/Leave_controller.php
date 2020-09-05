@@ -9,7 +9,10 @@ class Leave_controller extends CI_Controller{
         }
         $this->load->model("leave_model", 'leave_model');
         $this->load->model("employee_model", 'employee_model');
+        $this->load->model("attendance_model", 'attendance_model');
+        $this->load->model("audit_trial_model", 'audit_trial_model');
         $this->load->helper('leave_helper');
+        $this->load->helper('hupay_helper');
     }
     public function getTypesOfLeave(){
         $leaveId = $this->input->post('leaveId');
@@ -74,7 +77,7 @@ class Leave_controller extends CI_Controller{
                 $dateRange = $dateFrom . " - " . $dateTo;
                 if ($value->approveStat != 2 && $value->approveStat != 1) {
 
-                    $finalData .= "<tr id='".$value->leave_id."'>";
+                    $finalData .= "<tr class='leave-approval-".$value->leave_id."'>";
                         $finalData .= "<td>" .$fullName ."</td>";
                         $finalData .= "<td>" .$dateFile ."</td>";
                         $finalData .= "<td>" .$dateRange ."</td>";
@@ -86,8 +89,8 @@ class Leave_controller extends CI_Controller{
 
                         if ($id != 21){
 
-                                $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
-                                $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button>";
+                                $finalData .= "<button id=".$value->leave_id." class='for-approve-leave-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#approveLeaveModal'>Approve</button>";
+                                $finalData .= "<button id=".$value->leave_id." class='for-disapprove-leave-btn btn btn-sm btn-outline-danger' data-toggle='modal' data-target='#disapproveLeaveModal'>Disapprove</button>";
                             $finalData .= "</td>";
                         }
                         else {
@@ -303,4 +306,176 @@ class Leave_controller extends CI_Controller{
 
 
     //for leave maintenance end
+
+    //for approve leave start
+    public function approveLeave(){
+
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+        
+        $id = $this->input->post('id');
+        $row = $this->leave_model->get_leave_by_id($id);
+        $password = $this->input->post('password');
+        $this->form_validation->set_rules('password', 'password','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                
+                $approveStat = 0;
+                $approveDate = getDateDate();
+                if ($row['head_emp_id'] == 0 || $row['approveStat'] == 0){
+                    $approveStat = 1;
+                }
+                $updateData = array(
+                    'approveStat'=>$approveStat,
+                    'dateApprove'=>$approveDate,
+                );
+                $update = $this->leave_model->update_leave_data($id,$updateData);
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $emp_id;
+                $dateFrom = $row['dateFrom'];
+                $dateTo = $row['dateTo'];
+                $leaveType = $row['LeaveType'];
+
+                $date_create = date_create($dateFrom);
+                $final_date_from = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($dateTo);
+                $final_date_to = date_format($date_create, 'F d, Y');
+
+                
+                $notifType = "File ".$leaveType." from ".$final_date_from." to ".$final_date_to;
+                $status = "Approve";
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>'0',
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>$id,
+                    'NotifType'=>$notifType,
+                    'type'=>'Approve Leave',
+                    'Status'=>$status,
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                    
+                $module = "Leave Request List";
+                $task_description = "Approve " . $leaveType . ", " . $row['FileLeaveType'];
+                $dateTime = getDateTime();
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+            
+        }
+        
+
+        echo json_encode($this->data);
+    }
+    //for approve leave end
+
+    //for disapprove leave start
+    public function disapproveLeave(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+        
+        $id = $this->input->post('id');
+        $row = $this->leave_model->get_leave_by_id($id);
+        $password = $this->input->post('password');
+        $this->form_validation->set_rules('password', 'password','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                $disapproveDate = getDateDate();
+                $updateData = array(
+                    'approveStat'=>2,
+                    'dateApprove'=>$disapproveDate,
+                );
+                $update = $this->leave_model->update_leave_data($id,$updateData);
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $emp_id;
+                $dateFrom = $row['dateFrom'];
+                $dateTo = $row['dateTo'];
+                $leaveType = $row['LeaveType'];
+
+                $date_create = date_create($dateFrom);
+                $final_date_from = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($dateTo);
+                $final_date_to = date_format($date_create, 'F d, Y');
+
+                
+                $notifType = "File ".$leaveType." from ".$final_date_from." to ".$final_date_to;
+                $status = "Disapprove";
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>'0',
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>$id,
+                    'NotifType'=>$notifType,
+                    'type'=>'Disapprove Leave',
+                    'Status'=>$status,
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                    
+                $module = "Leave Request List";
+                $task_description = "Disapprove " . $leaveType . ", " . $row['FileLeaveType'];
+                $dateTime = getDateTime();
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+            
+        }
+        
+
+        echo json_encode($this->data);
+    }
+    //for disapprove leave end
 }

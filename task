@@ -31,12 +31,13 @@ BUGS
     - EVENTS WITH TWO IMAGES
 UNFINISHED TASK
  - DASHBOARD
-    - HOLIDAYS
+    - HOLIDAYS (done)
  - WORKING HOURS AND DAYS
     - modify working hours
  - PAYROLL
     - create salary bugs in condition
     - view payroll info bugs in update and no print (ajax/ append search employee)
+    - print in my payslip
  - PAYROLL REPORTS-
     - print in adjusment report
     -print in payroll reports
@@ -44,18 +45,26 @@ UNFINISHED TASK
     - prints in all
  - ADJUSTMENT REPORTS
     - prints in all
+- LEAVES
+    -LEAVE
+        - all prints
 
 FINISHED TASK
+ - AUDIT TRAIL
  - ATM ACCOUNT NO
  - MINIMUM WAGE
  - EMPLOYEE SALARY INFORMATION
  - YEAR TOTAL DEDUCTION
  - SIMKIMBAN
+ - SALARY INFORMATION
  - LOANS
     - pagibig
     - sss
+    - salary loans (doubt)
+    - file loans (doubt)
  - ATTENDANCE 
     - attendance list
+
 
 VIEW ATTENDANCE
  - FINISHED VIEWING

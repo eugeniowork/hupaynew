@@ -170,4 +170,22 @@ class Leave_model extends CI_Model{
         $insert = $this->db->insert('tb_emp_leave',$data);
         return $insert;
     }
+
+    public function get_leave_by_id($id){
+        $query = $this->db->get_where('tb_leave', array('leave_id ' =>$id));
+        return $query->row_array();
+    }
+
+    public function update_leave_data($id,$data){
+        $this->db->trans_start();
+        $this->db->where('leave_id',$id);
+        $this->db->update('tb_leave',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

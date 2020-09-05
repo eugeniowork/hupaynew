@@ -20,6 +20,11 @@ class Holiday_model extends CI_Model{
         $query = $this->db->get_where('tb_holiday', array('holiday_date'=>$holiday));
         return $query->result();
     }
+
+    public function get_holiday_types($holiday){
+        $query = $this->db->get_where('tb_holiday', array('holiday_type'=>$holiday));
+        return $query->result();
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();

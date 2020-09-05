@@ -17,7 +17,7 @@ class Payroll_controller extends CI_Controller{
         $this->load->model('bir_model','bir_model');
         $this->load->model('allowance_model','allowance_model');
         $this->load->model('cashbond_model','cashbond_model');
-        // $this->load->model("attendance_model", "attendance_model");
+        $this->load->model("cut_off_model", "cut_off_model");
         $this->load->model("payroll_model", "payroll_model");
         $this->load->model('deduction_model','deduction_model');
         $this->load->model('salary_model','salary_model');
@@ -931,4 +931,63 @@ class Payroll_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+
+
+
+    //for my payslip start
+
+    public function viewMyPaySlip(){
+        $this->data['pageTitle'] = 'My Payslip List';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('payroll/my_payslip');
+        $this->load->view('global/footer');
+    }
+
+    public function getPayslipList(){
+        $emp_id = $this->session->userdata('user');
+
+        $select_qry = $this->payroll_model->get_payroll_list($emp_id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $year = date_format(date_create($value->datePayroll),"Y");
+
+                $payroll_date_payroll = date_format(date_create($value->datePayroll),"m-d");
+
+                $select_qry_cutoff = $this->cut_off_model->get_cut_off();
+                if(!empty($select_qry_cutoff)){
+                    foreach ($select_qry_cutoff as $key => $valueCutOff) {
+                        $date_create = date_create($valueCutOff->datePayroll . ", " . $year);
+                        $date_format = date_format($date_create, 'm-d');
+
+                        //echo $row->datePayroll . "<br/>";
+                        if ($payroll_date_payroll == $date_format){
+
+
+
+                            if ($payroll_date_payroll == "01-15"){
+                                $cut_off_period = $valueCutOff->dateFrom . ", " . ($year - 1) . " - " . $valueCutOff->dateTo . ", " . $year;
+                            }
+                            else {
+                                $cut_off_period = $valueCutOff->dateFrom . ", " . $year . " - " . $valueCutOff->dateTo . ", " . $year;
+                            }
+                        }
+                    }
+                }
+                $finalData .= "<tr id='".$value->payroll_id."'>";
+                    $finalData .= "<td>".$cut_off_period."</td>";
+                    $finalData .= "<td>";
+                        $finalData .= "<button class='btn btn-sm btn-outline-success'>Print Payslip</button>";
+                    $finalData .= "</td>";
+                $finalData .= "</tr>";
+            }
+        };
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    //for my payslip end
 }

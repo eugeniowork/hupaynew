@@ -90,4 +90,58 @@ $(document).ready(function(){
         $('.div-sss-info-balance').slideToggle('fast');
         
     })
+
+
+    //for get holidays start
+    get_regular_holidays();
+    function get_regular_holidays(){
+        $('.holiday-content-regular').empty();
+        $.ajax({
+            url:base_url+'holiday_controller/getRegularHoliday',
+            type:'post',
+            dataType:'json',
+            data:{
+                holiday:'Regular Holiday',
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    $('.holiday-content-regular').append(response.finalData);
+                }
+                else{
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                }
+            },
+            error:function(response){
+                toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+            }
+        })
+    }
+    get_special_holidays();
+    function get_special_holidays(){
+        $('.holiday-content-special').empty();
+        $.ajax({
+            url:base_url+'holiday_controller/getSpecialHoliday',
+            type:'post',
+            dataType:'json',
+            data:{
+                holiday:'Special non-working day',
+            },
+            success:function(response){
+                if(response.status == "success"){
+                    $('.holiday-content-special').append(response.finalData);
+                }
+                else{
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                }
+            },
+            error:function(response){
+                toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+            }
+        })
+    }
+    //for get holidays end
 })

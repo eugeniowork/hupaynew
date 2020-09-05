@@ -72,6 +72,7 @@ $(document).ready(function(){
     var empName = "";
     $('.search-payroll-info-btn').on('click',function(){
         $('.loading-generating').show();
+        $('.generated-payroll-info-body').empty()
         $.ajax({
             url:base_url+'payroll_controller/generatePayrollPerEmployee',
             type:'post',

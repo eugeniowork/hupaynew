@@ -67,8 +67,8 @@
             </a>
 
             <div class="dropdown-menu accountDropdown" aria-labelledby="accountDropdown">
-                <button class="dropdown-item ">Profiles</button>
-                <button class="dropdown-item logout">Logout</button>
+                <a href="#" class="dropdown-item ">Profiles</a>
+                <a href="<?php echo base_url();?>logout" class="dropdown-item logout">Logout</a>
             </div>
         </div>
     </div>
@@ -257,7 +257,7 @@
             <div class="side-navbar-sub-buttons payrollDropdown">
                 <a class="btn" href="<?php echo base_url();?>generatepayroll"> Create Salary</a>
                 <a class="btn" href="<?php echo base_url();?>payrollinformation"> View Payroll Info</a>
-                <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
+                <a class="btn" href="<?php echo base_url();?>my_payslip">My Payslip</a>
             </div>
         <?php endif;?>
 

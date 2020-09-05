@@ -70,7 +70,6 @@
   .top-navbar a {
     font-weight: bold;
     font-family: sans-serif;
-    color: white;
     letter-spacing: 4px; }
     .top-navbar a:hover {
       text-decoration: none; }
@@ -95,10 +94,13 @@
         position: absolute; }
       .top-navbar .buttons button:hover {
         text-decoration: none; }
+    .top-navbar .buttons .dropdown-toggle {
+      color: white; }
     .top-navbar .buttons .dropdown-menu {
       top: 23px !important;
-      left: -142px;
-      width: 350px; }
+      left: -142px; }
+      .top-navbar .buttons .dropdown-menu #accountDropdown a {
+        color: black !important; }
     .top-navbar .buttons .dropdown-toggle::after {
       display: none; }
     .top-navbar .buttons .name {
@@ -236,6 +238,31 @@
     border-top-right-radius: 10px; }
   .loans-balance .div-main-body-content .div-sss-info-balance .div-sss-info-balance-content {
     padding: 10px 10px; }
+
+.holidays .holiday-head-regular {
+  width: 100%;
+  height: 35px;
+  background: orange;
+  padding: 7px 10px;
+  color: white;
+  font-size: 13px; }
+.holidays .holiday-content-regular {
+  border: 1px solid lightgray;
+  min-height: 100px;
+  height: auto;
+  padding: 20px 20px; }
+.holidays .holiday-head-special {
+  width: 100%;
+  height: 35px;
+  background: red;
+  padding: 7px 10px;
+  color: white;
+  font-size: 13px; }
+.holidays .holiday-content-special {
+  border: 1px solid lightgray;
+  min-height: 100px;
+  height: auto;
+  padding: 20px 20px; }
 
 .view-attendance {
   padding-bottom: 50px !important; }
@@ -1015,6 +1042,31 @@
   .registration .user-account-information .user-account-information-body img {
     width: 30px;
     height: 25px; }
+
+.leaves #approveLeaveModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .leaves #approveLeaveModal .modal-header .modal-title {
+    font-size: 15px; }
+.leaves #approveLeaveModal .modal-body i {
+  color: #158cba; }
+.leaves #approveLeaveModal .modal-body textarea {
+  resize: none; }
+.leaves #approveLeaveModal .modal-footer {
+  padding: 0px 5px; }
+.leaves #disapproveLeaveModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .leaves #disapproveLeaveModal .modal-header .modal-title {
+    font-size: 15px; }
+.leaves #disapproveLeaveModal .modal-body i {
+  color: #158cba; }
+.leaves #disapproveLeaveModal .modal-body textarea {
+  resize: none; }
+.leaves #disapproveLeaveModal .modal-footer {
+  padding: 0px 5px; }
 
 body {
   background: #ececec;

@@ -3,7 +3,7 @@
 
 <div class="div-main-body" >
     <div>
-        To view <b>List of Attendance</b> click <a href="#" target="_blank">here</a>, To view <b>List of Approve OT</b> of the current cut off click <a href="#" target="_blank">here</a>
+        To view <b>List of Attendance</b> click <a href="<?php echo base_url();?>attendance_list" target="_blank">here</a>, To view <b>List of Approve OT</b> of the current cut off click <a href="<?php echo base_url();?>ot_list_approved" target="_blank">here</a>
     </div>
     <div class="div-main-body-head">
         <strong>
