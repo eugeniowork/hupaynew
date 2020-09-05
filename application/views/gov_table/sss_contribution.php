@@ -1,9 +1,13 @@
+<?php $employeeInformation = employeeInformation();?>
 <div class="div-main-body" >
     <div class="div-main-body-head">
-        Holiday List
+        SSS Contribution Table
     </div>
 	<div class="div-main-body-content ">
-        <button class="btn btn-outline-success pull-right">SSS Contribution Table</button><br/><br/>
+        <?php if ($employeeInformation['role_id'] == 1): ?>
+            <button class="btn btn-outline-success pull-right">Add New</button><br/><br/>
+        <?php endif ?>
+        
 		<table class="table table-striped table-bordered" id="sssContributionList">
             <thead>
                 <tr>

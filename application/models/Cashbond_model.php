@@ -154,4 +154,9 @@ class Cashbond_model extends CI_Model{
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();
     // }
+
+    public function insert_cashbond($data){
+        $insert = $this->db->insert('tb_cashbond',$data);
+        return $insert;
+    }
 }

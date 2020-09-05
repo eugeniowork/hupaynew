@@ -320,5 +320,46 @@ class Working_days_controller extends CI_Controller{
         }
         echo json_encode($this->data);
     }
+
+    public function getWorkingDaysForDropDown(){
+        $select_qry = $this->working_days_model->get_all_working_days();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $day_from = $value->day_from;
+                $day_to = $value->day_to;
+
+                $day_of_the_week = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+                $day_of_the_week_value = [0,1,2,3,4,5,6];
+
+                $count = count($day_of_the_week);
+
+                $counter = 0;
+
+                $day_from_value = "";
+                $day_to_value = "";
+                do {
+
+                    if ($day_of_the_week_value[$counter] == $day_from){
+                        $day_from_value = $day_of_the_week[$counter];
+                    }
+
+                    if ($day_of_the_week_value[$counter] == $day_to){
+                        $day_to_value = $day_of_the_week[$counter];
+                    }
+
+
+                    $counter++;
+                }while($count > $counter);
+
+                $finalData .= "<option value='".$value->working_days_id."'>".$day_from_value ." - ". $day_to_value  ."</option>";
+
+            }
+        }
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
 }
 

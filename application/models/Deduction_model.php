@@ -49,6 +49,12 @@ class Deduction_model extends CI_Model{
             return "error";
         }
     }
+
+    public function insert_year_total_deduction($data){
+        $insert = $this->db->insert('tb_year_total_deduction',$data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
     // public function get_info_simkimban($id){
     //     $query = $this->db->get_where('tb_simkimban',array('emp_id'=>$id, 'status' => 1));
     //     return $query->result();

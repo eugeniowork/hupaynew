@@ -4,5 +4,10 @@
             $query = $this->db->get_where('tb_bir_status',array('Dependent'=>$dependentCount));
             return $query->row_array();
         }
+
+        public function get_all_bir_contribution(){
+        	$query = $this->db->get('tb_bir_contrib_table');
+            return $query->result();
+        }
     }
 ?>

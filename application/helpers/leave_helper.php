@@ -374,4 +374,41 @@
 
         return $exist_count;
     }
+
+    function insertEmpDefaultLeave($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('leave_model');
+
+        $leave_array = "";
+        $leave_count_array = "";
+
+        $select_query = $CI->leave_model->get_type_of_leave_status_oene();
+        if(!empty($select_query)){
+            foreach ($select_query as $value) {
+                if ($leave_array == ""){
+                    $leave_array = $value->lt_id; // 1
+                }
+
+                else {
+                    $leave_array .= ",". $value->lt_id;
+                }
+
+                if ($leave_count_array == ""){
+                    $leave_count_array = "0";
+                }
+
+                else {
+                    $leave_count_array .= ",". "0";
+                }
+            }
+        }
+        $insertData = array(
+            'emp_id'=>$emp_id,
+            'leave_array'=>$leave_array,
+            'leave_count_array'=>$leave_count_array
+        );
+        $insert = $CI->leave_model->insert_employee_leave($insertData);
+
+        return 'success';
+    }
 ?>

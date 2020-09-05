@@ -165,4 +165,9 @@ class Leave_model extends CI_Model{
         $query = $this->db->get('tb_emp_leave');
         return $query->result();
     }
+
+    public function insert_employee_leave($data){
+        $insert = $this->db->insert('tb_emp_leave',$data);
+        return $insert;
+    }
 }

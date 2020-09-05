@@ -96,9 +96,9 @@
             </button>
             <div class="side-navbar-sub-buttons employeeDropdown">
                 <?php if($employeeInformation['role_id'] != 21):?>
-                    <button class="btn" >Registration</button>  
-                <?php endif;?>   
-                <button class="btn" >Employee List</button>   
+                    <a class="btn" href="<?php echo base_url();?>employee_registration">Registration</a>  
+                <?php endif;?>
+                <a class="btn" href="<?php echo base_url();?>employee_list">Employee List</a>
             </div>
         <?php endif;?>
         <button class="btn messaging-btn">Messaging
@@ -115,14 +115,18 @@
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 4 || $employeeInformation['role_id'] ==1):?>
-            <a class="btn" href="<?php echo base_url();?>memurandum">Memurandum</a>
+            <a class="btn" href="<?php echo base_url();?>memorandum">Memorandum</a>
         <?php endif;?>
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] ==3):?>
             <a class="btn" href="<?php echo base_url();?>minimumwage">Minimum Wage</a>
         <?php endif;?>
+        <?php if ($employeeInformation['role_id'] == 1): ?>
+            <a class="btn" href="<?php echo base_url();?>biometrics">Biometrics Registration</a>
+        <?php endif ?>
 
         <?php if($employeeInformation['role_id'] != 4):?>
+            <a class="btn" href="<?php echo base_url();?>department">Department</a>
             <a class="btn" href="<?php echo base_url();?>position">Position</a>
         <?php endif;?>
         
@@ -133,9 +137,9 @@
             </button>
             <div class="side-navbar-sub-buttons govTableDropdown">
                 <a class="btn" href="<?php base_url();?>sss_contribution">SSS</a>     
-                <a class="btn" href="<?php base_url();?>bircontribution">BIR</a>
-                <a class="btn" href="<?php base_url();?>pagibigcontribution">Pag-ibig</a>
-                <a class="btn" href="<?php base_url();?>philhealthcontribution">PhilHealth</a>
+                <a class="btn" href="<?php base_url();?>bir_contribution">BIR</a>
+                <a class="btn" href="<?php base_url();?>pagibig_contribution">Pag-ibig</a>
+                <a class="btn" href="<?php base_url();?>philhealth_contribution">PhilHealth</a>
             </div>
         <?php endif;?>
 

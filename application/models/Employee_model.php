@@ -208,4 +208,41 @@ class Employee_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_position_of_employee($id){
+        $query = $this->db->get_where('tb_employee_info',array('position_id'=>$id));
+        return $query->row_array();
+    }
+
+    public function get_all_employee_for_bio(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->order_by('Firstname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_all_list_of_employee(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->order_by('Lastname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function insert_employee($data){
+        $insert = $this->db->insert('tb_employee_info',$data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+
+    public function insert_employee_education($data){
+        $insert = $this->db->insert('tb_emp_education_attain',$data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+    public function insert_employee_work_exp($data){
+        $insert = $this->db->insert('tb_emp_work_experience',$data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+
 }

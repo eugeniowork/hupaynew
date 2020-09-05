@@ -1,0 +1,98 @@
+@mixin addEmployeeHead(){
+	width: 100%;
+	height: 50px;
+	background: pink;
+	padding:15px 20px;
+	span{
+		font-weight: bold;
+	}
+}
+@mixin addEmployeeBody(){
+	width: 100%;
+	height: auto;
+	min-height: 50px;
+	border-top: none !important;
+	border:1px solid gray;
+	padding:20px 50px;
+}
+.registration{
+	textarea{
+		resize: none;
+	}
+	.basic-information{
+		.basic-information-head{
+			@include addEmployeeHead();
+		}
+		.basic-information-body{
+			@include addEmployeeBody();
+		}
+	}
+	.pet-information{
+		.pet-information-head{
+			@include addEmployeeHead();
+		}
+		.pet-information-body{
+			@include addEmployeeBody();
+
+			// .pet-type-2{
+			// 	display: none;
+			// }
+		}
+	}
+	.company-information{
+		.company-information-head{
+			@include addEmployeeHead();
+		}
+		.company-information-body{
+			@include addEmployeeBody();
+		}
+	}
+	.government-information{
+		.government-information-head{
+			@include addEmployeeHead();
+		}
+		.government-information-body{
+			@include addEmployeeBody();
+			img{
+				width: 30px;
+				height: 25px;
+			}
+		}
+	}
+	.school-information{
+		.school-information-head{
+			@include addEmployeeHead();
+		}
+		.school-information-body{
+			@include addEmployeeBody();
+			img{
+				width: 30px;
+				height: 25px;
+			}
+		}
+	}
+	.employment-information{
+		.employment-information-head{
+			@include addEmployeeHead();
+		}
+		.employment-information-body{
+			@include addEmployeeBody();
+			img{
+				width: 30px;
+				height: 25px;
+			}
+		}
+	}
+	.user-account-information{
+		.user-account-information-head{
+			@include addEmployeeHead();
+		}
+		.user-account-information-body{
+			@include addEmployeeBody();
+			img{
+				width: 30px;
+				height: 25px;
+			}
+		}
+	}
+}
