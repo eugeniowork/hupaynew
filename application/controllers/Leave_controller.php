@@ -478,4 +478,73 @@ class Leave_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for disapprove leave end
+
+
+    // for get add leave maintenance start
+    public function getValidationList(){
+        $select_qry = $this->leave_model->get_all_leave_validation();
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $finalData .= "<option title='".$value->information."' value='".$value->lv_id."'>".$value->name."</option>";
+            }
+        }
+
+        $this->data['finalData'] = $finalData;
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+
+    }
+    public function addNewLeaveMaintenance(){
+        $leaveName = $this->input->post('leaveName');
+        $leaveValidation= $this->input->post('leaveValidation');
+        $noOfDays= $this->input->post('noOfDays');
+        $leaveCount= $this->input->post('leaveCount');
+        $isConvertable= $this->input->post('isConvertable');
+        //$errorMsg = "";
+        //$errorCount = 0;
+        $this->form_validation->set_rules('leaveName','leaveName','required|is_unique[tb_leave_type.name]',array(
+            'required'=>'Please enter a name.',
+            'is_unique'=>'Leave Type <strong>'.$leaveName.'</strong> already exist.'
+        ));
+        $this->form_validation->set_rules('leaveValidation','leaveValidation','required',array(
+            'required'=>'Please select leave validation.',
+        ));
+        $this->form_validation->set_rules('leaveCount','leaveCount','required',array(
+            'required'=>'Please enter a no of leave count.',
+        ));
+        if($leaveValidation == 1 || $leaveValidation == 2){
+            $this->form_validation->set_rules('noOfDays','noOfDays','required',array(
+                'required'=>'Please enter a no of days to be filed.',
+            ));
+        }
+
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = validation_errors();
+        }
+        else{
+            $checkLeave = $this->leave_model->get_leave_lidation_data($leaveValidation);
+            if(empty($checkLeave)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "There was a problem on the selected validation type.";
+            }
+            else{
+                $insertData = array(
+                    'name'=>$leaveName,
+                    'lv_id'=>$leaveValidation,
+                    'no_days_to_file'=>$noOfDays,
+                    'count'=>$leaveCount,
+                    'is_convertable_to_cash'=>$isConvertable,
+
+                );
+                $insert = $this->leave_model->insert_leave_type($insertData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "Leave Type <strong>".$leaveName."</strong> was successfully added.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+    //for get add leave maintenance end
 }

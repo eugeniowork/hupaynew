@@ -188,4 +188,14 @@ class Leave_model extends CI_Model{
             return "error";
         }
     }
+
+    public function get_all_leave_validation(){
+        $query = $this->db->get('tb_leave_validation');
+        return $query->result();
+    }
+
+    public function insert_leave_type($data){
+        $insert = $this->db->insert('tb_leave_type',$data);
+        return $insert;
+    }
 }

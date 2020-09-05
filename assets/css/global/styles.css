@@ -1068,6 +1068,19 @@
 .leaves #disapproveLeaveModal .modal-footer {
   padding: 0px 5px; }
 
+.leave-maintenance #addLeaveMaintenanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .leave-maintenance #addLeaveMaintenanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.leave-maintenance #addLeaveMaintenanceModal .modal-body i {
+  color: #158cba; }
+.leave-maintenance #addLeaveMaintenanceModal .modal-body textarea {
+  resize: none; }
+.leave-maintenance #addLeaveMaintenanceModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

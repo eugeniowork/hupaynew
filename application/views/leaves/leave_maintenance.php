@@ -1,9 +1,9 @@
-<div class="div-main-body" >
+<div class="div-main-body leave-maintenance" >
     <div class="div-main-body-head">
         Leave Maintenance
     </div>
 	<div class="div-main-body-content leaves">
-        <button class="btn btn-outline-success pull-right protip" data-pt-title='Tooltip Title' data-pt-position='top' color-blue'>Add New</button><br/><br/>
+        <button class="btn btn-outline-success pull-right protip" data-toggle="modal" data-target="#addLeaveMaintenanceModal">Add New</button><br/><br/>
 		<table class="table table-striped" id="leaveMaintenance">
             <thead>
                 <tr>
@@ -17,6 +17,53 @@
             
             </tbody>
         </table>
+        <div class="modal fade" id="addLeaveMaintenanceModal" tabindex="-1" role="dialog" aria-labelledby="addLeaveMaintenanceModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addLeaveMaintenanceModalLongTitle">Add Leave Type</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <span >Name</span>
+                                <input type="text" class="form-control leave-name" placeholder="Enter Name">
+                            </div>
+                            <div class="col-lg-6">
+                                <span >Validation</span>
+                                <select class="form-control leave-validation">
+                                    <option selected disabled>Select Validation</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                <span >No. of Days To Be Filed</span>
+                                <input type="text" class="number-only form-control no-of-days-to-file" placeholder="Enter Days" disabled>
+                            </div>
+                            <div class="col-lg-6">
+                                <span >Leave Count</span>
+                                <input type="text" class="number-only form-control leave-count" placeholder="Enter Count">
+                            </div>
+                            <div class="col-lg-6">
+                                <br/>
+                                <input type="checkbox" class="is-convertable-to-cash" id="isConvertable">
+                                <label for="isConvertable">Is Convertable To Cash</label>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div class="add-leave-maintenance-warning">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary submit-new-leave-maintenance-btn">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 <script src="<?php echo base_url();?>assets/js/leaves/leave_maintenance.js"></script>
