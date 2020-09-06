@@ -11,6 +11,7 @@ class Attendance_controller extends CI_Controller{
         $this->load->model("attendance_model", "attendance_model");
         $this->load->model("payroll_model", "payroll_model");
         $this->load->model("attendance_model", "attendance_model");
+        $this->load->model("audit_trial_model", "audit_trial_model");
         $this->load->model('holiday_model','holiday_model');
         $this->load->model('leave_model','leave_model');
         $this->load->model('working_hours_model','working_hours_model');
@@ -1372,13 +1373,13 @@ class Attendance_controller extends CI_Controller{
                         $finalData .= "<td>";
                             
                             if ($emp_id != 21 && ((($emp_id == 167 || $emp_id == 168 || $emp_id == 174) && $value->notif_status == 4) || $emp_id == 71 || ($value->head_emp_id == $emp_id && $value->notif_status == 4)) || $role == 1){
-                                $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
-                                $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button";
+                                $finalData .= "<button id=".$value->attendance_notif_id." class='approve-single-attendance btn btn-sm btn-outline-success' type='button' data-toggle='modal' data-target='#singleApproveAttendanceModal'>Approve</button>";
+                                $finalData .= "<button id=".$value->attendance_notif_id." class='disapprove-single-attendance btn btn-sm btn-outline-danger' type='button' data-toggle='modal' data-target='#singleDisapproveAttendanceModal'>Disapprove</button";
                             }
                             else {
                                 if ($row->emp_id == 71){
-                                   $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
-                                    $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button";
+                                   $finalData .= "<button id=".$value->attendance_notif_id." class='approve-single-attendance btn btn-sm btn-outline-success' type='button' data-toggle='modal' data-target='#singleApproveAttendanceModal'>Approve</button>";
+                                    $finalData .= "<button id=".$value->attendance_notif_id." class='disapprove-single-attendance btn btn-sm btn-outline-danger' type='button' data-toggle='modal' data-target='#singleDisapproveAttendanceModal'>Disapprove</button";
                                 }
                                 else {
                                     $finalData .= "No action";
@@ -1881,4 +1882,457 @@ class Attendance_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for add attendance to cut off end
+
+    //for approve attendance updates start
+    public function approveDisapproveAttendanceUpdatesMultiple(){
+        $id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($id);
+        $role = $employeeInfo['role_id'];
+        $count = attendanceNotifToTableCount();
+        $counter = 1;
+        do{
+            if (isset($_POST["attendance_request".$counter])){
+                $attendance_notif_id = $_POST["attendance_request".$counter];
+                $row = $this->attendance_model->get_attendance_notif_request($attendance_notif_id);
+                $notif_status = 0;
+                if ($row['head_emp_id'] == 0 || $row['notif_status'] == 0){
+                    $notif_status = 1;
+                }
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+                $updateRequestData = array(
+                    'notif_status'=>$notif_status,
+                    'DateApprove'=>$current_date_time,
+                );
+                $updateRequest = $this->attendance_model->attendance_notif_update($updateRequestData,$attendance_notif_id);
+                $emp_id = $row['emp_id'];
+                
+                $time_in = $row['time_in'];
+                $time_out = $row['time_out'];
+                $attendance_date = $row['date']; 
+
+
+                $attendance_id = $row['attendance_id'];
+                $row_emp = $this->employee_model->employee_information($emp_id);
+                $bio_id = $row_emp['bio_id'];
+                $checkAttendance = $this->attendance_model->get_attendance_by_id($attendance_id);
+                if(!empty($checkAttendance)){
+                    $updateData = array(
+                        'time_in'=>$time_in,
+                        'time_out'=>$time_out,
+
+                    );
+                    $update = $this->attendance_model->update_attendance($attendance_id,$updateData);
+                }
+                else{
+                    $insertData = array(
+                        'bio_id'=>$bio_id,
+                        'date'=>$attendance_date,
+                        'time_in'=>$time_in,
+                        'time_out'=>$time_out,
+                        'DateCreated'=>getDateDate()
+                    );
+                    $insert = $this->attendance_model->insert_attendance($insertData);
+                }
+                
+                $final_attendance_date = dateFormat($attendance_date);
+
+                $date_create = date_create($time_in);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $this->session->userdata('user');
+                $notifType = "Update Attendance on ".$final_attendance_date." with time in ".$final_time_in." and time out ".$final_time_out."";
+                //$status = $approve;
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>$attendance_notif_id,
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>0,
+                    'NotifType'=>$notifType,
+                    'type'=>'Approve Attendance',
+                    'Status'=>"Approve",
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                $module = "Attendance Updates List";
+                $task_description = "Approve Attendance Updates";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+
+                
+            }
+
+            $counter++;
+        }while($count >= $counter);
+
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+
+    public function validatePassForApproveDisapproveOfAttendance(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+        $password = $this->input->post('password');
+        $approve_payroll_id = $this->input->post('id');
+        $this->form_validation->set_rules('password', 'password','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function disapproveAttendanceUpdatesMultiple(){
+        $id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($id);
+        $role = $employeeInfo['role_id'];
+        $count = attendanceNotifToTableCount();
+        $counter = 1;
+        do{
+            if (isset($_POST["attendance_request".$counter])){
+                $attendance_notif_id = $_POST["attendance_request".$counter];
+                $row = $this->attendance_model->get_attendance_notif_request($attendance_notif_id);
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+                $updateRequestData = array(
+                    'notif_status'=>2,
+                    'DateApprove'=>$current_date_time,
+                );
+                $updateRequest = $this->attendance_model->attendance_notif_update($updateRequestData,$attendance_notif_id);
+                $emp_id = $row['emp_id'];
+                
+                $time_in = $row['time_in'];
+                $time_out = $row['time_out'];
+                $attendance_date = $row['date'];
+
+                $final_attendance_date = dateFormat($attendance_date);
+
+                $date_create = date_create($time_in);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $this->session->userdata('user');
+                $notifType = "Update Attendance on ".$final_attendance_date." with time in ".$final_time_in." and time out ".$final_time_out."";
+                //$status = $approve;
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>$attendance_notif_id,
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>0,
+                    'NotifType'=>$notifType,
+                    'type'=>'Disapprove Attendance',
+                    'Status'=>"Disapprove",
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                $module = "Attendance Updates List";
+                $task_description = "Disapprove Attendance Updates";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+
+                
+            }
+
+            $counter++;
+        }while($count >= $counter);
+
+        $this->data['status'] = "success";
+        echo json_encode($this->data);
+    }
+    //for approve attendance updates end
+
+    //for approve single attendance start 
+    public function approveSingleAttendance(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+
+
+        $password = $this->input->post('password');
+        $id = $this->input->post('id');
+
+        $this->form_validation->set_rules('password', 'password','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                $row = $this->attendance_model->get_attendance_notif_request($id);
+                $notif_status = 0;
+                if ($row['head_emp_id'] == 0 || $row['notif_status'] == 0){
+                    $notif_status = 1;
+                }
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+                $updateRequestData = array(
+                    'notif_status'=>$notif_status,
+                    'DateApprove'=>$current_date_time,
+                );
+                $updateRequest = $this->attendance_model->attendance_notif_update($updateRequestData,$id);
+                if ($notif_status == 1) {
+                    $emp_id = $row['emp_id'];
+            
+                    $time_in = $row['time_in'];
+                    $time_out = $row['time_out'];
+                    $attendance_date = $row['date']; 
+
+
+                    $attendance_id = $row['attendance_id'];
+                    $row_emp =  $this->employee_model->employee_information($emp_id);
+                    $bio_id = $row_emp['bio_id'];
+                    $row_wh = $this->working_hours_model->get_info_working_hours($row_emp['working_hours_id']);
+
+                    $emp_time_in = $row_wh['timeFrom'];
+                    $emp_time_out = $row_wh['timeTo'];
+
+                    $checkAttendance = $this->attendance_model->get_attendance_by_id($attendance_id);
+                    if(!empty($checkAttendance)){
+                        $db_time_in = $checkAttendance['time_in'];
+                        $db_time_out = $checkAttendance['time_out'];
+
+                        if ($db_time_in >= $emp_time_out){
+                            $time_out = $db_time_in;
+                        }
+
+                        if ($db_time_out >= $emp_time_out){
+                            $time_out = $db_time_out;
+                        }
+                        $updateData = array(
+                            'time_in'=>$time_in,
+                            'time_out'=>$time_out,
+
+                        );
+                        $update = $this->attendance_model->update_attendance($attendance_id,$updateData);
+                    }
+                    else{
+                        $checkAttendanceWithBio = $this->attendance_model->get_leave_date($bio_id, $attendance_date);
+                        if(!empty($checkAttendanceWithBio)){
+                            $db_time_in = $checkAttendanceWithBio['time_in'];
+                            $db_time_out = $checkAttendanceWithBio['time_out'];
+
+                            if ($db_time_in >= $emp_time_out){
+                                $time_out = $db_time_in;
+                            }
+
+                            if ($db_time_out >= $emp_time_out){
+                                $time_out = $db_time_out;
+                            }
+                            $updateData = array(
+                                'time_in'=>$time_in,
+                                'time_out'=>$time_out,
+
+                            );
+                            $update = $this->attendance_model->update_attendance_using_bio_and_date($bio_id,$attendance_date, $updateData);
+                        }
+                        else{
+                            $insertData = array(
+                                'bio_id'=>$bio_id,
+                                'date'=>$attendance_date,
+                                'time_in'=>$time_in,
+                                'time_out'=>$time_out,
+                                'DateCreated'=>getDateDate(),
+                            );
+                            $insert = $this->attendance_model->insert_attendance($insertData);
+                        }
+                    }
+
+                }
+
+                $final_attendance_date = dateFormat($attendance_date);
+
+                $date_create = date_create($time_in);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $this->session->userdata('user');
+                $notifType = "Update Attendance on ".$final_attendance_date." with time in ".$final_time_in." and time out ".$final_time_out."";
+                //$status = $approve;
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>$id,
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>0,
+                    'NotifType'=>$notifType,
+                    'type'=>'Approve Attendance',
+                    'Status'=>"Approve",
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                $module = "Attendance Updates List";
+                $task_description = "Approve Attendance Updates";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+    //for approve single attendance end
+
+    //for disapprove single attendance start
+    public function disapproveSingleAttendance(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+
+
+        $password = $this->input->post('password');
+        $id = $this->input->post('id');
+
+        $this->form_validation->set_rules('password', 'password','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                $row = $this->attendance_model->get_attendance_notif_request($id);
+                $this->data['asd'] = $row;
+                date_default_timezone_set("Asia/Manila");
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+                $updateRequestData = array(
+                    'notif_status'=>2,
+                    'DateApprove'=>$current_date_time,
+                );
+                $updateRequest = $this->attendance_model->attendance_notif_update($updateRequestData,$id);
+
+                //$emp_id = $row['emp_id'];
+                
+                $time_in = $row['time_in'];
+                $time_out = $row['time_out'];
+                $attendance_date = $row['date'];
+
+                $final_attendance_date = dateFormat($attendance_date);
+
+                $date_create = date_create($time_in);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $this->session->userdata('user');
+                $notifType = "Update Attendance on ".$final_attendance_date." with time in ".$final_time_in." and time out ".$final_time_out."";
+                //$status = $approve;
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>$id,
+                    'attendance_ot_id'=>0,
+                    'leave_id'=>0,
+                    'NotifType'=>$notifType,
+                    'type'=>'Disapprove Attendance',
+                    'Status'=>"Disapprove",
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                $module = "Attendance Updates List";
+                $task_description = "Disapprove Attendance Updates";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+    //for disapprove single attendance end
 }

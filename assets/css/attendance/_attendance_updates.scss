@@ -1,0 +1,14 @@
+.attendance-updates{
+	#approveAttendanceModal{
+		@include modal();
+	}
+	#disapproveAttendanceModal{
+		@include modal();
+	}
+	#singleApproveAttendanceModal{
+		@include modal();
+	}
+	#singleDisapproveAttendanceModal{
+		@include modal();
+	}
+}

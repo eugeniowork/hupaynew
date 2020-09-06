@@ -1378,4 +1378,29 @@
         }
         return $ot_amount;
     }
+
+    function attendanceNotifToTableCount(){
+        $CI =& get_instance();
+        $CI->load->model('attendance_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        $row_emp = $CI->employee_model->employee_information($emp_id);
+        $role = $row_emp['role_id'];
+
+        $counter = 1;
+        $count = 0;
+        if ($role == 3 || $role == 4){
+            $attendance = $CI->attendance_model->get_attendance_notif_head_zero($emp_id);
+            if(!empty($attendance)){
+                $count = count($attendance);
+            }
+        }
+        else{
+            $attendance = $CI->attendance_model->get_attendance_notif_head_zero_condition($emp_id);
+            if(!empty($attendance)){
+                $count = count($attendance);
+            }
+        }
+        return $count;
+    }
 ?>

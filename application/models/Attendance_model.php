@@ -258,4 +258,30 @@ class Attendance_model extends CI_Model{
         $insert = $this->db->insert('tb_attendance',$data);
         return $insert;
     }
+
+    public function get_attendance_notif_head_zero($emp_id){
+        $query = $this->db->get_where('tb_attendance_notif', array('head_emp_id'=>$emp_id, 'notif_status '=>0));
+        return $query->result();
+    }
+    public function get_attendance_notif_head_zero_condition($emp_id){
+        $query = $this->db->get_where('tb_attendance_notif', array('emp_id !='=>$emp_id,'head_emp_id'=>'0', 'notif_status'=>0));
+        return $query->result();
+    }
+
+    public function get_attendance_notif_request($id){
+        $query = $this->db->get_where('tb_attendance_notif', array('attendance_notif_id'=>$id));
+        return $query->row_array();
+    }
+    public function update_attendance($attendance_id,$data){
+        $this->db->trans_start();
+        $this->db->where('attendance_id',$attendance_id);
+        $this->db->update('tb_attendance',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

@@ -1114,6 +1114,55 @@
 .add-attendance #generateCutOffAttendanceModal .submit-generate-attendance-btn {
   display: none; }
 
+.attendance-updates #approveAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .attendance-updates #approveAttendanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.attendance-updates #approveAttendanceModal .modal-body i {
+  color: #158cba; }
+.attendance-updates #approveAttendanceModal .modal-body textarea {
+  resize: none; }
+.attendance-updates #approveAttendanceModal .modal-footer {
+  padding: 0px 5px; }
+.attendance-updates #disapproveAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .attendance-updates #disapproveAttendanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.attendance-updates #disapproveAttendanceModal .modal-body i {
+  color: #158cba; }
+.attendance-updates #disapproveAttendanceModal .modal-body textarea {
+  resize: none; }
+.attendance-updates #disapproveAttendanceModal .modal-footer {
+  padding: 0px 5px; }
+.attendance-updates #singleApproveAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .attendance-updates #singleApproveAttendanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.attendance-updates #singleApproveAttendanceModal .modal-body i {
+  color: #158cba; }
+.attendance-updates #singleApproveAttendanceModal .modal-body textarea {
+  resize: none; }
+.attendance-updates #singleApproveAttendanceModal .modal-footer {
+  padding: 0px 5px; }
+.attendance-updates #singleDisapproveAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .attendance-updates #singleDisapproveAttendanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.attendance-updates #singleDisapproveAttendanceModal .modal-body i {
+  color: #158cba; }
+.attendance-updates #singleDisapproveAttendanceModal .modal-body textarea {
+  resize: none; }
+.attendance-updates #singleDisapproveAttendanceModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }
