@@ -211,10 +211,10 @@ class Employee_controller extends CI_Controller{
                     $fullName = $value->Lastname . ", " . $value->Firstname;
                 }
 
-                $finalData .= "<tr id='".$value->emp_id."'>";
-                    $finalData .= "<td>".$fullName."</td>";
+                $finalData .= "<tr class='".$value->emp_id."'>";
+                    $finalData .= "<td class='employee-name-".$value->emp_id."'>".$fullName."</td>";
                     $finalData .= "<td>";
-                        $finalData .= "<button class='btn btn-sm btn-outline-success'>Add Attendance</button>";
+                        $finalData .= "<button id=".$value->emp_id." class='add-attendance-btn btn btn-sm btn-outline-success' data-toggle='modal' data-target='#generateCutOffAttendanceModal'>Add Attendance</button>";
                     $finalData .= "</td>";
                 $finalData .= "</tr>";
             }

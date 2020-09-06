@@ -18,7 +18,7 @@
         $(btnName).css('cursor','pointer');
         $(btnName).text(btnText);
     }
-    $(".input-only").keydown(function (e) {
+    $(document).on("keydown",".input-only",function (e) {
         //  return false;
         if(e.keyCode != 116) {
             return false;
@@ -26,7 +26,7 @@
     });
 
         // onpaste
-    $(".input-only").on("paste", function(){
+    $(document).on("paste",".input-only", function(){
          return false;
     });
     $(".float-only").keydown(function (e) {
@@ -68,7 +68,7 @@
         }
 
     });
-    $(".text-only").on('input', function(){
+    $(document).on('input', ".text-only",function(){
         $(this).val($(this).val().charAt(0).toUpperCase() + $(this).val().slice(1));
        // document.getElementById(id).value = inputTxt.value.charAt(0).toUpperCase() + inputTxt.value.slice(1);
      }); 
@@ -83,11 +83,11 @@
         }
     });
 
-    $(".text-only").on("paste", function(){ 
+    $(document).on("paste", ".text-only",function(){ 
         return false;
     });
 
-    $(".text-only").on('input', function(){
+    $(document).on('input',".text-only", function(){
 
        if ($(this).attr("maxlength") != 50){
             if ($(this).val().length > 50){
@@ -97,7 +97,7 @@
        }
 
    });
-    $(".number-only").keydown(function (e) {
+    $(document).on('keydown',".number-only",function (e) {
         // Allow: backspace, delete, tab, escape, enter , F5
         if ($.inArray(e.keyCode, [46,8, 9, 27, 13, 110,116]) !== -1 ||
              // Allow: Ctrl+A, Command+A
@@ -115,14 +115,14 @@
 
 
      // for security purpose return false
-     $(".number-only").on("paste", function(){
+     $(document).on("paste",".number-only", function(){
           return false;
      });
 
 
 
       // for handling security in contactNo
-    $(".number-only").on('input', function(){
+    $(document).on('input',".number-only", function(){
         if ($(this).attr("maxlength") != 11){
             if ($(this).val().length > 11){
                 $(this).val($(this).val().slice(0,-1));

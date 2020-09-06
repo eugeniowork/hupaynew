@@ -240,4 +240,22 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function update_attendance_using_bio_and_date($bioId, $date, $data){
+        $this->db->trans_start();
+        $this->db->where('date',$date);
+        $this->db->where('bio_id',$bioId);
+        $this->db->update('tb_attendance',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function insert_attendance($data){
+        $insert = $this->db->insert('tb_attendance',$data);
+        return $insert;
+    }
 }

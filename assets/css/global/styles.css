@@ -1097,6 +1097,23 @@
 .leave-maintenance #editLeaveMaintenanceModal .submit-update-leave-btn {
   display: none; }
 
+.add-attendance #generateCutOffAttendanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .add-attendance #generateCutOffAttendanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.add-attendance #generateCutOffAttendanceModal .modal-body i {
+  color: #158cba; }
+.add-attendance #generateCutOffAttendanceModal .modal-body textarea {
+  resize: none; }
+.add-attendance #generateCutOffAttendanceModal .modal-footer {
+  padding: 0px 5px; }
+.add-attendance #generateCutOffAttendanceModal .generate-attendance-info {
+  display: none; }
+.add-attendance #generateCutOffAttendanceModal .submit-generate-attendance-btn {
+  display: none; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

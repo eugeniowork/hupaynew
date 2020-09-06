@@ -15,10 +15,12 @@ class Attendance_controller extends CI_Controller{
         $this->load->model('leave_model','leave_model');
         $this->load->model('working_hours_model','working_hours_model');
         $this->load->model('working_days_model','working_days_model');
+        $this->load->model('cut_off_model','cut_off_model');
         $this->load->helper('hupay_helper');
         $this->load->helper('attendance_helper');
         $this->load->helper('date_helper');
         $this->load->helper('leave_helper');
+        $this->load->helper('cut_off_helper');
         //$this->load->library('../controllers/holiday_controller');
 
     }
@@ -1691,4 +1693,192 @@ class Attendance_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //fora attnendace list end
+
+    //for generate attendance for cut off period start
+    public function generateAttendance(){
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+
+        $year = date("Y");
+
+        $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+        $finalData = "";
+        $select_qry = $this->cut_off_model->get_cut_off();
+        if(!empty($select_qry)){
+            foreach($select_qry as $value){
+                $date_from = date_format(date_create($value->dateFrom),'Y-m-d');
+                if (date_format(date_create($value->dateFrom),'m-d') == "12-26"){
+                    //echo "wew";
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($value->dateFrom),'m-d');
+                    //echo $date_from . "sad";
+                    //$date_from = date_format(date_create($row->dateFrom),'Y-m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($value->dateTo),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+
+                
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    //$date_payroll = date_format(date_create($value->datePayroll),'Y-m-d');
+                }
+            }
+        }
+        $dates = array();
+        $from = strtotime($final_date_from);
+        $last = strtotime($final_date_to);
+        $output_format = 'Y-m-d';
+        $step = '+1 day';
+
+        $count = 0;
+        while( $from <= $last ) {
+
+            $count++;
+            $dates[] = date($output_format, $from);
+            $from = strtotime($step, $from);
+           
+        }
+
+
+        $count = $count- 1;
+        
+        $weekdays = array();
+
+        $counter = 0;
+
+        $weekdays_count = 0;
+        $name_count = 0;
+
+        do {
+            $date_create = date_create($dates[$counter]);
+            $attendance_date = date_format($date_create, 'M d, Y');
+
+            $day = date_format($date_create, 'l');
+
+            if ($day != "Saturday" && $day != "Sunday"){
+                $name_count++;
+            
+                $finalData .= "<table style='background-color:#d6eaf8' border='1'>";
+                    $finalData .= "<tbody>";
+                        $finalData .= "<tr>";
+                            $finalData .= "<td style='padding:5px;' width='15%'><input type='text' class='input-only form-control' name='attendance_date".$name_count."' value='".$attendance_date."'</td>";
+                            $finalData .= "<td style='padding:5px;' width='8%'><input type='text' title='hour' name='time_in_hour_attendance".$name_count ."' class='form-control number-only' placeholder='Hour'/></td>";
+
+                            $finalData .= "<td style='padding:5px;' width='8%'><input type='text' title='min' name='time_in_min_attendance".$name_count ."' class='form-control number-only' placeholder='Min'/></td>";
+
+                            $finalData .= "<td style='padding:1px;' width='8%'>";
+                                $finalData .= "<select class='' name='time_in_period".$name_count."'>
+                                        <option value=''></option>
+                                        <option value='AM'>AM</option>
+                                        <option value='PM'>PM</option>
+                                    </select>";
+                            $finalData .= "</td>";
+
+                            $finalData .= "<td style='padding:5px;' width='8%'><input type='text' title='hour' name='time_out_hour_attendance".$name_count ."' class='form-control number-only' placeholder='Hour'/></td>";
+
+                            $finalData .= "<td style='padding:5px;' width='8%'><input type='text' title='min' name='time_out_min_attendance".$name_count ."' class='form-control number-only' placeholder='Min'/></td>";
+
+                            $finalData .= "<td style='padding:1px;' width='8%'>";
+                                $finalData .= "<select class='' name='time_out_period".$name_count."'>
+                                        <option value=''></option>
+                                        <option value='AM'>AM</option>
+                                        <option value='PM'>PM</option>
+                                    </select>";
+                            $finalData .= "</td>";
+                        $finalData .= "</tr>";
+                    $finalData .= "</tbody>";
+                $finalData .= "</table>";
+
+
+            }
+            $counter++;
+        }while($counter <= $count);
+        $finalData .='<input type="hidden" class="for-id" name="id">';
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+    //for generate attendance for cut off period end
+
+    //for add attendance to cut off start
+    public function addAttendanceForCutOff(){
+        $id = $this->input->post('id');
+        $employeeInfo = $this->employee_model->employee_information($id);
+        if(!empty($employeeInfo)){
+            $name = $employeeInfo['Lastname'] . ", " . $employeeInfo['Firstname'] . " " . $employeeInfo['Middlename'];
+            //echo $name;
+
+            $bio_id = $employeeInfo['bio_id'];
+            $count = getCutOffAttendanceDateCount();
+            $counter = 0;
+            do {
+
+                $counter++;
+                if ($_POST["time_in_hour_attendance".$counter] != "" && $_POST["time_in_min_attendance".$counter] && $_POST["time_out_hour_attendance".$counter] != "" && $_POST["time_out_min_attendance".$counter] != ""){
+
+                    $attendance_date = $_POST["attendance_date".$counter];
+
+                    $time_in = date_format(date_create($_POST["time_in_hour_attendance".$counter] . ":" . $_POST["time_in_min_attendance".$counter] ),"H:i:s");
+                    
+                    $time_in_period = $_POST["time_in_period".$counter];
+                    if ($time_in_period == "PM"){
+                        $time_in  = date("H:i:s",strtotime($time_in ." +12 hours"));
+                    }
+
+                    $time_out = date_format(date_create($_POST["time_out_hour_attendance".$counter] . ":" . $_POST["time_out_min_attendance".$counter]),"H:i:s");
+                    $time_out_period = $_POST["time_out_period".$counter];
+                    if ($time_out_period == "PM"){
+                        $time_out  =  date("H:i:s",strtotime($time_out ." +12 hours"));
+                    }
+                    if ($time_in_period != "AM" && $time_in_period != "PM"){
+                        //echo $attendance_date . " " . $time_in . " " .$time_out ."Hindi masisave";
+                    }
+
+                    else if ($time_in >= $time_out){
+                        //echo $attendance_date . " " . $time_in . " " .$time_out ."Hindi masisave";
+                    }
+
+                    else {
+                        $dateCreated = getDateDate();
+
+                        $attendance_date = dateDefaultDb($attendance_date);
+                        $checkAttendance = $this->attendance_model->get_leave_date($bio_id, $attendance_date);
+                        if(!empty($checkAttendance)){
+                            $updateData = array(
+                                'time_in'=>$time_in,
+                                'time_out'=>$time_out,
+
+                            );
+                            $update = $this->attendance_model->update_attendance_using_bio_and_date($bio_id,$attendance_date, $updateData);
+                        }
+                        else{
+                            $insertData = array(
+                                'bio_id'=>$bio_id,
+                                'date'=>$attendance_date,
+                                'time_in'=>$time_in,
+                                'time_out'=>$time_out,
+                                'DateCreated'=>$dateCreated
+                            );
+                            $insert = $this->attendance_model->insert_attendance($insertData);
+                        }
+
+                        
+                    }
+                }
+            }while($count > $counter);
+            $this->data['status'] = "success";
+            $this->data['msg'] = '<strong>'.$name.'</strong> attendance for the cut off <strong>'.getCutOffPeriodLatest().'</strong> was successfully added.';
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    //for add attendance to cut off end
 }

@@ -1,0 +1,11 @@
+.add-attendance{
+	#generateCutOffAttendanceModal{
+		@include modal();
+		.generate-attendance-info{
+			display: none;
+		}
+		.submit-generate-attendance-btn{
+			display: none;
+		}
+	}
+}
