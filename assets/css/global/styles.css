@@ -1163,6 +1163,31 @@
 .attendance-updates #singleDisapproveAttendanceModal .modal-footer {
   padding: 0px 5px; }
 
+.file-overtime #approveOtModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .file-overtime #approveOtModal .modal-header .modal-title {
+    font-size: 15px; }
+.file-overtime #approveOtModal .modal-body i {
+  color: #158cba; }
+.file-overtime #approveOtModal .modal-body textarea {
+  resize: none; }
+.file-overtime #approveOtModal .modal-footer {
+  padding: 0px 5px; }
+.file-overtime #disapproveOtModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .file-overtime #disapproveOtModal .modal-header .modal-title {
+    font-size: 15px; }
+.file-overtime #disapproveOtModal .modal-body i {
+  color: #158cba; }
+.file-overtime #disapproveOtModal .modal-body textarea {
+  resize: none; }
+.file-overtime #disapproveOtModal .modal-footer {
+  padding: 0px 5px; }
+
 body {
   background: #ececec;
   overflow-x: hidden !important; }

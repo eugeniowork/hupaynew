@@ -284,4 +284,21 @@ class Attendance_model extends CI_Model{
             return "error";
         }
     }
+
+    public function get_attendance_ot($id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('attendance_ot_id'=>$id));
+        return $query->row_array();
+    }
+    public function update_attendance_overtime_by_id($id, $data){
+        $this->db->trans_start();
+        $this->db->where('attendance_ot_id',$id);
+        $this->db->update('tb_attendance_overtime',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

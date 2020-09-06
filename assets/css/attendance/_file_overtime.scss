@@ -1,0 +1,8 @@
+.file-overtime{
+	#approveOtModal{
+		@include modal();
+	}
+	#disapproveOtModal{
+		@include modal();
+	}
+}

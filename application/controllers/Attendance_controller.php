@@ -1622,8 +1622,8 @@ class Attendance_controller extends CI_Controller{
 
                         if ($emp_id != 21 && ((($emp_id == 167 || $emp_id == 168) && $value->approve_stat == 4)) || $emp_id == 71 || ($value->head_emp_id == $emp_id && $value->approve_stat == 4) || $role == 1 || $role == 2){
 
-                            $finalData .= "<button class='btn btn-sm btn-outline-success'>Approve</button>";
-                            $finalData .= "<button class='btn btn-sm btn-outline-danger'>Disapprove</button>";
+                            $finalData .= "<button id=".$value->attendance_ot_id." class='open-approval-ot btn btn-sm btn-outline-success' data-toggle='modal' data-target='#approveOtModal'>Approve</button>";
+                            $finalData .= "<button id=".$value->attendance_ot_id." class='open-disapproval-ot btn btn-sm btn-outline-danger' data-toggle='modal' data-target='#disapproveOtModal'>Disapprove</button>";
                         }
                         else {
                             $finalData .= "No action";
@@ -2335,4 +2335,109 @@ class Attendance_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for disapprove single attendance end
+
+    //for approval of ot start 
+    public function otApproval(){
+        $emp_id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($emp_id);
+        $originalPassword = $employeeInfo['Password'];
+
+        $password = $this->input->post('password');
+        $id = $this->input->post('id');
+        $type = $this->input->post('type');
+
+        $this->form_validation->set_rules('password', 'password','required');
+
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = "Please enter your password.";
+        }
+        else{
+            if(password_verify($password, $originalPassword)){
+                $row = $this->attendance_model->get_attendance_ot($id);
+
+                date_default_timezone_set("Asia/Manila");
+                //$date = date_create("1/1/1990");
+
+                $dates = date("Y-m-d H:i:s");
+                $date = date_create($dates);
+                $current_date_time = date_format($date, 'Y-m-d');
+
+                if($type == "Approve"){
+                    $approve_stat = 0;
+                    if ($row['head_emp_id'] == 0 || $row['approve_stat'] == 0){
+                        $approve_stat = 1;
+                    }
+                    $updateOtData = array(
+                        'approve_stat'=>$approve_stat,
+                        'DateApprove'=>$current_date_time,
+                    );
+                    $this->attendance_model->update_attendance_overtime_by_id($id, $updateOtData);
+                    $task_description = "Approve File OT";
+                }
+                else{
+                    $updateOtData = array(
+                        'approve_stat'=>2,
+                        'DateApprove'=>$current_date_time,
+                    );
+                    $this->attendance_model->update_attendance_overtime_by_id($id, $updateOtData);
+                    $task_description = "Disapprove File OT";
+                }
+
+                $emp_id = $row['emp_id'];
+                $approver_id = $this->session->userdata('user');
+                $time_from = $row['time_from'];
+                $time_out = $row['time_out'];
+                $ot_date = $row['date'];
+
+                $final_attendance_date = dateFormat($ot_date);
+
+                $date_create = date_create($time_from);
+                $final_time_in = date_format($date_create, 'g:i A');
+
+                $date_create = date_create($time_out);
+                $final_time_out = date_format($date_create, 'g:i A');
+
+                
+                $notifType = "File Overtime on ".$final_attendance_date." from ".$final_time_in." to time out ".$final_time_out."";
+                $status = $type;
+                $dateTime = getDateTime();
+
+                $insertNotificationsData = array(
+                    'attendance_notification_id'=>'',
+                    'emp_id'=>$emp_id,
+                    'notif_emp_id'=>$approver_id,
+                    'attendance_notif_id'=>0,
+                    'attendance_ot_id'=>$id,
+                    'leave_id'=>0,
+                    'NotifType'=>$notifType,
+                    'type'=>$type." OT",
+                    'Status'=>$status,
+                    'DateTime'=>$dateTime,
+                    'ReadStatus'=>0,
+                );
+                $insertNotifications = $this->attendance_model->insert_notifications($insertNotificationsData);
+
+                $module = "File Overtime List";
+                $insertAuditTrialData = array(
+                    'audit_trail_id'=>'',
+                    'file_emp_id'=>$emp_id,
+                    'approve_emp_id'=>$approver_id,
+                    'involve_emp_id'=>0,
+                    'module'=>$module,
+                    'task_description'=>$task_description,
+                );
+                $insertAuditTrial = $this->audit_trial_model->insert_audit_trial($insertAuditTrialData);
+
+                $this->data['status'] = "success";
+            }
+            else{
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Your password is incorrect.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+    //for approval of ot end
 }
