@@ -198,4 +198,29 @@ class Leave_model extends CI_Model{
         $insert = $this->db->insert('tb_leave_type',$data);
         return $insert;
     }
+
+    public function update_leave_type_data($id,$data){
+        $this->db->trans_start();
+        $this->db->where('lt_id',$id);
+        $this->db->update('tb_leave_type',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
+    public function delete_leave_type($id){
+        $this->db->trans_start();
+        $this->db->where('lt_id',$id);
+        $this->db->delete('tb_leave_type');
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

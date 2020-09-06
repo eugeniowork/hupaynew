@@ -270,7 +270,7 @@ class Leave_controller extends CI_Controller{
                 $info .= "<br/>";
                 $info .= "<b class='color-blue'>Convertable To Cash: </b>" . $is_convertable_to_cash;
 
-                $finalData .= "<tr id='".$value->lt_id."'>";
+                $finalData .= "<tr class='leave-type-".$value->lt_id."'>";
                     $finalData .= "<td><b>".$value->name."</b></td>";
                     $finalData .= "<td>".$info."</td>";
                     $finalData .= "<td>".$status."</td>";
@@ -279,14 +279,14 @@ class Leave_controller extends CI_Controller{
                         if ($value->name != "Formal Leave"){
                             $finalData .= "<button class='btn btn-outline-success btn-sm' >Edit</button>";
                             $finalData .= "&nbsp;";
-                            $finalData .= "<button class='btn btn-outline-primary btn-sm' >".$status_txt."</button>";
+                            $finalData .= "<button id=".$value->lt_id." class='change-status-btn btn btn-outline-primary btn-sm '>".$status_txt."</button>";
                             $finalData .= "&nbsp;";
 
                             // check tb_emp_leave
 
                             if (checkExistEmpLeaveInfo($value->lt_id) == 0){
 
-                                $finalData .= "<button class='btn btn-outline-danger btn-sm' >Delete</button>";
+                                $finalData .= "<button id=".$value->lt_id." class='delete-leave-type-btn btn btn-outline-danger btn-sm' >Delete</button>";
                             }
 
                         }
@@ -547,4 +547,76 @@ class Leave_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for get add leave maintenance end
+
+    //for active/inactive of leave maintenance start
+    public function getLeaveMaintenanceInfo(){
+        $id = $this->input->post('id');
+
+        $row = $this->leave_model->get_type_of_leave_by_id($id);
+        if(!empty($row)){
+            $isDelete = false;
+            $status = "<span class='badge badge-success'>Active</span>";
+
+            if ($row['status'] == 1){
+                $status = "<span class='badge badge-warning'>Inactive</span>";
+            }
+            if (checkExistEmpLeaveInfo($id) == 0){
+                $isDelete = true;
+            }
+            $this->data['name'] = $row['name'];
+            $this->data['status_leave'] = $status;
+            $this->data['isDelete'] = $isDelete;
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    public function changeLeaveStatus(){
+        $id = $this->input->post('id');
+
+        $row = $this->leave_model->get_type_of_leave_by_id($id);
+        if(!empty($row)){
+            $leave_type = $row['name'];
+
+            $status = 0;
+            if ($row['status'] == 0){
+                $status = 1;
+            }
+            $updateData = array(
+                'status'=>$status,
+            );
+            $update = $this->leave_model->update_leave_type_data($id,$updateData);
+
+            $this->data['msg'] ="Leave Type <strong>".$leave_type."</strong> status was successfully changed.";
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    //for active/inactive of leave maintenance end
+
+    //for delete leave type start
+    public function deleteLeaveType(){
+        $id = $this->input->post('id');
+
+        $row = $this->leave_model->get_type_of_leave_by_id($id);
+        if(!empty($row)){
+            $leave_type = $row['name'];
+            $delete = $this->leave_model->delete_leave_type($id);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "Leve Type <strong>".$leave_type."</strong> was successfully deleted.";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+        echo json_encode($this->data);
+    }
+    //for delete leave type ennd
 }

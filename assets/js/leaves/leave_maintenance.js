@@ -143,4 +143,136 @@ $(document).ready(function(){
         }
 	})
 	//for save leave maintenance end
+
+	//for activate/inactive of leave maintenance
+	$(document).on('click','.change-status-btn',function(e){
+		var id = e.target.id;
+		$.ajax({
+			url:base_url+'leave_controller/getLeaveMaintenanceInfo',
+			type:'post',
+			dataType:'json',
+			data:{
+				id:id,
+			},
+			success:function(response){
+				if(response.status == "success"){
+					Swal.fire({
+		                html: 'Are you sure you want to make the Leave Type <strong>'+response.name+'</strong> in '+response.status_leave+' status?',
+		                icon: 'warning',
+		                showCancelButton: true,
+		                confirmButtonColor: '#3085d6',
+		                cancelButtonColor: '#d33',
+		                confirmButtonText: 'Yes'
+		            }).then((result) => {
+						if (result.value) {
+							$.ajax({
+								url:base_url+'leave_controller/changeLeaveStatus',
+								type:'post',
+								dataType:'json',
+								data:{
+									id:id,
+								},
+								success:function(responseData){
+									if(responseData.status == "success"){
+										toast_options(4000);
+				                        toastr.success(responseData.msg);
+				                        setTimeout(function(){
+				                            window.location.reload();
+				                        },1000)
+									}
+									else{
+										toast_options(4000);
+                    				toastr.error("There was a problem updating leave type, please try again!");
+									}
+								},
+								error:function(responseData){
+									toast_options(4000);
+                					toastr.error("There was a problem, please try again!");
+								}
+							})
+						}
+					})
+				}
+				else{
+					toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+				}
+			},
+			error:function(response){
+				toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+			}
+		})
+	})
+	//for activate/inactive of leave maintenance
+
+	//for delete of leave type start
+	$(document).on('click','.delete-leave-type-btn',function(e){
+		var id = e.target.id;
+		$.ajax({
+			url:base_url+'leave_controller/getLeaveMaintenanceInfo',
+			type:'post',
+			dataType:'json',
+			data:{
+				id:id
+			},
+			success:function(response){
+				if(response.status == "success"){
+					if(response.isDelete){
+						Swal.fire({
+			                html: 'Are you sure you want to delete the <strong>'+response.name+'</strong> Leave Type?',
+			                icon: 'warning',
+			                showCancelButton: true,
+			                confirmButtonColor: '#3085d6',
+			                cancelButtonColor: '#d33',
+			                confirmButtonText: 'Yes'
+			            }).then((result) => {
+							if (result.value) {
+								$.ajax({
+									url:base_url+'leave_controller/deleteLeaveType',
+									type:'post',
+									dataType:'json',
+									data:{
+										id:id,
+									},
+									success:function(responseData){
+										if(responseData.status == "success"){
+											toast_options(4000);
+					                        toastr.success(responseData.msg);
+					                        setTimeout(function(){
+					                            window.location.reload();
+					                        },1000)
+					                        $('.leave-type-'+id).remove();
+										}
+										else{
+											toast_options(4000);
+	                    					toastr.error("There was a problem deleting leave type, please try again!");
+										}
+									},
+									error:function(responseData){
+										toast_options(4000);
+	                					toastr.error("There was a problem, please try again!");
+									}
+								})
+							}
+						})
+					}
+					else{
+						toast_options(4000);
+                    	toastr.error("Leave Type <strong>"+response.name+"</strong> cannot be deleted!");
+					}
+					console.log(response.isDelete)
+				}
+				else{
+					toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+				}
+			},
+			error:function(response){
+				toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+			}
+		})
+	})
+	//for delete of leave type end
 })
