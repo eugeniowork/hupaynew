@@ -2,4 +2,13 @@
 	#addLeaveMaintenanceModal{
 		@include modal();
 	}
+	#editLeaveMaintenanceModal{
+		@include modal();
+		.update-leave-info{
+			display: none;
+		}
+		.submit-update-leave-btn{
+			display: none;
+		}
+	}
 }

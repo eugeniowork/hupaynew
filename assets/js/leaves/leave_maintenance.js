@@ -39,6 +39,7 @@ $(document).ready(function(){
 	get_validation_list();
 	function get_validation_list(){
 		$('.leave-validation').empty();
+		$('.update-leave-validation').empty();
 		$.ajax({
 			url:base_url+'leave_controller/getValidationList',
 			type:'get',
@@ -47,6 +48,8 @@ $(document).ready(function(){
 				if(response.status == "success"){
 					$('.leave-validation').append('<option selected disabled>Select Validation</option>')
 					$('.leave-validation').append(response.finalData);
+					$('.update-leave-validation').append('<option selected disabled>Select Validation</option>')
+					$('.update-leave-validation').append(response.finalData);
 					// $('#leaveMaintenance').dataTable({
 					// 	ordering:false
 					// });
@@ -275,4 +278,138 @@ $(document).ready(function(){
 		})
 	})
 	//for delete of leave type end
+
+	//for edit leave start
+	var obj = $(".update-no-of-days-to-file");
+	disabledNoOfDays(obj);
+	$(".update-leave-validation").on("change",function(){
+
+
+		var validation = $(this).val();
+		var values = obj.val();
+		disabledNoOfDays(obj);
+
+		if (validation == 1 || validation == 2){
+
+			enabledNoOfDays(obj,values);
+		}
+
+	});
+	function disabledNoOfDays(obj){
+    	obj.attr("disabled","disabled");
+    	obj.val("");
+    }
+
+    function enabledNoOfDays(obj,values){
+    	obj.val(values);
+    	obj.removeAttr("disabled");
+    	
+    }
+
+	var editLeaveId = null;
+	var originalLeaveName = "";
+	$(document).on('click', '.edit-leave-btn',function(e){
+		editLeaveId = e.target.id
+		$('.update-leave-info').hide();
+        $('.submit-update-leave-btn').hide();
+        $('.loading-update-leave').show();
+		$.ajax({
+			url:base_url+'leave_controller/getLeaveTypeInfo',
+			type:'post',
+			dataType:'json',
+			data:{
+				id:editLeaveId
+			},
+			success:function(response){
+				if(response.status == "success"){
+					$('.update-leave-info').show();
+			        $('.submit-update-leave-btn').show();
+			        $('.loading-update-leave').hide();
+			        $('.update-leave-name').val(response.name);
+			        $('.update-leave-validation option[value='+response.validation+']').attr('selected','selected');
+			        $('.update-no-of-days-to-file').val(response.noOfDays)
+			        $('.update-leave-count').val(response.leaveCount)
+			        originalLeaveName = response.name
+			        if(response.isConvertable == 1){
+			        	$('.update-is-convertable-to-cash').prop('checked',true)
+			        }
+			        else{
+			        	$('.update-is-convertable-to-cash').prop('checked',false)
+			        }
+			        var values = obj.val();
+			        if (response.validation == 1 || response.validation == 2){
+			        	
+						enabledNoOfDays(obj,values);
+					}
+					else{
+						disabledNoOfDays(obj);
+					}
+				}
+				else{
+					$('.loading-update-leave').show();
+                    $('.loading-update-leave').empty();
+                    $('.loading-update-leave').append('<p class="text-danger" style="text-align:center">'+response.msg+'</p>');
+                    editLeaveId = null;
+				}
+			},
+			error:function(response){
+				$('.loading-update-leave').show();
+                $('.loading-update-leave').empty();
+                $('.loading-update-leave').append('<p class="text-danger" style="text-align:center">There was a problem, please try again.</p>');
+                editLeaveId = null;
+			}
+
+		})
+	})
+	var loadingUpdateLeave = false
+	$('.submit-update-leave-btn').on('click',function(){
+		var btnName = this;
+		if(!loadingUpdateLeave){
+            loadingUpdateLeave = true;
+            $(btnName).text('');
+            $(btnName).append('<span><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span> Validating . . .');
+            $(btnName).prop('disabled', true);
+            $(btnName).css('cursor','not-allowed');
+            $('.update-leave-warning').empty();
+            var is_convetable_to_cash = 0;
+			if ($(".update-is-convertable-to-cash").is(":checked")){
+				is_convetable_to_cash = 1;
+			}
+            $.ajax({
+            	url:base_url+'leave_controller/updateLeaveMaintenance',
+            	type:'post',
+            	dataType:'json',
+            	data:{
+            		id:editLeaveId,
+            		leaveName:$('.update-leave-name').val(),
+            		leaveValidation:$('.update-leave-validation').val(),
+            		noOfDays:$('.update-no-of-days-to-file').val(),
+            		leaveCount:$('.update-leave-count').val(),
+            		isConvertable:is_convetable_to_cash,
+            		originalLeaveName:originalLeaveName,
+            	},
+            	success:function(response){
+            		if(response.status == "success"){
+            			toast_options(4000);
+                        toastr.success(response.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)
+            		}
+            		else{
+            			render_response('.update-leave-warning',response.msg, "danger")
+                        loadingUpdateLeave = false;
+                        change_button_to_default(btnName, 'Submit');
+            		}
+            	},
+            	error:function(response){
+            		toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                    loadingUpdateLeave = false;
+                    change_button_to_default(btnName, 'Submit');
+            	}
+            })
+        }
+	})
+	//for edit leave end
 })

@@ -1080,6 +1080,22 @@
   resize: none; }
 .leave-maintenance #addLeaveMaintenanceModal .modal-footer {
   padding: 0px 5px; }
+.leave-maintenance #editLeaveMaintenanceModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .leave-maintenance #editLeaveMaintenanceModal .modal-header .modal-title {
+    font-size: 15px; }
+.leave-maintenance #editLeaveMaintenanceModal .modal-body i {
+  color: #158cba; }
+.leave-maintenance #editLeaveMaintenanceModal .modal-body textarea {
+  resize: none; }
+.leave-maintenance #editLeaveMaintenanceModal .modal-footer {
+  padding: 0px 5px; }
+.leave-maintenance #editLeaveMaintenanceModal .update-leave-info {
+  display: none; }
+.leave-maintenance #editLeaveMaintenanceModal .submit-update-leave-btn {
+  display: none; }
 
 body {
   background: #ececec;

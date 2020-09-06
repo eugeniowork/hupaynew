@@ -277,7 +277,7 @@ class Leave_controller extends CI_Controller{
                     $finalData .= "<td>";
 
                         if ($value->name != "Formal Leave"){
-                            $finalData .= "<button class='btn btn-outline-success btn-sm' >Edit</button>";
+                            $finalData .= "<button id=".$value->lt_id." class='edit-leave-btn btn btn-outline-success btn-sm' data-toggle='modal' data-target='#editLeaveMaintenanceModal'>Edit</button>";
                             $finalData .= "&nbsp;";
                             $finalData .= "<button id=".$value->lt_id." class='change-status-btn btn btn-outline-primary btn-sm '>".$status_txt."</button>";
                             $finalData .= "&nbsp;";
@@ -619,4 +619,97 @@ class Leave_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for delete leave type ennd
+
+    //for update leave type start
+    public function getLeaveTypeInfo(){
+        $id = $this->input->post('id');
+
+        $row = $this->leave_model->get_type_of_leave_by_id($id);
+        if(!empty($row)){
+            $lv_id = $row['lv_id'];
+            $no_days_to_file  = $row['no_days_to_file'] ;
+            $name = $row['name'];
+            $count = round($row['count']);
+            $is_convertable_to_cash = $row['is_convertable_to_cash'];
+            $validation = $row['lv_id'];
+            $this->data['noOfDays'] = $no_days_to_file;
+            $this->data['name'] = $name;
+            $this->data['leaveCount'] = $count;
+            $this->data['isConvertable'] = $is_convertable_to_cash;
+            $this->data['validation'] = $validation;
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    public function updateLeaveMaintenance(){
+        $id = $this->input->post('id');
+        $leaveName = $this->input->post('leaveName');
+        $leaveValidation= $this->input->post('leaveValidation');
+        $noOfDays= $this->input->post('noOfDays');
+        $leaveCount= $this->input->post('leaveCount');
+        $isConvertable= $this->input->post('isConvertable');
+        $originalLeaveName = $this->input->post('originalLeaveName');
+        //$errorMsg = "";
+        //$errorCount = 0;
+
+        $row = $this->leave_model->get_type_of_leave_by_id($id);
+        if(!empty($row)){
+            $this->form_validation->set_rules('leaveName','leaveName','required',array(
+                'required'=>'Please enter a name.',
+            ));
+            if($originalLeaveName != $leaveName){
+               $this->form_validation->set_rules('leaveName','leaveName','is_unique[tb_leave_type.name]',array(
+                    'is_unique'=>'Leave Type <strong>'.$leaveName.'</strong> already exist.'
+                )); 
+            }
+            $this->form_validation->set_rules('leaveValidation','leaveValidation','required',array(
+                'required'=>'Please select leave validation.',
+            ));
+            $this->form_validation->set_rules('leaveCount','leaveCount','required',array(
+                'required'=>'Please enter a no of leave count.',
+            ));
+            if($leaveValidation == 1 || $leaveValidation == 2){
+                $this->form_validation->set_rules('noOfDays','noOfDays','required',array(
+                    'required'=>'Please enter a no of days to be filed.',
+                ));
+            }
+
+            if($this->form_validation->run() == FALSE){
+                $this->data['status'] = "error";
+                $this->data['msg'] = validation_errors();
+            }
+            else{
+                $checkLeave = $this->leave_model->get_leave_lidation_data($leaveValidation);
+                if(empty($checkLeave)){
+                    $this->data['status'] = "error";
+                    $this->data['msg'] = "There was a problem on the selected validation type.";
+                }
+                else{
+                    $updateData = array(
+                        'name'=>$leaveName,
+                        'lv_id'=>$leaveValidation,
+                        'no_days_to_file'=>$noOfDays,
+                        'count'=>$leaveCount,
+                        'is_convertable_to_cash'=>$isConvertable,
+
+                    );
+                    $update = $this->leave_model->update_leave_type_data($id,$updateData);
+                    $this->data['status'] = "success";
+                    $this->data['msg'] = "Leave Type was successfully updated.";
+                }
+            }
+        }
+        else{
+            $this->data['status'] = "error";
+            $this->data['msg'] = "There was a problem updating the leave type, please try again.";
+        }
+        
+
+        echo json_encode($this->data);
+    }
+    //for update leave type end
 }
