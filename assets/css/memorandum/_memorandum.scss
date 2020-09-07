@@ -1,0 +1,31 @@
+.memorandum{
+	#editMemoModal{
+		@include modal();
+		.update-memo-info{
+			display: none;
+		}
+		.update-memo-btn{
+			display: none;
+		}
+	}
+	#emp_list_modal{
+		@include modal();
+	}
+	#memoImagesModal{
+		@include modal();
+		.memo-images-info{
+			display: none;
+		}
+		.update-memo-image{
+			display: none;
+		}
+		
+		.image-section{
+			padding:40px 40px;
+			img{
+				width: 500px;
+				height: 600px;
+			}
+		}
+	}
+}

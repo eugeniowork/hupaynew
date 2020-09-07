@@ -92,4 +92,21 @@
         }
         return $emp_id_values;
     }
+    function getAllEmployeesNameToTable(){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $finalData = "";
+        $select_qry = $CI->employee_model->get_all_employee();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                if (($value->role_id != 1 || $value->dept_id != 1) && $value->ActiveStatus == 1) {
+                    $finalData .= "<tr id='".$value->emp_id."' style='text-align:center;'>";
+                        $finalData .= "<td><a href='#' id='chooseEmployee' title='Choose ".$value->Lastname .", " . $value->Firstname . " " . $value->Middlename."'>" . $value->Lastname .", " . $value->Firstname . " " . $value->Middlename . "</a></td>";
+                    $finalData .= "</tr>";
+                }
+            }
+        }
+
+        return $finalData;
+    }
 ?>

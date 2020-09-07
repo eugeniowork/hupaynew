@@ -107,7 +107,7 @@
         </button>
         <div class="side-navbar-sub-buttons messagingDropdown">
             <button class="btn" >Create</button>     
-            <button class="btn" >Inbox</button>   
+            <a  href="<?php echo base_url();?>inbox" class="btn" >Inbox</a>   
         </div>
         <?php if($employeeInformation['role_id'] != 4):?>
             <a class="btn" href="<?php echo base_url();?>atm">ATM Account No</a>
