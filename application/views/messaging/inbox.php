@@ -33,6 +33,25 @@
                             	<div class="messages-head">
                             		<p class='subject-name'></p>
                             	</div>
+                                <div class="messages-body-1">
+                                    <div class="row" style="border:1px solid #BDBDBD;padding:5px;background-color:#fff">
+
+                                        <div class="col-lg-1">
+                                            <img class="first-sender-profile"/>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="col-lg-12">
+                                                <b><span class='sender-from-name'></span></b>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <span style="word-wrap: break-word" id="readmoreReply"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3" style="">
+                                            <small style="color:#707b7c"><i class="date"></i></small>
+                                        </div>
+                                    </div>
+                                </div>
                             	<div class="messages-body">
                             		
                             	</div>

@@ -12,6 +12,7 @@ class Messaging_controller extends CI_Controller{
         $this->load->helper('hupay_helper');
         $this->load->helper('message_helper');
         $this->load->helper('date_helper');
+        $this->load->helper('employee_helper');
     }
 
     public function viewInbox(){
@@ -108,7 +109,7 @@ class Messaging_controller extends CI_Controller{
                 'subject'=>$row['subject'],
                 'profilePath'=>$profilePath,
                 'from_name'=>$from_name,
-                'message'=>$row['message'],
+                'message'=>htmlspecialchars($row['message']),
                 'date'=>$date,
                 'time'=>$time,
                 'reply'=>getReplyMessages($id),
@@ -168,4 +169,58 @@ class Messaging_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for add reply end
+
+    //for create message start 
+    public function viewCreateMessage(){
+        $this->data['pageTitle'] = 'Create Message';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('messaging/create_message');
+        $this->load->view('global/footer');
+    }
+
+    public function sendMessage(){
+        $to = $this->input->post('to');
+        $subject = $this->input->post('subject');
+        $message = $this->input->post('message');
+        $id = $this->session->userdata('user');
+        $dateCreated = getDateTime();
+        $this->data['asd'] = $to;
+        $this->form_validation->set_rules('to','to','required');
+        $this->form_validation->set_rules('subject','subject','required');
+        $this->form_validation->set_rules('message','message','required');
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = 'All fields are required.';
+        }
+        else{
+            if(checkExistEmployeeName($to) == 1){
+                $this->data['status'] = "error";
+                $this->data['msg'] = 'There was a problem on selected user.';
+            }
+            else if(checkMessageSelf($id, $to)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = 'You are not authorized to message yourself.';
+            }
+            else{
+                $to_emp_id = getEmpIdByEmployeeName($to);
+
+                $insertData = array(
+                    'message_id'=>'',
+                    'from_emp_id'=>$id,
+                    'to_emp_id'=>$to_emp_id,
+                    'subject'=>$subject,
+                    'message'=>$message,
+                    'dateCreated'=>$dateCreated
+                );
+                $insert = $this->messaging_model->insert_message_logs($insertData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "Your message to <strong>".$to."</strong> was successfully sent.";
+            }
+        }
+
+        echo json_encode($this->data);
+    }
+    //for create message end 
 }

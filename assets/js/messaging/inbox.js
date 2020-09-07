@@ -50,13 +50,18 @@ $(document).ready(function(){
         			$('.loading-message-history').hide();      
 
         			//$('.account-no').val(response.atmAccountNumber);
+
         			if(response.finalData.length > 0){
         				$('.messages-body').empty();
         				response.finalData.forEach(function(data,key){
         					$('.subject-name').text(data.subject)
         					$('.messages-body').append(data.reply)
+        					$('.first-sender-profile').attr('src',base_url+'assets/images/'+data.profilePath)
+        					$('.sender-from-name').text(data.from_name)
+        					$('#readmoreReply').text(data.message)
+        					$('.date').text(data.date+' '+data.time)
         				})
-        				console.log(response.finalData)
+        				
         			}
                 }
                 else{

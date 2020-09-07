@@ -109,4 +109,67 @@
 
         return $finalData;
     }
+    function checkExistEmployeeName($emp_name){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+
+        $has_error = 1;
+        $select_qry = $CI->employee_model->get_active_employee_row_array();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $name = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+                if ($value->Middlename == ""){
+                    $name = $value->Lastname . ", " . $value->Firstname;
+                }
+
+                if ($emp_name == $name){
+                    $has_error = 0;
+                }
+            }
+        }
+        return $has_error;
+    }
+    function checkMessageSelf($emp_id,$emp_name){
+        
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $existData = 0;
+        $select_qry = $CI->employee_model->get_all_employee();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $emp_id_db = $value->emp_id;
+                $emp_name_db = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+
+                if ($value->Middlename == ""){
+                    $emp_name_db = $value->Lastname . ", " . $value->Firstname;
+                }
+                
+                if ($emp_id == $emp_id_db && $emp_name == $emp_name_db){
+                    $existData = 1;
+                }
+            }
+        }
+
+        return $existData;
+    }
+    function getEmpIdByEmployeeName($emp_name){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $emp_id = 0;
+        $select_qry = $CI->employee_model->get_active_employee_row_array();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $name = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+                if ($value->Middlename == ""){
+                    $name = $value->Lastname . ", " . $value->Firstname;
+                }
+
+                if ($emp_name == $name){
+                    $emp_id = $value->emp_id;
+                }
+            }
+        }
+
+        return $emp_id;
+    }
 ?>

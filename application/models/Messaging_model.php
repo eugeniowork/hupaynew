@@ -40,5 +40,9 @@ class Messaging_model extends CI_Model{
         $insert = $this->db->insert('tb_message_reply',$data);
         return $insert;
     }
+    public function insert_message_logs($data){
+        $insert = $this->db->insert('tb_message_logs',$data);
+        return $insert;
+    }
 
 }

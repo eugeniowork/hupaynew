@@ -106,7 +106,7 @@
             <i class="caret-down-messaging fas fa-caret-down pull-right"></i>
         </button>
         <div class="side-navbar-sub-buttons messagingDropdown">
-            <button class="btn" >Create</button>     
+            <a class="btn" href="<?php echo base_url();?>create_message">Create</a>     
             <a  href="<?php echo base_url();?>inbox" class="btn" >Inbox</a>   
         </div>
         <?php if($employeeInformation['role_id'] != 4):?>
