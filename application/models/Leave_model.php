@@ -20,6 +20,10 @@ class Leave_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_type_of_leave_status_one(){
+        $query = $this->db->get_where('tb_leave_type', array('status' =>1));
+        return $query->result();
+    }
     public function get_leave_info_by_one_condition($id){
         $query = $this->db->get_where('tb_leave',array('emp_id'=>$id, 'approveStat' => 1, 'FileLeaveType'=>'Leave with pay'));
         return $query->result();
@@ -222,5 +226,10 @@ class Leave_model extends CI_Model{
         else{
             return "error";
         }
+    }
+
+    public function get_leave_of_employee($id){
+        $query = $this->db->get_where('tb_leave', array('emp_id' =>$id));
+        return $query->result();
     }
 }

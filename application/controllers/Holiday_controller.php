@@ -9,6 +9,8 @@ class Holiday_controller extends CI_Controller{
         }
         $this->load->model("holiday_model", 'holiday_model');
         $this->load->model("leave_model", 'leave_model');
+        $this->load->helper('month_day_helper');
+        $this->load->helper('hupay_helper');
     }
     public function getHolidayCutOff($holiday,$bio_id){
         $id = $this->session->userdata('user');
@@ -552,13 +554,13 @@ class Holiday_controller extends CI_Controller{
         $finalData = "";
         if(!empty($select_qry)){
             foreach ($select_qry as $value) {
-                $finalData .= "<tr id=".$value->holiday_id.">";
-                    $finalData .= "<td>".$value->holiday_date."</td>";
-                    $finalData .= "<td id='readmoreValue'>".$value->holiday_value."</td>";
+                $finalData .= "<tr class='holiday-tr-".$value->holiday_id."'>";
+                    $finalData .= "<td class='holiday-date-".$value->holiday_id."'>".$value->holiday_date."</td>";
+                    $finalData .= "<td id='readmoreValue' class='holiday-name-".$value->holiday_id."'>".$value->holiday_value."</td>";
                     $finalData .= "<td>".$value->holiday_type."</td>";
                     $finalData .= "<td>";
-                            $finalData .= "<button class='btn btn-sm btn-outline-success'>Edit</button>&nbsp;";
-                            $finalData .= "<button class='btn btn-sm btn-outline-danger'>Delete</button>";
+                            $finalData .= "<button id=".$value->holiday_id." class='open-edit-holiday btn btn-sm btn-outline-success' data-toggle='modal' data-target='#updateHolidayModal'>Edit</button>&nbsp;";
+                            $finalData .= "<button id=".$value->holiday_id." class='delete-holiday btn btn-sm btn-outline-danger'>Delete</button>";
                     $finalData .= "</td>";
                 $finalData .= "</tr>";
             }
@@ -603,4 +605,195 @@ class Holiday_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+
+    //for update holiday start
+    public function getUpdateHolidayInfo(){
+        $id = $this->input->post('id');
+        $holiday = $this->holiday_model->get_holiday_data($id);
+        $finalData = array();
+        if(!empty($holiday)){
+            $holiday_date = explode(" ",$holiday['holiday_date']);
+            array_push($finalData, array(
+                'month'=>$holiday_date[0],
+                'day'=>$holiday_date[1],
+                'dayOptions'=>getDayOfMonthUpdate($holiday_date[0],$holiday_date[1]),
+                'holiday_name'=>$holiday['holiday_value'],
+                'holiday_type'=>$holiday['holiday_type'],
+            ));
+            $this->data['finalData'] = $finalData;
+            $this->data['status'] = "success";
+        }
+        else{
+            $this->data['status'] = "error";
+
+            
+        }
+
+        echo json_encode($this->data);
+    }
+
+    public function updateHoliday(){
+        $id = $this->input->post('id');
+        $month= $this->input->post('month');
+        $day= $this->input->post('day');
+        $name= $this->input->post('name');
+        $type= $this->input->post('type');
+        $originalDateOfHoliday = $this->input->post('originalDateOfHoliday');
+
+        $current_date = getDateDate();
+
+        $year = date("Y");
+        if ($year % 4 == 0) {
+            $total_day = 29;
+        }
+        else {
+            $total_day = 28;
+        }
+
+        $this->form_validation->set_rules('month','month','required',array('required'=>'Please select a month.'));
+        $this->form_validation->set_rules('day','day','required',array('required'=>'Please select a day.'));
+        $this->form_validation->set_rules('name','name','required',array('required'=>'Please enter a name.'));
+        $this->form_validation->set_rules('type','type','required',array('required'=>'Please select a type.'));
+        if($month." ".$day != $originalDateOfHoliday){
+            $this->form_validation->set_rules('date','date','is_unique[tb_holiday.holiday_date]', array(
+                'is_unique'=>'<strong>'.$month. ' '.$day.'</strong> already exist'
+            ));
+        }
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = validation_errors(); 
+        }
+        else{
+            if ($month != "January" && $month != "February" && $month != "March" && $month != "April" && $month != "May" && $month != "June"
+            && $month != "July" && $month != "August" && $month != "September" && $month != "October" && $month != "November" && $month != "December"){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "January" || $month == "March" || $month == "May" || $month == "July" || $month == "August" || $month == "October" || $month == "December") && ($day <=0 || $day >= 32)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "February" && $total_day == 28) && ($day <=0 || $day >=29) || ($month == "February" && $total_day == 29) && ($day <=0 || $day >=30)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "April" || $month == "June" || $month == "September" || $month == "November") && ($day <=0 || $day >= 31)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+
+            // chec if the type of holiday is equal to the needed type
+            else if ($type != "Regular Holiday" && $type != "Special non-working day"){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid holiday type."; 
+            }
+            else{
+                $holiday_date = $month . " " . $day;
+                $updateData = array(
+                    'holiday_date'=>$holiday_date,
+                    'holiday_value'=>$name,
+                    'holiday_type'=>$type,
+                );
+                $update = $this->holiday_model->update_holiday($id, $updateData);
+                $this->data['status'] = "success";
+            }
+        }
+        echo json_encode($this->data);
+    }
+    //for update holiday end
+
+    //for delete holiday start
+    public function deleteHoliday(){
+        $id = $this->input->post('id');
+
+        $holiday = $this->holiday_model->get_holiday_data($id);
+        if(!empty($holiday)){
+            $delete = $this->holiday_model->delete_holiday($id);
+
+            $this->data['status'] = "success";
+            $this->data['msg'] = "The Holiday <strong>".$holiday['holiday_date']." - ".$holiday['holiday_value']. "</strong> was successfully deleted. ";
+        }
+        else{
+            $this->data['status'] = "error";
+        }
+
+        echo json_encode($this->data);
+    }
+    //for delete holiday end
+
+
+    //for get add holiday start
+    public function getDayInMonth(){
+        $month = $this->input->post('month');
+        if ($month != "" && $month != "January" && $month != "February" && $month != "March" 
+            && $month != "April" && $month != "May" && $month != "June" && $month != "July"
+             && $month != "August" && $month != "September" && $month != "October" 
+             && $month != "November" && $month != "December") {
+            $this->data['status'] = "error";
+        }
+        else{
+            $this->data['status'] = "success";
+            $this->data['finalData'] = getDayOfMonth($month);
+        }
+
+        echo json_encode($this->data);
+    }
+    public function addHoliday(){
+        $month = $this->input->post('month');
+        $day= $this->input->post('day');
+        $name= $this->input->post('name');
+        $type= $this->input->post('type');
+        $current_date = getDateDate();
+        $this->form_validation->set_rules('month','month','required',array('required'=>'Please select a month.'));
+        $this->form_validation->set_rules('day','day','required',array('required'=>'Please select a day.'));
+        $this->form_validation->set_rules('name','name','required',array('required'=>'Please enter a name.'));
+        $this->form_validation->set_rules('type','type','required',array('required'=>'Please select a type.'));
+        $this->form_validation->set_rules('date','date','is_unique[tb_holiday.holiday_date]', array(
+            'is_unique'=>'<strong>'.$month. ' '.$day.'</strong> already exist'
+        ));
+        if($this->form_validation->run() == FALSE){
+            $this->data['status'] = "error";
+            $this->data['msg'] = validation_errors(); 
+        }
+        else{
+            if ($month != "January" && $month != "February" && $month != "March" && $month != "April" && $month != "May" && $month != "June"
+            && $month != "July" && $month != "August" && $month != "September" && $month != "October" && $month != "November" && $month != "December"){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "January" || $month == "March" || $month == "May" || $month == "July" || $month == "August" || $month == "October" || $month == "December") && ($day <=0 || $day >= 32)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "February" && $total_day == 28) && ($day <=0 || $day >=29) || ($month == "February" && $total_day == 29) && ($day <=0 || $day >=30)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+            else if (($month == "April" || $month == "June" || $month == "September" || $month == "November") && ($day <=0 || $day >= 31)){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid month or day."; 
+            }
+
+            // chec if the type of holiday is equal to the needed type
+            else if ($type != "Regular Holiday" && $type != "Special non-working day"){
+                $this->data['status'] = "error";
+                $this->data['msg'] = "Invalid holiday type."; 
+            }
+            else{
+                $holiday_date = $month . " " . $day;
+                $insertData = array(
+                    'holiday_id'=>'',
+                    'holiday_date'=>$holiday_date,
+                    'holiday_value'=>$name,
+                    'holiday_type'=>$type,
+                    'DateCreated'=>$current_date,
+                );
+                $insert = $this->holiday_model->insert_holiday($insertData);
+                $this->data['status'] = "success";
+                $this->data['msg'] = "The <strong>".$name."</strong> was successfully added to <strong>".$type."</strong>";
+            }
+        }
+        echo json_encode($this->data);
+    }
+    //for get add holiday end
 }

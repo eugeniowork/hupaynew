@@ -408,6 +408,34 @@ $(document).ready(function(){
     })
 
 
+    //for get leave status and history START
+    get_leave_status_history();
+    function get_leave_status_history(){
+        $('#leaveStatusHistory tbody').empty();
+        $.ajax({
+            url:base_url+'leave_controller/getLeaveStatusHistory',
+            type:'get',
+            dataType:'json',
+            success:function(response){
+                if(response.status == "success"){
+                    $('#leaveStatusHistory tbody').append(response.finalData);
+                    $('#leaveStatusHistory').dataTable({
+                        ordering:false
+                    });
+                }
+                else{
+                    toast_options(4000);
+                    toastr.error("There was a problem, please try again!");
+                }
+            },
+            error:function(response){
+                toast_options(4000);
+                toastr.error("There was a problem, please try again!");
+            }
+        })
+    }
+    //for get leave status and history end
+
     function change_button_to_default(btnName, btnText){
         $(btnName).prop('disabled', false);
         $(btnName).css('cursor','pointer');

@@ -8,11 +8,11 @@
 		<table class="table table-striped table-bordered" id="listOfMemorandum">
             <thead>
                 <tr>
-                    <th><i class="fas fa-calendar-alt"></i>&nbsp;Subject</th>
-                    <th><i class="fas fa-calendar-alt"></i>&nbsp;To</th>
-                    <th><i class="fas fa-wrench"></i>&nbsp;Date</th>
-                    <th><i class="fas fa-wrench"></i>&nbsp;Content</th>
-                    <th><i class="fas fa-wrench"></i>&nbsp;Action</th>
+                    <th><small><i class="fas fa-calendar-alt"></i>&nbsp;Subject</small></th>
+                    <th><small><i class="fas fa-calendar-alt"></i>&nbsp;To</small></th>
+                    <th><small><i class="fas fa-wrench"></i>&nbsp;Date</small></th>
+                    <th><small><i class="fas fa-wrench"></i>&nbsp;Content</small></th>
+                    <th><small><i class="fas fa-wrench"></i>&nbsp;Action</small></th>
                 </tr>
             </thead>
             <tbody>

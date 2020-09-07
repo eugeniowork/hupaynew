@@ -411,4 +411,43 @@
 
         return 'success';
     }
+
+    // function getEmpLeaveCount(){
+    //     $CI =& get_instance();
+    //     $CI->load->model('leave_model');
+    //     $CI->load->library('session');
+    //     $emp_id = $CI->session->userdata('user');
+    //     $finalData = "";
+    //     $select_qry = $CI->leave_model->get_employee_leave($emp_id);
+    //     if(!empty($select_qry)){
+    //         foreach ($select_qry as $value) {
+    //             $leave_array_explode =explode("," ,$value->leave_array);
+    //             $leave_count_array_explode =explode("," ,$value->leave_count_array);
+
+    //             $counter = 0;
+
+    //             $count = count($leave_array_explode);
+    //             do{
+
+    //                 $lt_id = $leave_array_explode[$counter];
+
+    //                 //echo $lt_id . " ";
+    //                 $row1 = $this->leave_model->get_type_of_leave_by_id($lt_id);
+
+
+
+    //                 $finalData .= "<tr>";
+    //                     $finalData .= "<td><small>".$row1['name']."</small></td>";
+    //                     $finalData .= "<td><small>".$leave_count_array_explode[$counter]."</small></td>";
+    //                 $finalData .= "</tr>";
+
+
+    //                 $counter++;
+    //             }while($count > $counter);
+                
+    //         }
+    //     }
+
+    //     return $finalData;
+    // }
 ?>

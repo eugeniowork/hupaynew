@@ -48,6 +48,9 @@ UNFINISHED TASK
 - LEAVES
     -LEAVE
         - all prints
+ - ATENDANCE
+  - view attendance edit cancel file ot and attendance
+  - actions in file leave status
 
 FINISHED TASK
  - AUDIT TRAIL
@@ -67,8 +70,15 @@ FINISHED TASK
     - add attendance
     - attendance updates
     - file overtime
+    - ot list approved
+    to be finished
+    upload attendance (admin)
+    sub attendance (sir pat)
+    view attendance
  - LEAVES
     - leave maintenance
+ - HOLIDAY
+    - all
 
 
 VIEW ATTENDANCE

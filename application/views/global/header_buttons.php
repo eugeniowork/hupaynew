@@ -165,7 +165,7 @@
                 <a class="btn" >OT List Approved</a>
                 <a class="btn" >Attendance Updates</a> -->
                 <?php if($employeeInformation['role_id'] == 1):?>
-                    <a class="btn" href="<?php base_url();?>uploadattendance">Upload Attendance</a>
+                    <a class="btn" href="<?php base_url();?>upload_attendance">Upload Attendance</a>
                 <?php endif;?>
 
                 <?php if($employeeInformation['role_id'] == 2 || $employeeInformation['role_id'] == 3 || 

@@ -13,6 +13,7 @@ class Leave_controller extends CI_Controller{
         $this->load->model("audit_trial_model", 'audit_trial_model');
         $this->load->helper('leave_helper');
         $this->load->helper('hupay_helper');
+        $this->load->helper('cut_off_helper');
     }
     public function getTypesOfLeave(){
         $leaveId = $this->input->post('leaveId');
@@ -712,4 +713,89 @@ class Leave_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for update leave type end
+
+
+    //get leave status history START
+    public function getLeaveStatusHistory(){
+        $id = $this->session->userdata('user');
+        date_default_timezone_set("Asia/Manila");
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $finalData = "";
+        $select_cutoff_qry = $this->attendance_model->get_cut_off();
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $valueCutOff){
+                $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'d');
+                }
+                    
+            }
+        }
+        $select_qry = $this->leave_model->get_leave_of_employee($id);
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $date_create = date_create($value->dateFrom);
+                $dateFrom = date_format($date_create, 'F d, Y');
+
+                $date_create = date_create($value->dateTo);
+                $dateTo = date_format($date_create, 'F d, Y');
+
+                $approveStat = "Pending";
+                if ($value->approveStat == 1){
+                    $approveStat = "Approve";
+                }
+
+                if ($value->approveStat == 2){
+                    $approveStat = "Dispprove";
+                }
+
+
+                if ($value->approveStat == 3){
+                    $approveStat = "Cancelled";
+                }
+                $finalData .= "<tr id='".$value->leave_id."'>";
+                    $finalData .= "<td><small>" . $value->LeaveType . "</small></td>";
+                    $finalData .= "<td><small>" . $dateFrom . " - " . $dateTo . "</small></td>";
+                    $finalData .= "<td id='readmoreValue'><small>" . htmlspecialchars($value->Remarks) . "</small></td>";
+                    $finalData .= "<td><small>" . $value->FileLeaveType . "</small></td>";
+                    $finalData .= "<td><small>" . $approveStat . "</small></td>";
+                    $finalData .= "<td><center><small>";
+                        if ($value->approveStat == 0 || $value->approveStat == 4) {
+                            $finalData .= "<span style='color:#317eac;cursor:pointer;' id='edit_file_leave'><span class='glyphicon glyphicon-pencil' style='color:#b7950b'></span></span>";
+                            //echo "<span>&nbsp;|&nbsp;</span>";
+                        }
+                        /*
+                        if ($row->approveStat != 3 &&  ($row->dateFrom >= $final_date_from && $row->dateTo >= $final_date_from)) {
+                            echo "<span style='color:#317eac;cursor:pointer;' id='cancel_leave'><span class='glyphicon glyphicon-remove' style='color: #c0392b '></span></span>";
+                        }
+                        */
+
+                        //
+                        if (($value->approveStat != 0 && $value->approveStat != 4) || ($value->dateFrom < $final_date_from && $value->dateTo < $final_date_from)) {
+                            $finalData .= "No actions";
+                        }
+                    $finalData .= "</center></small></td>";
+                $finalData .= "</tr>";
+            }
+        }
+
+
+        $this->data['status'] = "success";
+        $this->data['finalData'] = $finalData;
+        echo json_encode($this->data);
+    }
+    //get leave status history end
 }

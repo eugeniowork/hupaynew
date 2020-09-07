@@ -1,0 +1,14 @@
+.holiday{
+	#updateHolidayModal{
+		@include modal();
+		.holiday-info{
+			display: none;
+		}
+		.update-holiday-btn{
+			display: none;
+		}
+	}
+	#addHolidayModal{
+		@include modal();
+	}
+}

@@ -1,12 +1,64 @@
+<?php $this->load->helper('cut_off_helper')?>
+<?php $this->load->helper('holiday_helper')?>
+<?php
+    $this->load->helper('hupay_helper');
+    $employeeInformation = employeeInformation();
+?>
 <div class="div-main-body view-attendance">
     <div class="div-main-body-head attendance-menu-head">
-        attendance menu 
+        Attendance menu 
     </div>
     <div class="div-main-body-content attendance-menu-content">
-        <button data-toggle="modal" data-target="#addOverTimeModal">File Overtime</button>
-        <button data-toggle="modal" data-target="#addAttendanceModal">Add Attendance</button>
-        <button data-toggle="modal" data-target="#fileLeaveOptionModal">File Leave</button>
-        <button>View Leave Status and History</button>
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#addOverTimeModal">File Overtime</button>
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#addAttendanceModal">Add Attendance</button>
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#fileLeaveOptionModal">File Leave</button>
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#leaveStatusHistoryModal">View Leave Status and History</button>
+        <br/><br/>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="sub-head">
+                    File OT and Attendance Status
+                </div>
+                <div class="sub-body">
+                    <strong>Cut Off</strong>: <?php echo getCutOffPeriodLatest();?><button class="btn btn-link" data-toggle="modal" data-target="#viewFileOtModal"><i class="fas fa-search"></i>&nbsp;View</button>
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sub-head">
+                    Cut Off's Holiday 
+                    
+                </div>
+                <div class="sub-body">
+                    <?php if (holidayCutOffCount() == 0): ?>
+                        <span>There is no holiday.</span>
+                    <?php else: ?>
+                        <?php echo getCutOffHoliday()?>
+                    <?php endif ?>
+                    
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sub-head">
+                    Leave Counts
+                </div>
+                <div class="sub-body">
+                    <table class="table table-striped" id="leaveCounts">
+                        <thead>
+                            <tr>
+                                <th class="color-white bg-color-gray"><small>Leave Type</small></th>
+                                <th class="color-white bg-color-gray"><small>Leave Count</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php echo getEmpLeaveCount($employeeInformation['emp_id']) ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
         <div class="modal fade" id="addOverTimeModal" tabindex="-1" role="dialog" aria-labelledby="addOverTimeModalTitle" aria-hidden="true">
             <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -216,6 +268,86 @@
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-primary submit-leave-btn">Submit</button>
                 </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="leaveStatusHistoryModal" tabindex="-1" role="dialog" aria-labelledby="leaveStatusHistoryModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="leaveStatusHistoryModalLongTitle">File Leave History and Status</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped" id="leaveStatusHistory">
+                            <thead>
+                                <tr>
+                                    <th><small><i class="fas fa-calendar-alt"></i>&nbsp;Leave Type</small></th>
+                                    <th><small><i class="fas fa-clock"></i>&nbsp;Date Range</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Remarks</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;File Leave Type</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Status</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Action</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary submit-leave-btn">Submit</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="viewFileOtModal" tabindex="-1" role="dialog" aria-labelledby="viewFileOtModalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewFileOtModalLongTitle">File Leave History and Status</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <strong>File Overtime</strong>
+                        <table class="table table-striped" id="overtime">
+                            <thead>
+                                <tr>
+                                    <th><small><i class="fas fa-calendar-alt"></i>&nbsp;Date of OT</small></th>
+                                    <th><small><i class="fas fa-clock"></i>&nbsp;OT Rendered</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Type of OT</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Status</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Action</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php echo getOTStatusCurrentCutOff($employeeInformation['emp_id']) ?>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <strong>Attendance</strong>
+                        <table class="table table-striped" id="overtime">
+                            <thead>
+                                <tr>
+                                    <th><small><i class="fas fa-calendar-alt"></i>&nbsp;Date of Attendance</small></th>
+                                    <th><small><i class="fas fa-clock"></i>&nbsp;Time Rendered</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Status</small></th>
+                                    <th><small><i class="fas fa-wrench"></i>&nbsp;Action</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php echo getAttendanceStatusCurrentCutOff($employeeInformation['emp_id']) ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary submit-leave-btn">Submit</button>
+                    </div> -->
                 </div>
             </div>
         </div>

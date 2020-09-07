@@ -1403,4 +1403,204 @@
         }
         return $count;
     }
+
+
+    function getOTStatusCurrentCutOff($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $CI->load->model('working_hours_model');
+        $CI->load->model('attendance_model');
+        $CI->load->model('allowance_model');
+        $CI->load->model('minimum_wage_model');
+
+        date_default_timezone_set("Asia/Manila");
+        //$date = date_create("1/1/1990");
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $select_cutoff_qry = $CI->attendance_model->get_cut_off();
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $valueCutOff){
+                $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                }
+                    
+            }
+        }
+
+        $select_qry = $CI->attendance_model->get_overtime_of_employee($emp_id);
+
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                if ($final_date_from <= $value->date && $final_date_to >= $value->date){
+                    
+                    $date_create = date_create($value->date);
+                    $date = date_format($date_create, 'F d, Y');
+
+                    $timeFrom = date_format(date_create($value->time_from), 'g:i A');
+                    $timeTo = date_format(date_create($value->time_out), 'g:i A');
+                                
+                    if ($value->approve_stat == 1){
+                        $approve_stat = "Approved";
+                    }
+                    else if ($value->approve_stat == 2){
+                        $approve_stat = "Disapproved";
+                    }
+                    else if ($value->approve_stat == 0){
+                        $approve_stat = "Pending";
+                    }
+
+                    else if ($value->approve_stat == 4){
+                        $approve_stat = "Pending";
+                    }
+
+                    else if ($value->approve_stat == 3){
+                        $approve_stat = "Cancelled";
+                    }
+
+
+                    $finalData .= "<tr id='".$value->attendance_ot_id."'>";
+                        $finalData .= "<td>" . $date . "</td>";
+                        $finalData .= "<td>" . $timeFrom . " - " . $timeTo . "</td>";
+                        $finalData .= "<td>" . $value->type_ot . "</td>";
+                        $finalData .= "<td>" . $approve_stat . "</td>";
+                        $finalData .= "<td>";
+                            if ($value->approve_stat == 0) {
+                                $finalData .= "<button class='btn btn-sm btn-outline-success'>Edit</button>&nbsp;";
+                            }
+
+                            if ($value->approve_stat == 4) {
+                                $finalData .= "<button class='btn btn-sm btn-outline-success'>Edit</button>&nbsp;";
+                            }
+
+                            if ($value->approve_stat != 3 && $value->approve_stat != 2 && $value->approve_stat != 1) {
+                                $finalData .= "<button class='btn btn-sm btn-outline-danger'>Cancel</button>";
+                            }
+
+                            if ($value->approve_stat == 3 || $value->approve_stat == 2 || $value->approve_stat == 1) {
+                                $finalData .= "No actions";
+                            }
+
+
+                            
+                        $finalData .= "</td>";
+                    $finalData .= "</tr>";
+                }
+            }
+        }
+        return $finalData;
+    }
+
+    function getAttendanceStatusCurrentCutOff($emp_id){
+        $CI =& get_instance();
+        $CI->load->model('employee_model');
+        $CI->load->model('working_hours_model');
+        $CI->load->model('attendance_model');
+        $CI->load->model('allowance_model');
+        $CI->load->model('minimum_wage_model');
+
+        date_default_timezone_set("Asia/Manila");
+        //$date = date_create("1/1/1990");
+        $dates = date("Y-m-d H:i:s");
+        $date = date_create($dates);
+        $current_date_time = date_format($date, 'Y-m-d');
+        $year = date("Y");
+        $select_cutoff_qry = $CI->attendance_model->get_cut_off();
+        if(!empty($select_cutoff_qry)){
+            foreach($select_cutoff_qry as $valueCutOff){
+                $date_from = date_format(date_create($valueCutOff->dateFrom . ", " .$year),'Y-m-d');
+                if (date_format(date_create($valueCutOff->dateFrom),'m-d') == "12-26"){
+                    $prev_year = $year - 1;
+                    $date_from = $prev_year . "-" .date_format(date_create($valueCutOff->dateFrom),'m-d');
+
+                }
+                $date_from = date_format(date_create($date_from),"Y-m-d");
+                $date_to = date_format(date_create($valueCutOff->dateTo. ", " .$year),'Y-m-d');
+                $minus_five_day = date("Y-m-d",strtotime($current_date_time) - (86400 *5));
+                if ($minus_five_day >= $date_from && $minus_five_day <= $date_to) {
+                    $final_date_from = $date_from;
+                    $final_date_to = $date_to;
+                    $date_payroll = date_format(date_create($valueCutOff->datePayroll . ", " .$year),'Y-m-d');
+                }
+                    
+            }
+        }
+        $select_qry = $CI->attendance_model->get_attendance_of_employee($emp_id);
+        $finalData = "";
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                if ($final_date_from <= $value->date && $final_date_to >= $value->date){
+                    
+                    $date_create = date_create($value->date);
+                    $date = date_format($date_create, 'F d, Y');
+
+                    $timeIn = date_format(date_create($value->time_in), 'g:i A');
+                    $timeTo = date_format(date_create($value->time_out), 'g:i A');
+                                
+                    if ($value->notif_status == 1){
+                        $approve_stat = "Approved";
+                    }
+                    else if ($value->notif_status == 2){
+                        $approve_stat = "Disapproved";
+                    }
+                    else if ($value->notif_status == 0){
+                        $approve_stat = "Pending";
+                    }
+                    else if ($value->notif_status == 4){
+                        $approve_stat = "Pending";
+                    }
+
+                    else if ($value->notif_status == 3){
+                        $approve_stat = "Cancelled";
+                    }
+
+            
+
+
+                    $finalData .= "<tr id='".$value->attendance_notif_id."'>";
+                        $finalData .= "<td>" . $date . "</td>";
+                        $finalData .= "<td>" . $timeIn . " - " . $timeTo . "</td>";
+                        $finalData .= "<td>" . $approve_stat . "</td>";
+                        $finalData .= "<td>";
+
+
+
+                            if ($value->notif_status == 0) {
+                                $finalData .= "<span style='color:#317eac;cursor:pointer;' id='edit_file_attendance_updates'><span class='glyphicon glyphicon-pencil' style='color:#b7950b'></span>&nbsp;Edit</span>";
+                                $finalData .= "<span>&nbsp;|&nbsp;</span>";
+                            }
+
+                            if ($value->notif_status == 4) {
+                                $finalData .= "<span style='color:#317eac;cursor:pointer;' id='edit_file_attendance_updates'><span class='glyphicon glyphicon-pencil' style='color:#b7950b'></span>&nbsp;Edit</span>";
+                                $finalData .= "<span>&nbsp;|&nbsp;</span>";
+                            }
+
+                            if ($value->notif_status != 3 && $value->notif_status != 2 && $value->notif_status != 1) {
+                                $finalData .= "<span style='color:#317eac;cursor:pointer;' id='cancel_file_attendance_updates'><span class='glyphicon glyphicon-remove' style='color: #c0392b '></span>&nbsp;Cancel</span>";
+                            }
+
+                            if ($value->notif_status == 3 || $value->notif_status == 1 || $value->notif_status == 2) {
+                                $finalData .= "No actions";
+                            }
+                        $finalData .= "</td>";
+                    $finalData .= "</tr>";
+                }
+            }
+        }
+
+        return $finalData;
+    }
 ?>

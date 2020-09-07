@@ -301,4 +301,13 @@ class Attendance_model extends CI_Model{
             return "error";
         }
     }
+    public function get_overtime_of_employee($id){
+        $query = $this->db->get_where('tb_attendance_overtime', array('emp_id'=>$id));
+        return $query->result();
+    }
+
+    public function get_attendance_of_employee($id){
+        $query = $this->db->get_where('tb_attendance_notif', array('emp_id'=>$id));
+        return $query->result();
+    }
 }

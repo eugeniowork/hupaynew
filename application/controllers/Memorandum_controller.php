@@ -69,11 +69,11 @@ class Memorandum_controller extends CI_Controller{
                         $count = count($memoImg);
                     }
                     $finalData .= "<tr id='".$value->memo_id."'>";
-                        $finalData .= "<td>".$value->Subject ."</td>";
-                        $finalData .= "<td>".$recipient."</td>";
-                        $finalData .= "<td>".$date."</td>";
-                        $finalData .= "<td id=''>".nl2br($value->Content)."</td>";
-                        $finalData .= "<td>";
+                        $finalData .= "<td><small>".$value->Subject ."</small></td>";
+                        $finalData .= "<td><small>".$recipient."</small></td>";
+                        $finalData .= "<td><small>".$date."</small></td>";
+                        $finalData .= "<td id=''><small>".nl2br($value->Content)."</small></td>";
+                        $finalData .= "<td><small>";
                             $finalData .= "<button class='btn btn-sm btn-outline-success'><i class='fas fa-pencil-alt'></i></button>&nbsp;";
                             $finalData .= "<button class='btn btn-sm btn-outline-danger'><i class='fas fa-trash-alt'></i></button>&nbsp;";
                             $finalData .= "<button class='btn btn-sm btn-outline-secondary'><i class='fas fa-print'></i></button>&nbsp;";
@@ -82,7 +82,7 @@ class Memorandum_controller extends CI_Controller{
                                 $finalData .= "<button class='btn btn-sm btn-outline-primary'><i class='fas fa-images'></i></button>&nbsp;";
                             }
                             $finalData .= "<button class='btn btn-sm btn-outline-success'><i class='fas fa-paperclip'></i></button>&nbsp;";
-                        $finalData .= "</td>";
+                        $finalData .= "</td></small>";
 
                     $finalData .= "</tr>";
                 }

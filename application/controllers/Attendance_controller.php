@@ -2440,4 +2440,21 @@ class Attendance_controller extends CI_Controller{
         echo json_encode($this->data);
     }
     //for approval of ot end
+
+    //for upload attendance view start
+    public function viewUploadAttendance(){
+        $this->data['pageTitle'] = 'Upload Attendance';
+
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('attendance/upload_attendance');
+        $this->load->view('global/footer');
+    }
+    //for upload attendance view end
+
+    //for upload attendance start
+    public function uploadAttendance(){
+        
+    }
+    //for upload attendance end
 }
