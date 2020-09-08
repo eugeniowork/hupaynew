@@ -45,4 +45,8 @@ class Events_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_events_with_employee($id){
+        $query = $this->db->get_where('tb_events_notif',array('emp_id '=>$id));
+        return $query->result();
+    }
 }

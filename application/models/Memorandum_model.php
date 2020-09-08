@@ -82,5 +82,9 @@ class Memorandum_model extends CI_Model{
             return "error";
         }
     }
+    public function get_memorandum_notif_of_employee($id){
+        $query = $this->db->get_where('tb_memo_notif',array('to_emp_id'=>$id));
+        return $query->result();
+    }
 }
 ?>

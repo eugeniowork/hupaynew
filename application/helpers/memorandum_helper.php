@@ -182,5 +182,38 @@
         return $finalData;
 	}
 
+	function getAllMemoNotif(){
+		$CI =& get_instance();
+        $CI->load->model('memorandum_model');
+        $CI->load->model('employee_model');
+        $CI->load->library('session');
+   		$emp_id = $CI->session->userdata('user');
+        $select_qry = $CI->memorandum_model->get_memorandum_notif_of_employee($emp_id);
+        $finalData = "";
+        if(!empty($select_qry)){
+        	foreach ($select_qry as $value) {
+        		$select_from_qry = $CI->employee_model->employee_information($value->from_emp_id);
+        		$profile_path = base_url()."assets/images/".$select_from_qry['ProfilePath'];
 
+				$fullName = $select_from_qry['Firstname'] . " " . $select_from_qry['Lastname'];
+
+				$dateCreated = date_format(date_create($value->dateCreated), 'F d, Y');
+
+				$time = date_format(date_create($value->dateCreated), 'g:i A');
+				$finalData .= '<div class="notif-content">
+                    <div class="d-flex flex-row">
+                        <img src="'.$profile_path.'">
+
+                        <div class="notif-content-sub">
+                            <b>'.$fullName.'</b> about <b>'.$value->notif_type.'</b> on
+							<b>'.$dateCreated.'</b> at <b>'.$time.'</b>
+                        </div>
+                    </div>
+                </div>';
+
+				
+        	}
+        }
+        return $finalData;
+	}
  ?>

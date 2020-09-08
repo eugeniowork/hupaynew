@@ -105,6 +105,130 @@
       display: none; }
     .top-navbar .buttons .name {
       font-size: 14px; }
+    .top-navbar .buttons .memo-notif {
+      width: 500px;
+      background: white;
+      position: absolute;
+      top: 65px;
+      right: 20px;
+      -webkit-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      color: #686565;
+      display: none;
+      font-family: sans-serif; }
+      .top-navbar .buttons .memo-notif .memo-head {
+        height: 20px;
+        padding-left: 10px; }
+      .top-navbar .buttons .memo-notif .memo-body .notif-list {
+        overflow: auto;
+        overflow-x: hidden;
+        height: 300px;
+        padding: 10px 10px; }
+        .top-navbar .buttons .memo-notif .memo-body .notif-list img {
+          height: 30px;
+          width: 30px; }
+        .top-navbar .buttons .memo-notif .memo-body .notif-list .notif-content {
+          padding: 5px 5px;
+          border-bottom: 1px solid gray; }
+          .top-navbar .buttons .memo-notif .memo-body .notif-list .notif-content .notif-content-sub {
+            line-height: 20px;
+            padding-left: 30px;
+            font-size: 13px; }
+    .top-navbar .buttons .payroll-notif {
+      width: 500px;
+      background: white;
+      position: absolute;
+      top: 65px;
+      right: 20px;
+      -webkit-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      color: #686565;
+      display: none;
+      font-family: sans-serif; }
+      .top-navbar .buttons .payroll-notif .payroll-head {
+        height: 20px;
+        padding-left: 10px; }
+      .top-navbar .buttons .payroll-notif .payroll-body .notif-list {
+        overflow: auto;
+        overflow-x: hidden;
+        height: 300px;
+        padding: 10px 10px; }
+        .top-navbar .buttons .payroll-notif .payroll-body .notif-list img {
+          height: 30px;
+          width: 30px; }
+        .top-navbar .buttons .payroll-notif .payroll-body .notif-list .notif-content {
+          padding: 5px 5px;
+          border-bottom: 1px solid gray; }
+          .top-navbar .buttons .payroll-notif .payroll-body .notif-list .notif-content .notif-content-sub {
+            line-height: 20px;
+            padding-left: 30px;
+            font-size: 13px; }
+    .top-navbar .buttons .events-notif {
+      width: 500px;
+      background: white;
+      position: absolute;
+      top: 65px;
+      right: 20px;
+      -webkit-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      color: #686565;
+      display: none;
+      font-family: sans-serif; }
+      .top-navbar .buttons .events-notif .events-head {
+        height: 20px;
+        padding-left: 10px; }
+      .top-navbar .buttons .events-notif .events-body .notif-list {
+        overflow: auto;
+        overflow-x: hidden;
+        height: 300px;
+        padding: 10px 10px; }
+        .top-navbar .buttons .events-notif .events-body .notif-list img {
+          height: 30px;
+          width: 30px; }
+        .top-navbar .buttons .events-notif .events-body .notif-list .notif-content {
+          padding: 5px 5px;
+          border-bottom: 1px solid gray; }
+          .top-navbar .buttons .events-notif .events-body .notif-list .notif-content .notif-content-sub {
+            line-height: 20px;
+            padding-left: 30px;
+            font-size: 13px; }
+    .top-navbar .buttons .attendance-notif {
+      width: 500px;
+      background: white;
+      position: absolute;
+      top: 65px;
+      right: 20px;
+      -webkit-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 112px -7px rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      color: #686565;
+      display: none;
+      font-family: sans-serif; }
+      .top-navbar .buttons .attendance-notif .attendance-head {
+        height: 20px;
+        padding-left: 10px; }
+      .top-navbar .buttons .attendance-notif .attendance-body .notif-list {
+        overflow: auto;
+        overflow-x: hidden;
+        height: 300px;
+        padding: 10px 10px; }
+        .top-navbar .buttons .attendance-notif .attendance-body .notif-list img {
+          height: 30px;
+          width: 30px; }
+        .top-navbar .buttons .attendance-notif .attendance-body .notif-list .notif-content {
+          padding: 5px 5px;
+          border-bottom: 1px solid gray; }
+          .top-navbar .buttons .attendance-notif .attendance-body .notif-list .notif-content .notif-content-sub {
+            line-height: 20px;
+            padding-left: 30px;
+            font-size: 13px; }
 
 .side-navbar {
   height: 100vh;

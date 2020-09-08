@@ -1603,4 +1603,61 @@
 
         return $finalData;
     }
+
+    function notificationsAttendance(){
+        $CI =& get_instance();
+        $CI->load->model('attendance_model');
+        $CI->load->model('employee_model');
+        $emp_id = $CI->session->userdata('user');
+        $finalData = "";
+
+        $select_qry = $CI->attendance_model->get_attendance_notification_employee($emp_id);
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $approver_emp_id = $value->notif_emp_id;
+
+                $select_emp_qry = $CI->employee_model->employee_information($approver_emp_id);
+
+                $profilePath = base_url().'assets/images/'.$select_emp_qry['ProfilePath'];
+
+                $approver_name = $select_emp_qry['Firstname'] . " " . $select_emp_qry['Middlename'] . " " . $select_emp_qry['Lastname'];
+
+                $date_create = date_create($value->DateTime);
+                $dateApprove = date_format($date_create, 'F d, Y');
+
+                $time_create = date_create($value->DateTime);
+                $timeApprove = date_format($time_create, 'g:i A');
+
+                if ($value->Status != ""){
+                    $status = "";
+                    if ($value->Status != "Pending"){
+                        $status = $value->Status . " your";
+                    }
+
+                    $finalData .= '<div class="notif-content '.$value->attendance_notification_id.' ">
+                        <div class="d-flex flex-row">
+                            <img src="'.$profilePath.'">
+
+                            <div class="notif-content-sub">
+                                <b>'.$approver_name.'</b> '.$status.' Request '.$value->NotifType.' <b>on '.$dateApprove.' at '.$timeApprove.'</b>
+                            </div>
+                        </div>
+                    </div>';
+                }
+                else{
+                    $finalData .= '<div class="notif-content '.$value->attendance_notification_id.' ">
+                        <div class="d-flex flex-row">
+                            <img src="'.$profilePath.'">
+
+                            <div class="notif-content-sub">
+                                <b>'.$approver_name.'</b> Already '.$row->NotifType.' <b>on '.$dateApprove.' at '.$timeApprove.'</b>
+                            </div>
+                        </div>
+                    </div>';
+                }
+            }
+        }
+
+        return $finalData;
+    }
 ?>

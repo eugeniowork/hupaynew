@@ -35,6 +35,47 @@ $(document).ready(function(){
         $('.payrollDropdown').slideToggle('fast');
         show_hide_dropdowns('.caret-right-payroll', '.caret-down-payroll')
     })
+
+    $('.memo-notif-btn').on('click',function(){
+        $('.memo-notif').toggle();
+    })
+    $(document).mouseup(function (e) { 
+        if ($(e.target).closest(".memo-notif").length 
+                    === 0) { 
+            $(".memo-notif").hide(); 
+        } 
+    }); 
+
+    $('.payroll-notif-btn').on('click',function(){
+        $('.payroll-notif').toggle();
+    })
+    $(document).mouseup(function (e) { 
+        if ($(e.target).closest(".payroll-notif").length 
+                    === 0) { 
+            $(".payroll-notif").hide(); 
+        } 
+    }); 
+
+    $('.events-notif-btn').on('click',function(){
+        $('.events-notif').toggle();
+    })
+    $(document).mouseup(function (e) { 
+        if ($(e.target).closest(".events-notif").length 
+                    === 0) { 
+            $(".events-notif").hide(); 
+        } 
+    }); 
+
+    $('.attendance-notif-btn').on('click',function(){
+        $('.attendance-notif').toggle();
+    })
+    $(document).mouseup(function (e) { 
+        if ($(e.target).closest(".attendance-notif").length 
+                    === 0) { 
+            $(".attendance-notif").hide(); 
+        } 
+    }); 
+
     function show_hide_dropdowns(caretRight, caretDown){
         if($(caretRight).css('display') == "block"){
             $(caretRight).hide();

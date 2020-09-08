@@ -310,4 +310,12 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get_where('tb_attendance_notif', array('emp_id'=>$id));
         return $query->result();
     }
+    public function get_attendance_notification_employee($id){
+        $this->db->select('*');
+        $this->db->from('tb_attendance_notifications');
+        $this->db->where('emp_id',$id);
+        $this->db->order_by('DateTime', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

@@ -1,3 +1,40 @@
+@mixin notifMain(){
+    width: 500px;
+    background:white;
+    position:absolute;
+    top:65px;
+    right:20px;
+    -webkit-box-shadow: 10px 10px 112px -7px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 112px -7px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 112px -7px rgba(0,0,0,0.75);
+    border-radius:5px;
+    color:#686565;
+    display: none;
+    font-family: sans-serif;
+}
+@mixin notifHead(){
+    height: 20px;
+    padding-left: 10px;
+}
+@mixin notifList(){
+    overflow: auto;
+    overflow-x: hidden;
+    height: 300px;
+    padding:10px 10px;
+    img{
+        height: 30px;
+        width: 30px;
+    }
+}
+@mixin notifContent(){
+    padding:5px 5px;
+    border-bottom:1px solid gray;
+}
+@mixin notifContentSub(){
+    line-height: 20px;
+    padding-left:30px;
+    font-size: 13px;
+}
 .top-navbar{
     background:#212529;
     width: 100%;
@@ -43,13 +80,6 @@
                 text-decoration: none;
             }
         }
-        // #accountDropdown{
-        //     line-height: 35px !important;
-        // }
-        // .accountDropdown{
-        //     top: 23px !important;
-        //     left: -142px;
-        // }
         .dropdown-toggle{
             color:white;
         }
@@ -71,6 +101,78 @@
         }
         .name{
             font-size: 14px;
+        }
+        .memo-notif{
+            @include notifMain();
+            .memo-head{
+                @include notifHead();
+            }
+            .memo-body{
+                
+                .notif-list{
+                    @include notifList();
+                    .notif-content{
+                        @include notifContent();
+                        .notif-content-sub{
+                            @include notifContentSub();
+                        }
+                    }
+                }
+            }
+        }
+        .payroll-notif{
+            @include notifMain();
+            .payroll-head{
+                @include notifHead();
+            }
+            .payroll-body{
+                
+                .notif-list{
+                    @include notifList();
+                    .notif-content{
+                        @include notifContent();
+                        .notif-content-sub{
+                            @include notifContentSub();
+                        }
+                    }
+                }
+            }
+        }
+        .events-notif{
+            @include notifMain();
+            .events-head{
+                @include notifHead();
+            }
+            .events-body{
+                
+                .notif-list{
+                    @include notifList();
+                    .notif-content{
+                        @include notifContent();
+                        .notif-content-sub{
+                            @include notifContentSub();
+                        }
+                    }
+                }
+            }
+        }
+        .attendance-notif{
+            @include notifMain();
+            .attendance-head{
+                @include notifHead();
+            }
+            .attendance-body{
+                
+                .notif-list{
+                    @include notifList();
+                    .notif-content{
+                        @include notifContent();
+                        .notif-content-sub{
+                            @include notifContentSub();
+                        }
+                    }
+                }
+            }
         }
     }
 }

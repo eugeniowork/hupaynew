@@ -1,5 +1,10 @@
 <?php
+    $this->load->helper('attendance_helper');
     $this->load->helper('hupay_helper');
+    $this->load->helper('memorandum_helper');
+    $this->load->helper('payroll_helper');
+    $this->load->helper('events_helper');
+    
     $employeeInformation = employeeInformation();
 ?>
 <div class="top-navbar">
@@ -12,7 +17,7 @@
         
         
         <!-- data-pt-position="bottom" data-pt-width="200" data-pt-scheme="blue" data-pt-title="Memurandum" -->
-        <button class="btn-link">
+        <button class="btn-link memo-notif-btn">
             
             <i class="fa fa-file">  
                 <?php $unreadMemo = unreadMemoNotif();?>
@@ -24,7 +29,29 @@
             </i>
             &nbsp;
         </button>
-        <button class="btn-link ">
+        <div class="memo-notif">
+            <div class="memo-head">
+                <strong>Memorandum Notification</strong>
+            </div>
+            <hr>
+            <div class="memo-body">
+                <div class="notif-list">
+                    <?php echo getAllMemoNotif(); ?>
+                    <!-- <div class="notif-content">
+                        <div class="d-flex flex-row">
+                            <img src="http://localhost/hupaynew/assets/images/auth/lloydslogo.png">
+
+                            <div class="notif-content-sub">
+                                <b>Derick eugenio</b> about <b>Loan product revision</b> on
+                                <b>September 06, 2019</b> at <b>4:00 pm</b>
+                            </div>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+        <button class="btn-link payroll-notif-btn">
             <i class="fas fa-ruble-sign">
                 <?php $unreadPayroll = unreadPayrollNotif();?>
                 <?php if(count($unreadPayroll) > 0):?>
@@ -35,7 +62,19 @@
             </i>
             &nbsp;
         </button>
-        <button class="btn-link " >
+        <div class="payroll-notif">
+            <div class="payroll-head">
+                <strong>Payroll Notification</strong>
+            </div>
+            <hr>
+            <div class="payroll-body">
+                <div class="notif-list">
+                    <?php echo getAllPayrollNotif(); ?>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-link events-notif-btn" >
             <i class="fa fa-calendar">
                 <?php $unreadEvents = unreadEventsNotif();?>
                 <?php if(count($unreadEvents) > 0):?>
@@ -46,7 +85,20 @@
             </i>
             &nbsp;
         </button>
-        <button class="btn-link " >
+        <div class="events-notif">
+            <div class="events-head">
+                <strong>Events Notification</strong>
+            </div>
+            <hr>
+            <div class="events-body">
+                <div class="notif-list">
+                    <?php echo getAllEventsNotif(); ?>
+                </div>
+            </div>
+        </div>
+
+
+        <button class="btn-link attendance-notif-btn" >
             <i class="fa fa-clock">
                 <?php $unreadAttendance = unreadAttendanceNotif();?>
                 <?php if(count($unreadAttendance) > 0):?>
@@ -59,6 +111,20 @@
             &nbsp;
         </button>
         
+        <div class="attendance-notif">
+            <div class="attendance-head">
+                <strong>Attendance Notification</strong>
+            </div>
+            <hr>
+            <div class="attendance-body">
+                <div class="notif-list">
+                    <?php echo notificationsAttendance(); ?>
+                </div>
+            </div>
+        </div>
+
+
+
         <span class="name">&nbsp;<?php echo ucwords($employeeInformation['Firstname'].' '.$employeeInformation['Middlename'].' '.$employeeInformation['Lastname'])?> | </span>
         <div class="dropdown show pull-right">
             &nbsp;
