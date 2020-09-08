@@ -1650,7 +1650,7 @@
                             <img src="'.$profilePath.'">
 
                             <div class="notif-content-sub">
-                                <b>'.$approver_name.'</b> Already '.$row->NotifType.' <b>on '.$dateApprove.' at '.$timeApprove.'</b>
+                                <b>'.$approver_name.'</b> Already '.$value->NotifType.' <b>on '.$dateApprove.' at '.$timeApprove.'</b>
                             </div>
                         </div>
                     </div>';

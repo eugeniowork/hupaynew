@@ -318,4 +318,16 @@ class Attendance_model extends CI_Model{
         $query = $this->db->get();
         return $query->result();
     }
+    public function update_attendance_using_bio($bioId,$data){
+        $this->db->trans_start();
+        $this->db->where('bio_id',$bioId);
+        $this->db->update('tb_attendance',$data);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === TRUE){
+            return "success";
+        }
+        else{
+            return "error";
+        }
+    }
 }

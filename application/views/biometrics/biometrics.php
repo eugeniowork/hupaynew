@@ -19,6 +19,28 @@
             
             </tbody>
         </table>
+        <div class="modal fade" id="updateBio" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLongTitle">Update/ Biometrics Registration</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span><i class="fas fa-users"></i>&nbsp;Biometrics ID</span>
+                    <input type="text" class="form-control update-bio-id number-only" placeholder="Enter Biometrics ID"><br/>
+                    <div class="update-bio-warning">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary update-bio-btn">Update</button>
+                </div>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 <script src="<?php echo base_url();?>assets/js/biometrics/biometrics.js"></script>
