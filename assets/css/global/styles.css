@@ -448,6 +448,36 @@
   padding: 0px 5px; }
 .working-schedule #updateWorkingDaysModal .update-working-days-info, .working-schedule #updateWorkingDaysModal .update-working-days-btn {
   display: none; }
+.working-schedule .working-days {
+  display: none; }
+.working-schedule #addWorkingHoursModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .working-schedule #addWorkingHoursModal .modal-header .modal-title {
+    font-size: 15px; }
+.working-schedule #addWorkingHoursModal .modal-body i {
+  color: #158cba; }
+.working-schedule #addWorkingHoursModal .modal-body textarea {
+  resize: none; }
+.working-schedule #addWorkingHoursModal .modal-footer {
+  padding: 0px 5px; }
+.working-schedule #updateWorkingHoursModal .modal-header {
+  background: #158cba;
+  color: white;
+  padding: 5px 10px; }
+  .working-schedule #updateWorkingHoursModal .modal-header .modal-title {
+    font-size: 15px; }
+.working-schedule #updateWorkingHoursModal .modal-body i {
+  color: #158cba; }
+.working-schedule #updateWorkingHoursModal .modal-body textarea {
+  resize: none; }
+.working-schedule #updateWorkingHoursModal .modal-footer {
+  padding: 0px 5px; }
+.working-schedule #updateWorkingHoursModal .update-working-hours-info {
+  display: none; }
+.working-schedule #updateWorkingHoursModal .update-working-hours-btn {
+  display: none; }
 
 .generate-payroll .generate-payroll-notes {
   height: 100%; }

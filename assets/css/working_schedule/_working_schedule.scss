@@ -12,4 +12,19 @@
             display:none;
         }
     }
+    .working-days{
+        display: none;
+    }
+    #addWorkingHoursModal{
+        @include modal();
+    }
+    #updateWorkingHoursModal{
+        @include modal();
+        .update-working-hours-info{
+            display: none;
+        }
+        .update-working-hours-btn{
+            display: none;
+        }
+    }
 }

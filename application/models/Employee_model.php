@@ -58,6 +58,10 @@ class Employee_model extends CI_Model{
         $query = $this->db->get_where('tb_employee_info',array('working_days_id'=>$working_days_id));
         return $query->result();
     }
+    public function get_working_hours_of_employee($working_hours_id){
+        $query = $this->db->get_where('tb_employee_info',array('working_hours_id'=>$working_hours_id));
+        return $query->result();
+    }
     public function get_active_employee(){
         $this->db->select('*');
         $this->db->from('tb_employee_info');

@@ -238,5 +238,50 @@
         }
 
     });
+    $("input[name='hour_time_in']").on('input', function(){
+      if ($(this).val() >= 24){
+         $(this).val($(this).val().slice(0,-1));
+      }
+    });
+
+        // for handling security in time in hours
+    $("input[name='min_time_in']").on('input', function(){
+      if ($(this).val() >= 60){
+         $(this).val($(this).val().slice(0,-1));
+      }
+
+    });
+
+        // for handling security in time in hours
+    $("input[name='sec_time_in']").on('input', function(){
+      if ($(this).val() >= 60){
+        $(this).val($(this).val().slice(0,-1));
+        }
+
+    });
+
+
+       // for handling security in time out hours
+    $("input[name='hour_time_out']").on('input', function(){
+      if ($(this).val() >= 24){
+        $(this).val($(this).val().slice(0,-1));
+      }
+
+    });
+
+        // for handling security in time out hours
+    $("input[name='min_time_out']").on('input', function(){
+        if ($(this).val() >= 60){
+          $(this).val($(this).val().slice(0,-1));
+        }
+    });
+
+        // for handling security in time out hours
+    $("input[name='sec_time_out']").on('input', function(){
+      if ($(this).val() >= 60){
+        $(this).val($(this).val().slice(0,-1));
+      }
+
+    });
 </script>
 <script src="<?php echo base_url();?>assets/js/global/toast_options.js"></script>

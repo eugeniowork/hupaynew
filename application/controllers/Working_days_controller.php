@@ -9,6 +9,7 @@ class Working_days_controller extends CI_Controller{
         }
         $this->load->model("login_model", 'login_model');
         $this->load->model("working_days_model",'working_days_model');
+        $this->load->model("working_hours_model",'working_hours_model');
         $this->load->model("employee_model",'employee_model');
         $this->load->model("holiday_model",'holiday_model');
         $this->load->model("audit_trial_model", "audit_trial_model");
@@ -93,6 +94,41 @@ class Working_days_controller extends CI_Controller{
             }
             $this->data['finalWorkingDays'] = $finalWorkingDays;
         }
+
+        $finalWorkingHours = "";
+        $workingHours = $this->working_hours_model->get_all_working_hours();
+        if(!empty($workingHours)){
+            foreach ($workingHours as $value) {
+                $alreadyUsed = $this->employee_model->get_working_hours_of_employee($value->working_hours_id);
+                $timeFrom = date_format(date_create($value->timeFrom), 'g:i A');
+                $timeTo = date_format(date_create($value->timeTo), 'g:i A');
+
+                $working_hours = $timeFrom . "-" . $timeTo;
+                $finalWorkingHours .= "<tr class='working-hours-tr-".$value->working_hours_id."'>";
+                    $finalWorkingHours .= "<td class='working-hours-".$value->working_hours_id."'>".$working_hours."</td>";
+
+                    // if already used
+                    if (!empty($alreadyUsed)){
+                        $finalWorkingHours .= "<td>No Actions</td>";
+                    }
+                    // if not yet used
+                    else {
+                        $emp_id = $this->session->userdata('user');
+                        if ($emp_id != 21){
+
+                            $finalWorkingHours .= "<td>";
+                                $finalWorkingHours .= "<button id=".$value->working_hours_id." class='open-update-time-hours btn btn-sm btn-outline-success' data-toggle='modal' data-target='#updateWorkingHoursModal'>Edit</button>&nbsp;";
+                                $finalWorkingHours.= "<button id=".$value->working_hours_id." class='remove-working-hours btn btn-sm btn-outline-danger'>Delete</button>";
+                            $finalWorkingHours.= "</td>";
+                        }
+                        else {
+                            $finalWorkingHours.= "<td>No Actions</td>";
+                        }
+                    }
+                $finalWorkingHours .= "</tr>";
+            }
+        }
+        $this->data['finalWorkingHours'] = $finalWorkingHours;
 
         $this->data['pageTitle'] = 'Working Hours and Days';
         $this->load->view('global/header', $this->data);
