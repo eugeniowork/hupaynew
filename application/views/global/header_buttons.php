@@ -36,7 +36,8 @@
             <hr>
             <div class="memo-body">
                 <div class="notif-list">
-                    <?php echo getAllMemoNotif(); ?>
+                    <!-- uncomment later -->
+                    <!-- <?php echo getAllMemoNotif(); ?> -->
                     <!-- <div class="notif-content">
                         <div class="d-flex flex-row">
                             <img src="http://localhost/hupaynew/assets/images/auth/lloydslogo.png">
@@ -69,7 +70,8 @@
             <hr>
             <div class="payroll-body">
                 <div class="notif-list">
-                    <?php echo getAllPayrollNotif(); ?>
+                    <!-- uncomment later -->
+                    <!-- <?php echo getAllPayrollNotif(); ?> -->
                 </div>
             </div>
         </div>
@@ -92,7 +94,8 @@
             <hr>
             <div class="events-body">
                 <div class="notif-list">
-                    <?php echo getAllEventsNotif(); ?>
+                    <!-- uncomment later -->
+                    <!-- <?php echo getAllEventsNotif(); ?> -->
                 </div>
             </div>
         </div>
@@ -118,7 +121,8 @@
             <hr>
             <div class="attendance-body">
                 <div class="notif-list">
-                    <?php echo notificationsAttendance(); ?>
+                    <!-- uncomment later -->
+                    <!-- <?php echo notificationsAttendance(); ?> -->
                 </div>
             </div>
         </div>
@@ -133,7 +137,7 @@
             </a>
 
             <div class="dropdown-menu accountDropdown" aria-labelledby="accountDropdown">
-                <a href="#" class="dropdown-item ">Profiles</a>
+                <a href="<?php echo base_url();?>profile" class="dropdown-item ">Profile</a>
                 <a href="<?php echo base_url();?>logout" class="dropdown-item logout">Logout</a>
             </div>
         </div>
@@ -194,6 +198,7 @@
         <?php if($employeeInformation['role_id'] != 4):?>
             <a class="btn" href="<?php echo base_url();?>department">Department</a>
             <a class="btn" href="<?php echo base_url();?>position">Position</a>
+            <a class="btn" href="<?php echo base_url();?>teams">Teams</a>
         <?php endif;?>
         
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
@@ -331,8 +336,8 @@
             <a class="btn" href="<?php echo base_url();?>mypayslip">My Payslip</a>
         <?php endif;?>
 
-        <a class="btn" href="<?php echo base_url();?>simkimban">SIMKIMBAN</a>
-        <a class="btn" href="<?php echo base_url();?>cashbond">Cashbond</a>
+        <!-- <a class="btn" href="<?php echo base_url();?>simkimban">SIMKIMBAN</a>
+        <a class="btn" href="<?php echo base_url();?>cashbond">Cashbond</a> -->
 
         <?php if($employeeInformation['role_id'] == 1 || $employeeInformation['role_id'] == 3):?>
             <a class="btn" href="<?php echo base_url();?>year_total_deduction">Year Total Deduction</a>

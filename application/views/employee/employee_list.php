@@ -4,7 +4,7 @@
         Employee List
     </div>
 	<div class="div-main-body-content ">
-        <button class="btn btn-outline-success pull-right">Print Employee List Reports</button>
+        <a href="<?php echo base_url();?>employee-list-print" class="btn btn-outline-success pull-right">Print Employee List Reports</a>
         <br/>
         <br/>
         <div class="col-sm-12" style="font-weight:bold;border-radius:10px;background-color: #e5e8e8;margin-bottom:10px;padding:10px;text-align:center;">

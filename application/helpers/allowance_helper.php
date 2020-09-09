@@ -154,4 +154,64 @@
         }
         return 'success';
     }
+
+    function getAllowanceInfoToProfile(){
+        $CI =& get_instance();
+        $CI->load->model('allowance_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        $finalData = "";
+
+        $allowance = $CI->allowance_model->get_info_allowance($emp_id);
+        if(!empty($allowance)){
+            foreach ($allowance as $key => $value) {
+                $finalData .='
+                    <div class="col-lg-4">
+                        <span class="title">Allowance Type</span>
+                        <span readonly class="form-control value">
+                            '.$value->AllowanceType.'
+                        </span>
+                    </div>
+                    <div class="col-lg-4">
+                        <span class="title">Amount</span>
+                        <span readonly class="form-control value">
+                            Php. '.moneyConvertion($value->AllowanceValue).'
+                        </span>
+                    </div>
+
+                ';
+            }
+        }
+        else{
+            $finalData .='<div class="col-lg-12">
+                <strong>There is no allowance</strong>
+            </div>';
+        }
+
+        return $finalData;
+    }
+
+    function getTotalAllowance(){
+        $CI =& get_instance();
+        $CI->load->model('allowance_model');
+        $CI->load->library('session');
+        $emp_id = $CI->session->userdata('user');
+        $finalData = "";
+        $allowanceData = $CI->allowance_model->get_info_allowance($emp_id);
+        $total_allowance = 0;
+
+        $allowance = 0;
+        if(!empty($allowanceData)){
+            foreach ($allowanceData as $value) {
+                if ($total_allowance == 0){
+                    $total_allowance = $value->AllowanceValue;
+                }
+
+                else {
+                    $total_allowance = ($total_allowance) + ($value->AllowanceValue);
+                }
+            }
+        }
+        return $total_allowance;
+    }
 ?>

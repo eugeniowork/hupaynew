@@ -248,5 +248,23 @@ class Employee_model extends CI_Model{
         $insert_id = $this->db->insert_id();
         return $insert_id;
     }
-
+    public function get_education_of_employee($id){
+        $query = $this->db->get_where('tb_emp_education_attain',array('emp_id'=>$id));
+        return $query->result();
+    }
+    public function get_work_experience_of_employee($id){
+        $query = $this->db->get_where('tb_emp_work_experience',array('emp_id'=>$id));
+        return $query->result();
+    }
+    public function get_employee_for_print(){
+        $this->db->select('*');
+        $this->db->from('tb_employee_info');
+        $this->db->where('role_id !=', 1);
+        $this->db->where('dept_id !=', 4);
+        $this->db->where('emp_id !=', 172);
+        $this->db->where('ActiveStatus ', 1);
+        $this->db->order_by('Lastname', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

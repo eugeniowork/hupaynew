@@ -19,7 +19,9 @@ class Employee_controller extends CI_Controller{
         $this->load->model('role_model','role_model');
         $this->load->model('deduction_model','deduction_model');
         $this->load->model('cashbond_model','cashbond_model');
+        $this->load->model('allowance_model','allowance_model');
         $this->load->model('audit_trial_model','audit_trial_model');
+        $this->load->model('dependent_model','dependent_model');
         $this->load->helper('hupay_helper');
         // $this->load->helper('attendance_helper');
         $this->load->helper('date_helper');
@@ -347,7 +349,7 @@ class Employee_controller extends CI_Controller{
                             $finalData .= '<button class="protip btn btn-sm btn-outline-primary" data-pt-title="Make <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> '.$active_value_action.' Employee" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-signal"></i></button>';
                             $finalData .= '<button class="protip btn btn-sm btn-outline-success" data-pt-title="View <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-eye"></i></button>';
                             $finalData .= '<button class="protip btn btn-sm btn-outline-warning" data-pt-title="Upload <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> 201 File" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-upload"></i></button>';
-                            $finalData .= '<button class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></button>';
+                            $finalData .= '<a href='.base_url().'print-info/'.$value->emp_id.' class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></a>';
                             $finalData .= '<button class="protip btn btn-sm btn-outline-danger" data-pt-title="View LFC Employment History of <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong>" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-briefcase"></i></button>';
                             $finalData .= '<button class="protip btn btn-sm btn-outline-success" data-pt-title="Update ATM records of <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong>" data-pt-scheme="blue" data-pt-position="left"><i class="far fa-credit-card"></i></button>';
                             $finalData .= '<button class="protip btn btn-sm btn-outline-success" data-pt-title="Add Increase Information of <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong>" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-ruble-sign"></i></button>';
@@ -370,7 +372,7 @@ class Employee_controller extends CI_Controller{
 
 
                             $finalData .= '<button class="protip btn btn-sm btn-outline-success" data-pt-title="View <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-eye"></i></button>';
-                            $finalData .= '<button class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></button>';
+                            $finalData .= '<a href='.base_url().'print-info/'.$value->emp_id.' class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></a>';
 
                             $finalData .= '<button class="protip btn btn-sm btn-outline-danger" data-pt-title="View LFC Employment History of <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong>" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-briefcase"></i></button>';
                         }
@@ -387,7 +389,7 @@ class Employee_controller extends CI_Controller{
                             $finalData .= "<td>".$active_value."</td>";
                             $finalData .= "<td>";
                                 $finalData .= '<button class="protip btn btn-sm btn-outline-success" data-pt-title="View <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-eye"></i></button>';
-                                $finalData .= '<button class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></button>';
+                                $finalData .= '<a href='.base_url().'print-info/'.$value->emp_id.' class="protip btn btn-sm btn-outline-secondary" data-pt-title="Print <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong> Info" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-print"></i></a>';
 
                                 
                                 $finalData .= '<button class="protip btn btn-sm btn-outline-danger" data-pt-title="View LFC Employment History of <strong>'.$value->Firstname. " " .  $value->Middlename. " " .$value->Lastname.'</strong>" data-pt-scheme="blue" data-pt-position="left"><i class="fas fa-briefcase"></i></button>';
@@ -940,5 +942,379 @@ class Employee_controller extends CI_Controller{
         //$this->data['asd'] = $petName;
         
         echo json_encode($this->data);
+    }
+
+    public function printEmployeeReportList(){
+        $this->load->library('excel');
+        $filename = "employee_list_reports";
+        $this->excel->setActiveSheetIndex(0) 
+                    ->setCellValue('A1', 'Status')
+                    ->setCellValue('B1', 'Employee Name')
+                    ->setCellValue('C1', 'Address')
+                    ->setCellValue('D1', 'Contact No.')
+                    ->setCellValue('E1', 'Birthdate')
+                    ->setCellValue('F1', 'Department')
+                    ->setCellValue('G1', 'Position')
+                    ->setCellValue('H1', 'Civil Status')
+                    ->setCellValue('I1', 'SSS No.')
+                    ->setCellValue('J1', 'Pagibig No.')
+                    ->setCellValue('K1', 'Philhealth No.')
+                    ->setCellValue('L1', 'TIN No.')
+                    ->setCellValue('M1', 'Salary')
+                    ->setCellValue('N1', 'Total Allowance')
+                    ->setCellValue('O1', 'Date Hired')
+                    ->setCellValue('P1', 'Dependent Name');
+        $count = 1;
+        $status  = "";
+        $select_qry = $this->employee_model->get_all_list_of_employee();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $status = "Active";
+
+                if ($value->ActiveStatus == 0){
+                    $status = "Inactive";
+                }
+                $empName = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+                $select_position_qry = $this->position_model->get_employee_position($value->position_id);
+                $position_val = $select_position_qry['Position'];
+
+                $select_dept_qry = $this->department_model->get_department($value->dept_id);
+                $dept_val = $select_dept_qry['Department'];
+
+                $allowance = 0;
+                $has_allowance = $this->allowance_model->get_info_allowance($value->emp_id);
+                if(!empty($has_allowance)){
+                    foreach ($has_allowance as $valueAllowance) {
+                        $allowance += $valueAllowance->AllowanceValue;
+                    }
+                }
+                $dependent_name = "";
+                $has_dependent = $this->dependent_model->get_dependent_data($value->emp_id);
+                if(!empty($has_dependent)){
+                    foreach ($has_dependent as $key => $valueDependent) {
+                        if ($dependent_name == ""){
+                            $dependent_name .= $valueDependent->Fullname;
+                        }
+                        else {
+                            $dependent_name .= "," . $valueDependent->Fullname;
+                        }
+                    }
+                }
+                $count++;
+                $this->excel->setActiveSheetIndex(0) 
+                    ->setCellValue('A'.$count, $status)
+                    ->setCellValue('B'.$count, $empName)
+                    ->setCellValue('C'.$count, $value->Address)
+                    ->setCellValue('D'.$count, $value->ContactNo)
+                    ->setCellValue('E'.$count, $value->Birthdate)
+                    ->setCellValue('F'.$count, $dept_val)
+                    ->setCellValue('G'.$count, $position_val)
+                    ->setCellValue('H'.$count, $value->CivilStatus)
+                    ->setCellValue('I'.$count, $value->SSS_No)
+                    ->setCellValue('J'.$count, $value->PagibigNo)
+                    ->setCellValue('K'.$count, $value->PhilhealthNo)
+                    ->setCellValue('L'.$count, $value->TinNo)
+                    ->setCellValue('M'.$count, $value->Salary)
+                    ->setCellValue('N'.$count, $allowance)
+                    ->setCellValue('O'.$count, $value->DateHired)
+                    ->setCellValue('P'.$count, $dependent_name);
+
+            }
+        }
+        foreach(range('A','P') as $columnID) {
+            $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+        $this->excel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()
+                    ->getStyle('A1:P1')
+                    ->getFill()
+                    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('abb2b9');
+        $this->excel->getActiveSheet()->setTitle('employee_list'); //give title to sheet
+        $this->excel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;Filename=$filename.xls");
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+    }
+    public function printEmployeeInfo($id){
+        $empInfo = $this->employee_model->employee_information($id);
+
+        $this->load->library('fpdf_master');
+        $this->fpdf = new PDF_MC_Table();
+
+        $this->fpdf->AddPage();
+
+        $this->fpdf->Image("assets/images/img/logo/lloyds_report_logo.jpeg",87,10,40,25);
+
+        $this->fpdf->Image('assets/images/'.$empInfo['ProfilePath'],155,42,40,25);// margin-left,margin-top,width,height
+
+        $this->fpdf->SetFont("Arial","B","10");
+        $this->fpdf->Multicell(0,20,"",0); // for multicell
+        $this->fpdf->Cell(0,15,"EMPLOYEE INFORMATION",0,1,"C");
+
+        $this->fpdf->SetFont("Arial","BU","10");
+        $this->fpdf->SetTextColor(255,0,0);
+        $this->fpdf->Cell(0,10,"BASIC INFORMATION",0,1);
+
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Employee Name:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(0,5,utf8_decode($empInfo['Lastname'] . ", " . $empInfo['Firstname'] . " " . $empInfo['Middlename']),0,1);
+
+        // employee civil status
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Civil Status:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(0,5,$empInfo['CivilStatus'],0,1);
+
+
+        // employee civil status
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Address:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(0,5,utf8_decode($empInfo['Address']),0,1);
+
+        // employee birthdate
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Birthdate:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(0,5,dateFormat($empInfo['Birthdate']),0,1);
+
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Gender:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(0,5,$empInfo['Gender'],0,1);
+
+
+        // employee contact number
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Contact No:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+
+        $contactNo = $empInfo['ContactNo'];
+        if ($contactNo == ""){
+            $contactNo = "N/A";
+        }
+
+        $this->fpdf->Cell(0,5,$contactNo,0,1);
+
+
+        // employee email address
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Email Address:",0,0,"R");
+        $this->fpdf->SetTextColor(30,144,255);
+        $this->fpdf->SetFont("Arial","BU","10");
+
+        $emailAddress = $empInfo['EmailAddress'];
+        if ($emailAddress == ""){
+            $emailAddress = "N/A";
+        }
+
+        $this->fpdf->Cell(0,5,utf8_decode($emailAddress),0,1);
+
+        $this->fpdf->Cell(0,5,"","B",1);
+        $this->fpdf->SetFont("Arial","BU","10");
+        $this->fpdf->SetTextColor(255,0,0);
+        $this->fpdf->Cell(0,10,"COMPANY INFORMATION",0,1);
+
+        // employee department
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Department:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+
+        $department = $this->department_model->get_department($empInfo['dept_id']);
+
+        $this->fpdf->Cell(35,5,utf8_decode($department['Department']),0,0);
+
+        $position = $this->position_model->get_employee_position($empInfo['position_id']);
+
+        $this->fpdf->Cell(35,5,utf8_decode($position['Position']),0,0);
+
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Salary:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(35,5,"Php " . moneyConvertion($empInfo['Salary']),0,1);
+
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Date Hired:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(35,5,date_format(date_create($empInfo['DateHired']),"F d, Y"),0,1);
+
+        $this->fpdf->Cell(0,5,"","B",1); // FOR UNDERLINE
+
+        $this->fpdf->SetFont("Arial","BU","10");
+        $this->fpdf->SetTextColor(255,0,0);
+        $this->fpdf->Cell(0,10,"GOVERNMENT INFORMATION",0,1);
+
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"SSS No:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $pagibigNo = pagibigNoFormat($empInfo['PagibigNo']);
+
+        if ($pagibigNo == ""){
+            $pagibigNo = "N/A";
+        }
+        $this->fpdf->Cell(35,5,$pagibigNo,0,0);
+
+
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Tin No:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $tinNo = tinNoFormat($empInfo['TinNo']);
+        if ($tinNo == ""){
+            $tinNo = "N/A";
+        }
+        $this->fpdf->Cell(35,5,$tinNo,0,1);
+
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Philhealth No:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $philhealthNo = philhealthNoFormat($empInfo['PhilhealthNo']);
+        if ($philhealthNo == ""){
+            $philhealthNo = "N/A";
+        }
+        $this->fpdf->Cell(35,5,$philhealthNo,0,1);
+
+        $this->fpdf->Cell(0,5,"","B",1); // FOR UNDERLINE
+
+        $this->fpdf->SetFont("Arial","BU","10");
+        $this->fpdf->SetTextColor(255,0,0);
+        $this->fpdf->Cell(0,10,"SCHOOL INFORMATION",0,1);
+
+        $this->fpdf->SetFont("Arial","B","9");
+        $this->fpdf->SetTextColor(0,0,255);
+        $this->fpdf->Cell(28,5,"Educational Attain:",0,0,"R");
+        $this->fpdf->SetTextColor(0,0,0);
+        $this->fpdf->Cell(35,5,$empInfo['highest_educational_attain'],0,1);
+
+        $is_first = 0;
+        $select_qry = $this->employee_model->get_education_of_employee($id);
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                if ($value->type == 0){  
+
+
+                    $this->fpdf->Cell(69,3,"",0,1); // for margin
+
+                    $this->fpdf->SetFont("Arial","","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,"SECONDARY",0,1);
+
+                    $this->fpdf->SetFont("Arial","B","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"School Name:",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,utf8_decode($value->school_name),0,1);
+
+                    $this->fpdf->SetFont("Arial","I","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,$value->year_from . " -  " . $value->year_to,0,1);
+                }
+                else {
+
+                    $this->fpdf->Cell(69,3,"",0,1); // for margin
+                    if ($is_first == 0){
+                        $is_first = 1;
+
+                        $this->fpdf->SetFont("Arial","","9");
+                        $this->fpdf->SetTextColor(0,0,255);
+                        $this->fpdf->Cell(28,5,"",0,0,"R");
+                        $this->fpdf->SetTextColor(0,0,0);
+                        $this->fpdf->Cell(69,5,"TERTIARY",0,1);
+                    }
+
+                    $this->fpdf->SetFont("Arial","B","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"School Name:",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,utf8_decode($value->school_name),0,1);
+
+                    $this->fpdf->SetFont("Arial","B","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,$value->course,0,1);
+
+                    $this->fpdf->SetFont("Arial","I","9");
+                    $this->fpdf->SetTextColor(0,0,255);
+                    $this->fpdf->Cell(28,5,"",0,0,"R");
+                    $this->fpdf->SetTextColor(0,0,0);
+                    $this->fpdf->Cell(69,5,$value->year_from . " -  " . $value->year_to,0,1);            
+                    
+                }
+            }
+        }
+        $this->fpdf->Cell(0,5,"","B",1); // FOR UNDERLINE
+
+        $this->fpdf->SetFont("Arial","BU","10");
+        $this->fpdf->SetTextColor(255,0,0);
+        $this->fpdf->Cell(0,10,"WORK EXPERIENCE",0,1);
+
+        $select_qry = $this->employee_model->get_work_experience_of_employee($id);
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+                $this->fpdf->SetFont("Arial","B","9");
+                $this->fpdf->SetTextColor(0,0,255);
+                $this->fpdf->Cell(28,5,"Position:",0,0,"R");
+                $this->fpdf->SetTextColor(0,0,0);
+                $this->fpdf->Cell(69,5,utf8_decode($value->position),0,1);
+
+                $this->fpdf->SetFont("Arial","B","9");
+                $this->fpdf->SetTextColor(0,0,255);
+                $this->fpdf->Cell(28,5,"",0,0,"R");
+                $this->fpdf->SetTextColor(0,0,0);
+                $this->fpdf->Cell(69,5,utf8_decode($value->company_name),0,1);
+
+                $this->fpdf->SetFont("Arial","","9");
+                $this->fpdf->SetTextColor(0,0,255);
+                $this->fpdf->Cell(28,5,"",0,0,"R");
+                $this->fpdf->SetTextColor(0,0,0);
+                $this->fpdf->Cell(69,5,utf8_decode($value->job_description),0,1);
+
+
+                $this->fpdf->SetFont("Arial","I","9");
+                $this->fpdf->SetTextColor(0,0,255);
+                $this->fpdf->Cell(28,5,"",0,0,"R");
+                $this->fpdf->SetTextColor(0,0,0);
+                $this->fpdf->Cell(69,5,$value->year_from . " -  " . $value->year_to,0,1);
+            }
+        }
+        echo $this->fpdf->Output($empInfo['Lastname'] . ", " . $empInfo['Firstname'] . " " . $empInfo['Middlename'].'.pdf','D');
+    }
+
+
+    public function viewMyProfile(){
+        $id = $this->session->userdata('user');
+        $employeeInfo = $this->employee_model->employee_information($id);
+        $department = $this->department_model->get_department($employeeInfo['dept_id']);
+        $department = $department['Department'];
+        $position = $this->position_model->get_employee_position($employeeInfo['position_id']);
+        $position = $position['Position'];
+        $salary = "Php. ".moneyConvertion($employeeInfo['Salary']);
+
+
+
+        $this->data['salary'] = $salary;
+        $this->data['position'] = $position;
+        $this->data['department'] = $department;
+        $this->data['empInfo'] = $employeeInfo;
+        $this->data['pageTitle'] = 'My Profile';
+        $this->load->view('global/header', $this->data);
+        $this->load->view('global/header_buttons');
+        $this->load->view('profiles/profiles',$this->data);
+        $this->load->view('global/footer');
     }
 }

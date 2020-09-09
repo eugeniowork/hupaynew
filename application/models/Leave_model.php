@@ -232,4 +232,16 @@ class Leave_model extends CI_Model{
         $query = $this->db->get_where('tb_leave', array('emp_id' =>$id));
         return $query->result();
     }
+    public function get_leave_for_absent_report($from,$id){
+        $this->db->select('*');
+        $this->db->from('tb_leave');
+        $this->db->where('emp_id',$id);
+        $this->db->where('approveStat',1);
+        $where = '(FileLeaveType ="Leave with pay" or FileLeaveType ="Leave without pay")';
+        $this->db->where($where);
+        $this->db->where('dateFrom <=',$from);
+        $this->db->where('dateTo >=',$from);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

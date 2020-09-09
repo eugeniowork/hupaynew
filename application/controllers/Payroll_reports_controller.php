@@ -51,11 +51,13 @@ class Payroll_reports_controller extends CI_Controller{
     }
     public function printPayrollAdjustmentReport($id){
         $this->load->library('fpdf_master');
+
         $cutOff = $this->payroll_model->get_payroll_approval_id($id);
         $cutOffPeriod = $cutOff['CutOffPeriod'];
 		//$this->fpdf->SetFont('Arial','B',18);
         $splitCutOff = explode("-",$cutOffPeriod);
-
+        $this->fpdf = new PDF_MC_Table("l");
+        $this->fpdf->SetMargins("20","10");
 		$this->fpdf->SetMargins("20","10"); // left top
 
 		$this->fpdf->AddPage();
@@ -76,14 +78,14 @@ class Payroll_reports_controller extends CI_Controller{
 		$day = date_format($date_create, 'd');
 
 		if ($day == "10") {
-			$dayImgPayroll =base_url()."assets/images/img/payroll images/15.png";
+			$dayImgPayroll ="assets/images/img/payroll images/15.png";
 		}
 
 		if ($day == "25") {
-			$dayImgPayroll = base_url()."assets/images/img/payroll images/30.png";
+			$dayImgPayroll ="assets/images/img/payroll images/30.png";
 		}
 
-		//$this->fpdf->Image($dayImgPayroll,85,10,15,20);// margin-left,margin-top,width,height
+		$this->fpdf->Image($dayImgPayroll,85,10,15,20);// margin-left,margin-top,width,height
         $this->fpdf->Cell(65,5,"",0,1,"C"); // for margin
 
 
@@ -118,7 +120,7 @@ class Payroll_reports_controller extends CI_Controller{
                 $date_create = date_create($select_emp_qry['DateHired']);
                 $dateHired = "(" . date_format($date_create, 'm/d/Y'). ")";
                 $salary = $select_emp_qry['Salary'];
-                $select_min_wage_qry = $this->minimum_wage->get_minimum_wage();
+                $select_min_wage_qry = $this->minimum_wage_model->get_minimum_wage();
                 $minimumWage = ($select_min_wage_qry['basicWage'] + $select_min_wage_qry['COLA']) * 26;
                 $civilStatus = "S";
                 if ($select_emp_qry['CivilStatus'] == "Married") {
@@ -160,7 +162,7 @@ class Payroll_reports_controller extends CI_Controller{
 
 
         $this->fpdf->Cell(65,5,"",0,1,"C"); // for margin
-        echo $this->fpdf->Output('hello_world.pdf','D');
+        echo $this->fpdf->Output('adjustment_report.pdf','D');
     }
 
     public function viewPayrollReports(){

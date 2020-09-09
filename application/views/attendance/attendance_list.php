@@ -43,7 +43,7 @@
             </table>
             <br/>
             <br/>
-            <button class="btn btn-outline-success pull-right">Print Absent Reports</button>
+            <button class="btn btn-outline-success pull-right print-absent-reports">Print Absent Reports</button>
             <span class="pull-right">&nbsp;</span>
             <button class="btn btn-outline-success pull-right">Print Late Attendance Reports</button>
             <span class="pull-right">&nbsp;</span>

@@ -50,4 +50,23 @@ $(document).ready(function(){
 			})
 		}
 	})
+	$('.print-absent-reports').on('click',function(){
+		var dateFrom = $(".date-from").val();
+        var dateTo = $(".date-to").val();
+		$.ajax({
+			url:base_url+'attendance_controller/printAbsentReports',
+			type:'post',
+			dataType:'json',
+			data:{
+				dateFrom:dateFrom,
+				dateTo:dateTo,
+			},
+			success:function(response){
+
+			},
+			error:function(response){
+				
+			}
+		})
+	})
 })

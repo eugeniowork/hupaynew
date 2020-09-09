@@ -1,0 +1,58 @@
+.profiles{
+	.title{
+		color:#317eac;
+		font-weight: bold;
+	}
+	.value{
+		height: auto;
+	}
+	.basic-information{
+		.basic-information-head{
+			@include addEmployeeHead();
+		}
+		.basic-information-body{
+			@include addEmployeeBody();
+
+		}
+	}
+	.company-information{
+		.company-information-head{
+			@include addEmployeeHead();
+		}
+		.company-information-body{
+			@include addEmployeeBody();
+			
+		}
+	}
+	.government-information{
+		.government-information-head{
+			@include addEmployeeHead();
+		}
+		.government-information-body{
+			@include addEmployeeBody();
+			img{
+				width: 30px;
+				height: 25px;
+			}
+			
+		}
+	}
+	.dependent-information{
+		.dependent-information-head{
+			@include addEmployeeHead();
+		}
+		.dependent-information-body{
+			@include addEmployeeBody();
+			
+		}
+	}
+	.compensation-information{
+		.compensation-information-head{
+			@include addEmployeeHead();
+		}
+		.compensation-information-body{
+			@include addEmployeeBody();
+			
+		}
+	}
+}

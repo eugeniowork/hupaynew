@@ -49,6 +49,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['profile'] = 'employee_controller/viewMyProfile';
+$route['print-info/(:any)'] = 'employee_controller/printEmployeeInfo/$1';
+
+
+$route['employee-list-print'] = 'employee_controller/printEmployeeReportList';
+$route['teams'] = 'teams_controller';
 $route['create_message'] = 'messaging_controller/viewCreateMessage';
 $route['inbox'] = 'messaging_controller/viewInbox';
 $route['upload_attendance'] = 'attendance_controller/viewUploadAttendance';

@@ -2457,4 +2457,95 @@ class Attendance_controller extends CI_Controller{
         
     }
     //for upload attendance end
+
+    
+
+    public function printAbsentReports(){
+        $dateTo = $this->input->post('dateTo');
+        $dateFrom = $this->input->post('dateFrom');
+        $this->load->library('excel');
+        $filename = "late_attendance_list";
+
+        $this->excel->setActiveSheetIndex(0) 
+                    ->setCellValue('A1', 'Emplyee Name')
+                    ->setCellValue('B1', 'Date');
+        $count = 1;
+        $select_qry = $this->employee_model->get_employee_for_print();
+        if(!empty($select_qry)){
+            foreach ($select_qry as $value) {
+               $counter = 0;
+
+                $from = $dateFrom;
+                do {
+
+                    if ($counter > 0){
+
+                        $from = str_replace('-', '/', $from);
+                        $from = date('Y-m-d',strtotime($from . "+1 days"));
+                    }
+                    $day = date_format(date_create($from), 'l');
+
+                    $holiday = date_format(date_create($from), 'F j');
+
+                    $holidayData = $this->holiday_model->get_holiday_date_all($holiday);
+
+                    $leaveData = $this->leave_model->get_leave_for_absent_report($from,$value->bio_id);
+
+                    $countHoliday = 0;
+                    if(!empty($holidayData)){
+                        $countHoliday = count($holidayData);
+                    }
+                    $countLeave = 0;
+                    if(!empty($leaveData)){
+                        $countLeave = count($leaveData);
+                    }
+
+
+                    if ($day != "Saturday" && $day != "Sunday" && $countHoliday == 0 && $countLeave == 0){
+                        $absent = $this->attendance_model->get_leave_date($value->bio_id, $from);
+                        if(empty($absent)){
+                            $full_name = $value->Lastname . ", " . $value->Firstname . " " . $value->Middlename;
+                            $count++;
+                            $rowArray = array($full_name,$from);
+                            $this->excel->getActiveSheet()
+                                    ->fromArray(
+                                        $rowArray,   // The data to set
+                                        NULL,        // Array values with this value will not be set
+                                        'A'.$count         // Top left coordinate of the worksheet range where
+                                                     //    we want to set these values (default is A1)
+                                    );
+                        }
+                    }
+                    $counter++;
+                }while($dateTo > $from);
+
+            }
+        }
+        foreach(range('A','D') as $columnID) {
+            $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+        /*********************Autoresize column width depending upon contents END***********************/
+        
+        $this->excel->getActiveSheet()->getStyle('A1:D1')->getFont()->setBold(true); //Make heading font bold
+        
+        /*********************Add color to heading START**********************/
+        $this->excel->getActiveSheet()
+                    ->getStyle('A1:D1')
+                    ->getFill()
+                    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('abb2b9');
+        /*********************Add color to heading END***********************/
+        
+        $this->excel->getActiveSheet()->setTitle('late_attendance_list_reports'); //give title to sheet
+        $this->excel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;Filename=$filename.xls");
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+
+        
+    }
 }

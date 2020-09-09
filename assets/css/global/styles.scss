@@ -31,6 +31,8 @@
 @import "../memorandum/memorandum";
 @import "../messaging/inbox";
 @import "../messaging/create_message";
+@import "../teams/teams";
+@import "../profiles/profiles";
 body{
     background:rgb(236, 236, 236);
     overflow-x: hidden !important;
@@ -114,4 +116,7 @@ body{
 }
 .tt-suggestion p {
     margin: 0;
+}
+.modal{
+    @include modal();
 }
