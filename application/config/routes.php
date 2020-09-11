@@ -49,6 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+
+$route['generatepayslip/(:any)'] = 'payroll_controller/generatePayslip/$1';
 $route['profile'] = 'employee_controller/viewMyProfile';
 $route['print-info/(:any)'] = 'employee_controller/printEmployeeInfo/$1';
 

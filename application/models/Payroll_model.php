@@ -150,4 +150,20 @@ class Payroll_model extends CI_Model{
         return $query->result();
 
     }
+    public function get_payroll_info_for_payslip($id){
+        // $query = $this->db->query("
+        //     SELECT tpi.*, tbd.deduction 
+        //     FROM `tb_payroll_info` tpi
+        //     LEFT OUTER JOIN tb_payroll_info_deduction tb_pid
+        //     ON tpi.payroll_id = tb_pid.payroll_id
+        //     LEFT OUTER JOIN tb_deduction tbd
+        //     ON tbd.deduction_id = tb_pid.deduction_id
+
+        //     WHERE tpi.payroll_id = ".$id."
+
+        // ");
+        // return $query->result();
+        $query = $this->db->get_where('tb_payroll_info',array('payroll_id'=>$id));
+        return $query->result();
+    }
 }

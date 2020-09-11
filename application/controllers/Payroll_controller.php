@@ -976,10 +976,14 @@ class Payroll_controller extends CI_Controller{
                         }
                     }
                 }
+                $key = "HUPAY SYSTEM";
+                $options = 0; 
+                $encryption_iv = '1234567891011121'; 
+                $encryptedUrlId = bin2hex(openssl_encrypt($value->payroll_id,'AES-128-CBC', $key,$options,$encryption_iv));
                 $finalData .= "<tr id='".$value->payroll_id."'>";
                     $finalData .= "<td>".$cut_off_period."</td>";
                     $finalData .= "<td>";
-                        $finalData .= "<button class='btn btn-sm btn-outline-success'>Print Payslip</button>";
+                        $finalData .= "<button id=".$encryptedUrlId." class='print-payslip btn btn-sm btn-outline-success'>Print Payslip</button>";
                     $finalData .= "</td>";
                 $finalData .= "</tr>";
             }
@@ -989,5 +993,40 @@ class Payroll_controller extends CI_Controller{
         $this->data['status'] = "success";
         echo json_encode($this->data);
     }
+    public function generatePayslip($id){
+
+        //echo strlen($id);
+        //$id = $this->input->get('id');
+        //$payrollInfo = $this->payroll_model->get_payroll_info_for_payslip($id);
+
+        //$key = "HUPAY SYSTEM";
+        //$decryption_iv = '1234567891011121'; 
+        //$id = $decrypted=openssl_decrypt(hex2bin($id),'AES-128-CBC',$key,$options,$decryption_iv);
+        //$data['id'] = $id;
+
+        //$this->load->library('fpdf_master');
+        //$this->load->view('payroll/print/my_payslip_print',$data);
+        if(strlen($id) == 48){
+
+            //$id = $this->input->get('id');
+            $payrollInfo = $this->payroll_model->get_payroll_info_for_payslip($id);
+
+            $key = "HUPAY SYSTEM";
+            $options = 0; 
+            $decryption_iv = '1234567891011121'; 
+            $id = $decrypted=openssl_decrypt(hex2bin($id),'AES-128-CBC',$key,$options,$decryption_iv);
+            $data['id'] = $id;
+            $this->load->library('fpdf_master');
+            $this->load->view('payroll/print/my_payslip_print',$data);
+        }
+        else{
+            echo "Cant find the url.";
+        }
+        //$this->data['payrollInfo'] = $payrollInfo;
+
+        //echo json_encode($this->data);
+    }
+    
+    
     //for my payslip end
 }
